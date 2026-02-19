@@ -1,0 +1,243 @@
+<mat-toolbar class="topbar">
+  <div class="brand">
+    <mat-icon>medical_services</mat-icon>
+    <span>Doctor Accounting</span>
+  </div>
+
+  <span class="spacer"></span>
+
+  <mat-form-field appearance="outline" class="month-field" subscriptSizing="dynamic">
+    <mat-label>Місяць звіту</mat-label>
+    <input matInput type="month" [formControl]="monthControl" />
+  </mat-form-field>
+</mat-toolbar>
+
+<main class="page" *ngIf="vm$ | async as vm">
+  <section class="hero">
+    <p class="hero__kicker">Приватна медична практика</p>
+    <h1>Фінансовий облік пацієнтів</h1>
+    <p>
+      Період обліку:
+      <strong>{{ selectedMonthLabel }}</strong>
+    </p>
+  </section>
+
+  <section class="stats-grid">
+    <mat-card class="stat-card stat-card--primary">
+      <p>Загальна сума візитів</p>
+      <h3>{{ vm.summary.totalAmount | currency: 'UAH' : 'symbol' : '1.0-0' : 'uk-UA' }}</h3>
+    </mat-card>
+
+    <mat-card class="stat-card stat-card--accent">
+      <p>Дохід лікаря</p>
+      <h3>{{ vm.summary.totalIncome | currency: 'UAH' : 'symbol' : '1.0-0' : 'uk-UA' }}</h3>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <p>Кількість візитів</p>
+      <h3>{{ vm.summary.totalVisits }}</h3>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <p>Унікальні пацієнти</p>
+      <h3>{{ vm.summary.uniquePatients }}</h3>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <p>Середній чек</p>
+      <h3>{{ vm.summary.averageCheck | currency: 'UAH' : 'symbol' : '1.0-0' : 'uk-UA' }}</h3>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <p>Середній відсоток</p>
+      <h3>{{ vm.summary.averagePercent | number: '1.0-1' }}%</h3>
+    </mat-card>
+  </section>
+
+  <section class="layout-grid">
+    <mat-card class="panel">
+      <header class="panel__header">
+        <h2>{{ editedVisitId ? 'Редагування візиту' : 'Новий візит' }}</h2>
+        <p>Заповніть дані та збережіть запис у Firestore.</p>
+      </header>
+
+      <form [formGroup]="visitForm" (ngSubmit)="submitVisit()" class="visit-form">
+        <div class="form-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Дата</mat-label>
+            <input matInput type="date" formControlName="visitDate" />
+            <mat-error *ngIf="visitForm.controls.visitDate.touched && visitForm.controls.visitDate.invalid">
+              Вкажіть дату візиту
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Сума, грн</mat-label>
+            <input matInput type="number" min="1" step="1" formControlName="amount" />
+            <mat-error *ngIf="visitForm.controls.amount.touched && visitForm.controls.amount.invalid">
+              Сума має бути більше 0
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="field-full">
+            <mat-label>ПІБ пацієнта</mat-label>
+            <input matInput formControlName="patientName" />
+            <mat-error *ngIf="visitForm.controls.patientName.touched && visitForm.controls.patientName.invalid">
+              Вкажіть ПІБ пацієнта
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="field-full">
+            <mat-label>Послуга</mat-label>
+            <input matInput formControlName="procedureName" />
+            <mat-error
+              *ngIf="visitForm.controls.procedureName.touched && visitForm.controls.procedureName.invalid"
+            >
+              Вкажіть назву послуги
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Відсоток лікаря</mat-label>
+            <input matInput type="number" min="0" max="100" step="0.5" formControlName="percent" />
+            <mat-error *ngIf="visitForm.controls.percent.touched && visitForm.controls.percent.invalid">
+              Допустимо від 0 до 100
+            </mat-error>
+          </mat-form-field>
+
+          <div class="income-preview">
+            <span>Очікуваний дохід лікаря</span>
+            <strong>{{ (projectedIncome$ | async) | currency: 'UAH' : 'symbol' : '1.0-0' : 'uk-UA' }}</strong>
+          </div>
+
+          <mat-form-field appearance="outline" class="field-full">
+            <mat-label>Примітки</mat-label>
+            <textarea matInput rows="2" formControlName="notes"></textarea>
+          </mat-form-field>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="form-actions">
+          <button mat-flat-button color="primary" type="submit" [disabled]="saving">
+            {{ editedVisitId ? 'Оновити запис' : 'Додати запис' }}
+          </button>
+
+          <button mat-stroked-button type="button" *ngIf="editedVisitId" (click)="cancelEdit()" [disabled]="saving">
+            Скасувати
+          </button>
+        </div>
+      </form>
+    </mat-card>
+
+    <mat-card class="panel panel--table">
+      <header class="panel__header panel__header--row">
+        <h2>Журнал візитів</h2>
+        <p>{{ vm.summary.totalVisits }} записів за місяць</p>
+      </header>
+
+      <div class="table-wrap" *ngIf="vm.visits.length; else emptyState">
+        <table mat-table [dataSource]="vm.visits" class="visits-table">
+          <ng-container matColumnDef="visitDate">
+            <th mat-header-cell *matHeaderCellDef>Дата</th>
+            <td mat-cell *matCellDef="let visit">{{ visit.visitDate | date: 'd MMM' : '' : 'uk-UA' }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="patientName">
+            <th mat-header-cell *matHeaderCellDef>Пацієнт</th>
+            <td mat-cell *matCellDef="let visit">{{ visit.patientName }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="procedureName">
+            <th mat-header-cell *matHeaderCellDef>Послуга</th>
+            <td mat-cell *matCellDef="let visit">
+              <span>{{ visit.procedureName }}</span>
+              <small *ngIf="visit.notes">{{ visit.notes }}</small>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="amount">
+            <th mat-header-cell *matHeaderCellDef>Сума</th>
+            <td mat-cell *matCellDef="let visit">
+              {{ visit.amount | currency: 'UAH' : 'symbol' : '1.0-0' : 'uk-UA' }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="percent">
+            <th mat-header-cell *matHeaderCellDef>%</th>
+            <td mat-cell *matCellDef="let visit">{{ visit.percent | number: '1.0-1' }}%</td>
+          </ng-container>
+
+          <ng-container matColumnDef="doctorIncome">
+            <th mat-header-cell *matHeaderCellDef>Дохід</th>
+            <td mat-cell *matCellDef="let visit">
+              {{ visit.doctorIncome | currency: 'UAH' : 'symbol' : '1.0-0' : 'uk-UA' }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let visit">
+              <div class="row-actions">
+                <button mat-button type="button" color="primary" (click)="editVisit(visit)">Редагувати</button>
+                <button
+                  mat-button
+                  type="button"
+                  color="warn"
+                  (click)="deleteVisit(visit)"
+                  [disabled]="deletingId === visit.id"
+                >
+                  Видалити
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns; trackBy: trackByVisitId"></tr>
+        </table>
+      </div>
+
+      <ng-template #emptyState>
+        <div class="empty-state">
+          <mat-icon>insights</mat-icon>
+          <h3>Записів за цей місяць ще немає</h3>
+          <p>Додайте перший візит у формі ліворуч.</p>
+        </div>
+      </ng-template>
+    </mat-card>
+  </section>
+
+  <section class="insights-grid">
+    <mat-card class="panel">
+      <header class="panel__header panel__header--row">
+        <h2>Найприбутковіші дні</h2>
+        <p>Топ 5</p>
+      </header>
+
+      <div class="top-days" *ngIf="vm.topDays.length; else emptyTopDays">
+        <div class="top-days__row" *ngFor="let day of vm.topDays">
+          <span>{{ day.date | date: 'd MMM' : '' : 'uk-UA' }}</span>
+          <span>{{ day.visits }} візит(ів)</span>
+          <strong>{{ day.income | currency: 'UAH' : 'symbol' : '1.0-0' : 'uk-UA' }}</strong>
+        </div>
+      </div>
+
+      <ng-template #emptyTopDays>
+        <p class="muted">Ще немає даних для порівняння днів.</p>
+      </ng-template>
+    </mat-card>
+
+    <mat-card class="panel panel--highlight">
+      <h2>Підсумок за місяць</h2>
+      <p>
+        За поточний період внесено <strong>{{ vm.summary.totalVisits }}</strong> візитів.
+        Дохід лікаря складає
+        <strong>{{ vm.summary.totalIncome | currency: 'UAH' : 'symbol' : '1.0-0' : 'uk-UA' }}</strong>.
+      </p>
+      <p class="muted">
+        Порада: заповнюйте поле "Послуга" детально, щоб далі легко робити аналітику по типах прийомів.
+      </p>
+    </mat-card>
+  </section>
+</main>

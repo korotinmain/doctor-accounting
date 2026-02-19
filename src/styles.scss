@@ -1,0 +1,48 @@
+@use '@angular/material' as mat;
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+@include mat.core();
+
+$doctor-accounting-primary: mat.define-palette(mat.$teal-palette, 700, 500, 900);
+$doctor-accounting-accent: mat.define-palette(mat.$amber-palette, 500, 400, 700);
+$doctor-accounting-warn: mat.define-palette(mat.$red-palette, 600);
+
+$doctor-accounting-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $doctor-accounting-primary,
+      accent: $doctor-accounting-accent,
+      warn: $doctor-accounting-warn
+    ),
+    typography: mat.define-typography-config(
+      $font-family: 'Manrope, "Segoe UI", sans-serif'
+    )
+  )
+);
+
+@include mat.all-component-themes($doctor-accounting-theme);
+
+:root {
+  --surface-color: #fcfffe;
+  --border-color: rgba(16, 68, 61, 0.14);
+  --text-color: #1f3c37;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--text-color);
+  font-family: 'Manrope', 'Segoe UI', sans-serif;
+  background:
+    radial-gradient(circle at 80% -10%, rgba(255, 204, 114, 0.35), transparent 38%),
+    radial-gradient(circle at 15% -5%, rgba(80, 182, 168, 0.24), transparent 30%),
+    #f4f8f7;
+}

@@ -25,10 +25,11 @@ npm install
 
 1. Створи Firebase проєкт у консолі Firebase.
 2. Увімкни Firestore Database.
-3. Скопіюй web-конфіг і встав у:
+3. Перевір/онови web-конфіг у:
 - `src/environments/environment.ts`
 - `src/environments/environment.development.ts`
-4. У файлі `.firebaserc` заміни `YOUR_PROJECT_ID` на свій Firebase Project ID.
+- `src/environments/environment.production.ts`
+4. Перевір `doctor-accounting/.firebaserc` (поле `projects.default`) — там має бути твій Firebase Project ID.
 
 ## 3. Firestore правила та індекси
 
@@ -36,8 +37,8 @@ npm install
 - `firestore.rules`
 - `firestore.indexes.json`
 
-Поточні правила дозволяють доступ тільки авторизованим користувачам (`request.auth != null`).
-Якщо потрібно працювати без авторизації на етапі MVP, тимчасово пом'якши правила.
+Поточні правила в цьому репозиторії відкриті для MVP (`allow read, write: if true;`), щоб додаток працював без авторизації.
+Перед публічним запуском обов'язково увімкни Firebase Auth і зміни правила на `request.auth != null`.
 
 ## 4. Локальний запуск
 

@@ -30,12 +30,20 @@ export class VisitsService {
       visitsCollection,
       where('visitDate', '>=', start),
       where('visitDate', '<=', end),
-      orderBy('visitDate', 'desc'),
-      orderBy('createdAt', 'desc')
+      orderBy('visitDate', 'desc')
     );
 
     return collectionData(visitsQuery, { idField: 'id' }).pipe(
-      map((items) => items as Visit[])
+      map((items) =>
+        (items as Visit[]).sort((left, right) => {
+          const byDate = right.visitDate.localeCompare(left.visitDate);
+          if (byDate !== 0) {
+            return byDate;
+          }
+
+          return (right.createdAt ?? 0) - (left.createdAt ?? 0);
+        })
+      )
     );
   }
 
@@ -84,22 +92,18 @@ export class VisitsService {
   private getMonthBounds(month: string): { start: string; end: string } {
     const safeMonth = /^\d{4}-\d{2}$/.test(month) ? month : this.getCurrentMonth();
     const [year, monthNumber] = safeMonth.split('-').map((value) => Number(value));
-
-    const start = new Date(Date.UTC(year, monthNumber - 1, 1));
-    const end = new Date(Date.UTC(year, monthNumber, 0));
+    const lastDay = new Date(year, monthNumber, 0).getDate();
+    const normalizedMonth = String(monthNumber).padStart(2, '0');
 
     return {
-      start: this.formatDate(start),
-      end: this.formatDate(end)
+      start: `${year}-${normalizedMonth}-01`,
+      end: `${year}-${normalizedMonth}-${String(lastDay).padStart(2, '0')}`
     };
   }
 
   private getCurrentMonth(): string {
-    return new Date().toISOString().slice(0, 7);
-  }
-
-  private formatDate(date: Date): string {
-    return date.toISOString().slice(0, 10);
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
   }
 
   private round(value: number): number {

@@ -140,7 +140,9 @@
         <table mat-table [dataSource]="vm.visits" class="visits-table">
           <ng-container matColumnDef="visitDate">
             <th mat-header-cell *matHeaderCellDef>Дата</th>
-            <td mat-cell *matCellDef="let visit">{{ visit.visitDate | date: 'd MMM' : '' : 'uk-UA' }}</td>
+            <td mat-cell *matCellDef="let visit">
+              {{ visit.visitDate + 'T00:00:00' | date: 'd MMM' : '' : 'uk-UA' }}
+            </td>
           </ng-container>
 
           <ng-container matColumnDef="patientName">
@@ -217,7 +219,7 @@
 
       <div class="top-days" *ngIf="vm.topDays.length; else emptyTopDays">
         <div class="top-days__row" *ngFor="let day of vm.topDays">
-          <span>{{ day.date | date: 'd MMM' : '' : 'uk-UA' }}</span>
+          <span>{{ day.date + 'T00:00:00' | date: 'd MMM' : '' : 'uk-UA' }}</span>
           <span>{{ day.visits }} візит(ів)</span>
           <strong>{{ day.income | currency: 'UAH' : 'symbol' : '1.0-0' : 'uk-UA' }}</strong>
         </div>

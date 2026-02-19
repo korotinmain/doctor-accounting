@@ -1,4 +1,4 @@
-import { ApplicationConfig, LOCALE_ID } from '@angular/core';
+import { ApplicationConfig, LOCALE_ID, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
@@ -12,7 +12,9 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimations(),
     { provide: LOCALE_ID, useValue: 'uk-UA' },
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideFirestore(() => getFirestore())
+    importProvidersFrom(
+      provideFirebaseApp(() => initializeApp(environment.firebase)),
+      provideFirestore(() => getFirestore())
+    )
   ]
 };

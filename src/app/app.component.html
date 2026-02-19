@@ -380,7 +380,7 @@
                   class="row-delete-btn"
                   aria-label="Видалити запис"
                 >
-                  <mat-icon>delete</mat-icon>
+                  <mat-icon>delete_outline</mat-icon>
                 </button>
               </div>
             </td>
@@ -450,7 +450,7 @@
               class="row-delete-btn"
               aria-label="Видалити запис"
             >
-              <mat-icon>delete</mat-icon>
+              <mat-icon>delete_outline</mat-icon>
             </button>
           </div>
         </article>
@@ -458,16 +458,20 @@
     </div>
 
     <div class="empty-state" *ngIf="!view.monthLoading && !ledgerVm.visits.length && vm.summary.totalVisits === 0">
-      <mat-icon>event_busy</mat-icon>
+      <mat-icon class="empty-state__icon">playlist_add</mat-icon>
       <h3>Поки немає записів</h3>
-      <p>Додайте перший прийом через кнопку "Новий візит".</p>
+      <p>Додайте перший прийом, щоб журнал почав формуватись.</p>
+      <button mat-flat-button color="primary" type="button" class="empty-state__cta" (click)="openCreateDialog()">
+        <mat-icon>add</mat-icon>
+        Новий візит
+      </button>
     </div>
 
     <div class="empty-state" *ngIf="!view.monthLoading && !ledgerVm.visits.length && vm.summary.totalVisits > 0">
-      <mat-icon>search_off</mat-icon>
+      <mat-icon class="empty-state__icon">search_off</mat-icon>
       <h3>Нічого не знайдено</h3>
       <p>Спробуйте змінити пошуковий запит або очистити фільтр.</p>
-      <button mat-stroked-button type="button" (click)="clearSearch()" *ngIf="ledgerVm.hasQuery">
+      <button mat-stroked-button type="button" class="empty-state__cta" (click)="clearSearch()" *ngIf="ledgerVm.hasQuery">
         <mat-icon>restart_alt</mat-icon>
         Очистити пошук
       </button>

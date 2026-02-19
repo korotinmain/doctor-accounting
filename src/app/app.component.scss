@@ -1394,15 +1394,25 @@
 .row-delete-btn {
   width: 34px !important;
   height: 34px !important;
+  min-width: 34px !important;
+  min-height: 34px !important;
   border-radius: 10px !important;
   border: 1px solid rgba(239, 68, 68, 0.22);
   background: rgba(239, 68, 68, 0.06);
   color: #dc2626 !important;
+  padding: 0 !important;
+  line-height: 1;
+  display: inline-grid;
+  place-items: center;
+  --mdc-icon-button-state-layer-size: 34px;
+  --mdc-icon-button-icon-size: 18px;
 
   mat-icon {
     width: 18px;
     height: 18px;
     font-size: 18px;
+    line-height: 18px;
+    margin: 0;
   }
 
   &:hover:not([disabled]) {
@@ -1537,42 +1547,58 @@
 }
 
 .empty-state {
-  padding: 48px 20px;
+  margin-top: 12px;
+  padding: 34px 20px;
   display: grid;
   place-items: center;
   gap: 12px;
   text-align: center;
+  border-radius: 14px;
+  border: 1px dashed rgba(178, 209, 201, 0.9);
+  background: linear-gradient(180deg, #fbfefe 0%, #f5fbf9 100%);
   animation: fadeIn 0.5s ease-out;
 
-  mat-icon {
-    width: 72px;
-    height: 72px;
-    font-size: 72px;
-    color: #80cbc4;
-    opacity: 0.6;
-    animation: pulse 2s ease-in-out infinite;
-    background: linear-gradient(135deg, #e0f2f1, #b2dfdb);
-    border-radius: 20px;
-    padding: 16px;
-  }
-
   h3 {
-    margin: 8px 0 0;
+    margin: 4px 0 0;
     color: #0d5852;
-    font-size: 1.3rem;
+    font-size: 1.85rem;
     font-weight: 700;
   }
 
   p {
     margin: 4px 0 0;
     color: #6b8a84;
-    font-size: 0.95rem;
+    font-size: 1.02rem;
     max-width: 400px;
     line-height: 1.5;
   }
 
   button {
-    margin-top: 4px;
+    margin-top: 6px;
+  }
+}
+
+.empty-state__icon {
+  width: 54px;
+  height: 54px;
+  font-size: 54px;
+  color: #5fb9ae;
+  opacity: 0.9;
+  background: linear-gradient(135deg, #e0f2f1, #b2dfdb);
+  border-radius: 16px;
+  padding: 11px;
+}
+
+.empty-state__cta {
+  .mat-icon {
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+    line-height: 20px;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    opacity: 1;
   }
 }
 

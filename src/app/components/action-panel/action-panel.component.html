@@ -1,0 +1,40 @@
+<mat-card class="panel action-panel">
+  <header class="panel__header panel__header--row">
+    <div class="panel__title-group">
+      <mat-icon class="panel__icon">add_task</mat-icon>
+      <div>
+        <h2>Керування записами</h2>
+        <p>Створюйте або редагуйте візити через окреме діалогове вікно.</p>
+      </div>
+    </div>
+    <button
+      mat-flat-button
+      color="primary"
+      type="button"
+      class="primary-action action-panel__btn"
+      (click)="openCreateDialog()"
+    >
+      <mat-icon>add_circle</mat-icon>
+      Новий візит
+    </button>
+  </header>
+
+  <div class="action-panel__meta">
+    <div class="action-chip">
+      <mat-icon>calendar_month</mat-icon>
+      <span
+        >Період: <strong>{{ selectedMonthLabel }}</strong></span
+      >
+    </div>
+    <div class="action-chip">
+      <mat-icon>query_stats</mat-icon>
+      <span
+        >Візитів: <strong *ngIf="!monthLoading; else visitsChipSkeleton">{{ totalVisits }}</strong></span
+      >
+    </div>
+  </div>
+
+  <ng-template #visitsChipSkeleton>
+    <span class="skeleton-inline"></span>
+  </ng-template>
+</mat-card>

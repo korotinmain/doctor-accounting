@@ -1,0 +1,385 @@
+:host {
+  display: contents;
+}
+
+.ledger {
+  overflow: hidden;
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.ledger__header-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ledger__add-btn {
+  min-height: 36px !important;
+  padding: 0 14px !important;
+  border-radius: 11px !important;
+  box-shadow: none !important;
+}
+
+.ledger-controls {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(220px, 300px);
+  gap: 12px;
+  padding: 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(204, 225, 219, 0.8);
+  background: linear-gradient(180deg, #fbfdfd 0%, #f4faf8 100%);
+
+  .modern-field {
+    margin: 0;
+  }
+}
+
+.table-wrap {
+  margin-top: 12px;
+  overflow: auto;
+  border-radius: 14px;
+  border: 1px solid rgba(206, 226, 220, 0.9);
+  background: #ffffff;
+}
+
+.ledger-skeleton {
+  margin-top: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(206, 226, 220, 0.9);
+  background: #ffffff;
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+}
+
+.table-wrap__desktop {
+  min-width: 760px;
+}
+
+.visits-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: auto;
+
+  .mat-mdc-header-row {
+    background: #f3f9f7;
+    border-bottom: 1px solid rgba(186, 214, 207, 0.85);
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    box-shadow: none;
+
+    .mat-mdc-header-cell {
+      background: #f3f9f7;
+      color: #0d5852;
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      border-bottom: 1px solid rgba(186, 214, 207, 0.85);
+    }
+  }
+
+  .mat-mdc-row {
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid rgba(225, 236, 233, 0.9);
+
+    &:nth-child(even) {
+      background: #fcfefe;
+    }
+
+    &:hover {
+      background: #f2faf7;
+    }
+  }
+
+  .mat-mdc-cell,
+  .mat-mdc-header-cell {
+    white-space: normal;
+    border-bottom-color: rgba(224, 236, 232, 0.8);
+    padding: 14px 14px;
+    vertical-align: middle;
+  }
+
+  .mat-mdc-cell {
+    color: #183f39;
+    font-size: 0.95rem;
+    line-height: 1.4;
+
+    strong {
+      font-weight: 600;
+    }
+  }
+
+  .mat-column-visitDate {
+    width: 120px;
+    white-space: nowrap;
+  }
+
+  .mat-column-patientName {
+    min-width: 180px;
+  }
+
+  .mat-column-procedureName {
+    min-width: 200px;
+  }
+
+  .mat-column-amount,
+  .mat-column-percent,
+  .mat-column-doctorIncome {
+    width: 120px;
+    text-align: right;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .mat-column-actions {
+    width: 74px;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  small {
+    display: block;
+    margin-top: 4px;
+    max-width: 300px;
+    white-space: normal;
+    color: #6b8a84;
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+}
+
+.row-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0;
+}
+
+.visits-table__row {
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid rgba(20, 184, 166, 0.45);
+    outline-offset: -2px;
+  }
+}
+
+.row-delete-btn {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  min-height: 34px !important;
+  border-radius: 10px !important;
+  border: 1px solid rgba(239, 68, 68, 0.22);
+  background: rgba(239, 68, 68, 0.06);
+  color: #dc2626 !important;
+  padding: 0 !important;
+  line-height: 1;
+  display: inline-grid;
+  place-items: center;
+  --mdc-icon-button-state-layer-size: 34px;
+  --mdc-icon-button-icon-size: 18px;
+
+  mat-icon {
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+    line-height: 18px;
+    margin: 0;
+  }
+
+  &:hover:not([disabled]) {
+    background: rgba(239, 68, 68, 0.14);
+    border-color: rgba(239, 68, 68, 0.35);
+  }
+}
+
+.visits-mobile {
+  display: none;
+}
+
+.visit-card {
+  border: 1px solid rgba(210, 228, 221, 0.85);
+  border-radius: 14px;
+  padding: 14px;
+  background: linear-gradient(145deg, #ffffff 0%, #f7fbfa 100%);
+  box-shadow:
+    0 2px 8px rgba(10, 30, 26, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  display: grid;
+  gap: 10px;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid rgba(20, 184, 166, 0.45);
+    outline-offset: 2px;
+  }
+}
+
+.visit-card__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: baseline;
+
+  strong {
+    color: #0d5852;
+    font-size: 1rem;
+  }
+
+  span {
+    color: #5f817a;
+    font-size: 0.82rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+}
+
+.visit-card__procedure {
+  margin: 0;
+  color: #1b4b44;
+  font-weight: 600;
+}
+
+.visit-card__notes {
+  margin: 0;
+  color: #5f817a;
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.visit-card__metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+
+  div {
+    background: rgba(224, 242, 241, 0.45);
+    border-radius: 11px;
+    padding: 10px;
+    border: 1px solid rgba(20, 184, 166, 0.12);
+  }
+
+  span {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #62857e;
+    margin-bottom: 4px;
+  }
+
+  strong {
+    color: #0d5852;
+    font-size: 0.92rem;
+  }
+}
+
+.visit-card__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.empty-state {
+  margin-top: 12px;
+  padding: 34px 20px;
+  display: grid;
+  place-items: center;
+  gap: 12px;
+  text-align: center;
+  border-radius: 14px;
+  border: 1px dashed rgba(178, 209, 201, 0.9);
+  background: linear-gradient(180deg, #fbfefe 0%, #f5fbf9 100%);
+  animation: fadeIn 0.5s ease-out;
+
+  h3 {
+    margin: 4px 0 0;
+    color: #0d5852;
+    font-size: 1.85rem;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 4px 0 0;
+    color: #6b8a84;
+    font-size: 1.02rem;
+    max-width: 400px;
+    line-height: 1.5;
+  }
+
+  button {
+    margin-top: 6px;
+  }
+}
+
+.empty-state__icon {
+  width: 54px;
+  height: 54px;
+  font-size: 54px;
+  color: #5fb9ae;
+  opacity: 0.9;
+  background: linear-gradient(135deg, #e0f2f1, #b2dfdb);
+  border-radius: 16px;
+  padding: 11px;
+}
+
+.empty-state__cta {
+  .mat-icon {
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+    line-height: 20px;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    opacity: 1;
+  }
+}
+
+@media (max-width: 1180px) {
+  .ledger {
+    grid-column: auto;
+    grid-row: auto;
+  }
+}
+
+@media (max-width: 820px) {
+  .ledger__header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .ledger-controls {
+    grid-template-columns: 1fr;
+
+    .mat-mdc-form-field {
+      width: 100%;
+    }
+  }
+
+  .table-wrap {
+    overflow: visible;
+  }
+
+  .table-wrap__desktop {
+    display: none;
+  }
+
+  .visits-mobile {
+    display: grid;
+    gap: 10px;
+  }
+
+  .visit-card__head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .visit-card__metrics {
+    grid-template-columns: 1fr;
+  }
+}

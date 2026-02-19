@@ -1,0 +1,298 @@
+:host {
+  display: block;
+}
+
+.top {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  padding: 32px 36px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #0f766e 0%, #0d6660 45%, #0b5955 75%, #0a5852 100%);
+  color: #ecfdf5;
+  box-shadow:
+    0 10px 40px rgba(10, 60, 54, 0.22),
+    0 4px 12px rgba(10, 60, 54, 0.12),
+    0 1px 3px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.05) 40%, transparent 60%);
+    pointer-events: none;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3) 50%, transparent);
+  }
+
+  &:hover {
+    box-shadow:
+      0 16px 48px rgba(10, 60, 54, 0.28),
+      0 6px 16px rgba(10, 60, 54, 0.18),
+      0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.top__brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+
+  h1 {
+    margin: 4px 0 0;
+    font-size: clamp(1.65rem, 3vw, 2.25rem);
+    line-height: 1.1;
+    font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+}
+
+.top__logo {
+  width: 60px;
+  height: 60px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(12px);
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.15),
+    inset 0 2px 4px rgba(255, 255, 255, 0.35),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 18px;
+    padding: 1px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.1));
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+
+  .brand-icon {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+    color: #ecfdf5;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  }
+
+  &:hover {
+    transform: scale(1.05) rotate(-3deg);
+    background: rgba(255, 255, 255, 0.28);
+  }
+}
+
+.top__eyebrow {
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.85;
+  font-weight: 600;
+}
+
+.top__month {
+  min-width: 320px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.99);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  padding: 18px 20px 14px;
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.05),
+    inset 0 1px 3px rgba(255, 255, 255, 0.6);
+  position: relative;
+  z-index: 1;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 18px;
+    padding: 1px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.3));
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+
+  &:hover {
+    box-shadow:
+      0 8px 28px rgba(0, 0, 0, 0.14),
+      0 3px 10px rgba(0, 0, 0, 0.07),
+      inset 0 1px 3px rgba(255, 255, 255, 0.6);
+  }
+}
+
+.top__month-label {
+  margin: 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #587972;
+  font-weight: 800;
+}
+
+.top__month-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.top__month-today {
+  min-height: 30px !important;
+  padding: 0 10px !important;
+  border-radius: 10px !important;
+  font-size: 0.78rem !important;
+  color: #0d766c !important;
+  border-color: rgba(20, 184, 166, 0.25) !important;
+
+  .mat-icon {
+    margin-right: 5px;
+    width: 15px;
+    height: 15px;
+    font-size: 15px;
+  }
+}
+
+.month-switcher {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  gap: 10px;
+  border-radius: 16px;
+  border: 1px solid rgba(154, 199, 189, 0.9);
+  background: linear-gradient(180deg, #f6fcfa 0%, #edf8f5 100%);
+  min-height: 64px;
+  padding: 6px;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.month-switcher__btn {
+  width: 40px !important;
+  height: 40px !important;
+  color: #0f766e;
+  border-radius: 12px !important;
+  border: 1px solid rgba(170, 206, 198, 0.9);
+  background: #ffffff;
+
+  .mat-icon {
+    width: 24px;
+    height: 24px;
+    font-size: 24px;
+  }
+
+  &:hover {
+    background: #f1fcf8;
+    border-color: rgba(20, 184, 166, 0.45);
+  }
+}
+
+.month-switcher__center {
+  text-align: center;
+}
+
+.month-switcher__value {
+  margin: 0;
+  font-size: 1.38rem;
+  color: #0d5852;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  text-transform: capitalize;
+}
+
+@media (max-width: 820px) {
+  .top {
+    grid-template-columns: 1fr;
+    padding: 24px;
+    border-radius: 16px;
+
+    &:hover {
+      transform: none;
+    }
+  }
+
+  .top__brand {
+    gap: 12px;
+
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+
+  .top__logo {
+    width: 48px;
+    height: 48px;
+
+    .brand-icon {
+      font-size: 26px;
+      width: 26px;
+      height: 26px;
+    }
+  }
+
+  .top__month {
+    min-width: 0;
+  }
+
+  .top__month-head {
+    margin-bottom: 8px;
+  }
+
+  .top__month-today {
+    min-height: 28px !important;
+    padding: 0 8px !important;
+  }
+
+  .month-switcher {
+    grid-template-columns: 36px 1fr 36px;
+    min-height: 56px;
+    gap: 6px;
+  }
+
+  .month-switcher__btn {
+    width: 32px !important;
+    height: 32px !important;
+
+    .mat-icon {
+      width: 20px;
+      height: 20px;
+      font-size: 20px;
+    }
+  }
+
+  .month-switcher__value {
+    font-size: 1.1rem;
+  }
+}

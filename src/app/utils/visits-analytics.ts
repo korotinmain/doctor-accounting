@@ -3,7 +3,8 @@ import { Visit } from '../models/visit.model';
 export interface DailyInsight {
   date: string;
   visits: number;
-  income: number;
+  doctorIncome: number;
+  totalAmount: number;
 }
 
 export interface MonthlySummary {
@@ -54,9 +55,7 @@ export function filterVisits(visits: Visit[], query: string): Visit[] {
   }
 
   return visits.filter((visit) => {
-    const searchData = [visit.patientName, visit.procedureName, visit.notes, visit.visitDate]
-      .join(' ')
-      .toLowerCase();
+    const searchData = [visit.patientName, visit.procedureName, visit.notes, visit.visitDate].join(' ').toLowerCase();
 
     return searchData.includes(query);
   });
@@ -71,9 +70,7 @@ export function sortVisits(visits: Visit[], sort: VisitsSort): Visit[] {
     case 'amountDesc':
       return next.sort((left, right) => right.amount - left.amount);
     case 'patientAsc':
-      return next.sort((left, right) =>
-        left.patientName.localeCompare(right.patientName, 'uk-UA')
-      );
+      return next.sort((left, right) => left.patientName.localeCompare(right.patientName, 'uk-UA'));
     case 'dateDesc':
     default:
       return next.sort((left, right) => {
@@ -92,7 +89,7 @@ export function calculateIncome(amount: number, percent: number): number {
     return 0;
   }
 
-  return Math.round((amount * percent) / 100 * 100) / 100;
+  return Math.round(((amount * percent) / 100) * 100) / 100;
 }
 
 function getUniquePatientsCount(visits: Visit[]): number {
@@ -108,16 +105,18 @@ function getTopDays(visits: Visit[]): DailyInsight[] {
     const existing = grouped.get(visit.visitDate) ?? {
       date: visit.visitDate,
       visits: 0,
-      income: 0
+      doctorIncome: 0,
+      totalAmount: 0
     };
 
     existing.visits += 1;
-    existing.income += visit.doctorIncome;
+    existing.doctorIncome += visit.doctorIncome;
+    existing.totalAmount += visit.amount;
 
     grouped.set(visit.visitDate, existing);
   }
 
   return Array.from(grouped.values())
-    .sort((left, right) => right.income - left.income)
+    .sort((left, right) => right.doctorIncome - left.doctorIncome)
     .slice(0, 5);
 }

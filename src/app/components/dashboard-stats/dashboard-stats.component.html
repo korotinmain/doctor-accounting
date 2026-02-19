@@ -1,0 +1,62 @@
+<section class="stats" *ngIf="!monthLoading; else statsLoading">
+  <mat-card class="stat stat--income">
+    <div class="stat__icon-wrapper stat__icon-wrapper--primary">
+      <mat-icon>account_balance_wallet</mat-icon>
+    </div>
+    <div class="stat__content">
+      <span>Дохід лікаря</span>
+      <strong>{{ summary.totalIncome | currency: 'UAH' : 'symbol' : '1.0-0' : 'uk-UA' }}</strong>
+    </div>
+  </mat-card>
+
+  <mat-card class="stat">
+    <div class="stat__icon-wrapper">
+      <mat-icon>payments</mat-icon>
+    </div>
+    <div class="stat__content">
+      <span>Загальна каса</span>
+      <strong>{{ summary.totalAmount | currency: 'UAH' : 'symbol' : '1.0-0' : 'uk-UA' }}</strong>
+    </div>
+  </mat-card>
+
+  <mat-card class="stat">
+    <div class="stat__icon-wrapper">
+      <mat-icon>event_available</mat-icon>
+    </div>
+    <div class="stat__content">
+      <span>Прийомів</span>
+      <strong>{{ summary.totalVisits }}</strong>
+    </div>
+  </mat-card>
+
+  <mat-card class="stat">
+    <div class="stat__icon-wrapper">
+      <mat-icon>people</mat-icon>
+    </div>
+    <div class="stat__content">
+      <span>Пацієнтів</span>
+      <strong>{{ summary.uniquePatients }}</strong>
+    </div>
+  </mat-card>
+</section>
+
+<ng-template #statsLoading>
+  <section class="stats stats--skeleton">
+    <mat-card class="stat stat--skeleton">
+      <div class="skeleton-line skeleton-line--short"></div>
+      <div class="skeleton-line skeleton-line--value"></div>
+    </mat-card>
+    <mat-card class="stat stat--skeleton">
+      <div class="skeleton-line skeleton-line--short"></div>
+      <div class="skeleton-line skeleton-line--value"></div>
+    </mat-card>
+    <mat-card class="stat stat--skeleton">
+      <div class="skeleton-line skeleton-line--short"></div>
+      <div class="skeleton-line skeleton-line--value"></div>
+    </mat-card>
+    <mat-card class="stat stat--skeleton">
+      <div class="skeleton-line skeleton-line--short"></div>
+      <div class="skeleton-line skeleton-line--value"></div>
+    </mat-card>
+  </section>
+</ng-template>

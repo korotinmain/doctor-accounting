@@ -1,20 +1,11 @@
-@use "@angular/material" as mat;
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap");
+@use '@angular/material' as mat;
+@use './styles/dashboard-primitives';
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 
 @include mat.core();
 
-$doctor-accounting-primary: mat.define-palette(
-  mat.$teal-palette,
-  700,
-  500,
-  900
-);
-$doctor-accounting-accent: mat.define-palette(
-  mat.$amber-palette,
-  500,
-  400,
-  700
-);
+$doctor-accounting-primary: mat.define-palette(mat.$teal-palette, 700, 500, 900);
+$doctor-accounting-accent: mat.define-palette(mat.$amber-palette, 500, 400, 700);
 $doctor-accounting-warn: mat.define-palette(mat.$red-palette, 600);
 
 $doctor-accounting-theme: mat.define-light-theme(
@@ -22,12 +13,12 @@ $doctor-accounting-theme: mat.define-light-theme(
     color: (
       primary: $doctor-accounting-primary,
       accent: $doctor-accounting-accent,
-      warn: $doctor-accounting-warn,
+      warn: $doctor-accounting-warn
     ),
     typography: mat.define-typography-config(
-        $font-family: 'Inter, "Segoe UI", sans-serif',
+        $font-family: 'Inter, "Segoe UI", sans-serif'
       ),
-    density: -2,
+    density: -2
   )
 );
 
@@ -85,7 +76,6 @@ $doctor-accounting-theme: mat.define-light-theme(
   .mat-icon {
     margin-right: 8px;
   }
-
 }
 
 .mat-mdc-raised-button:not(:disabled),
@@ -252,18 +242,10 @@ body {
 body {
   margin: 0;
   color: #173f39;
-  font-family: "Inter", "Segoe UI", sans-serif;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
   background:
-    radial-gradient(
-      circle at 92% -15%,
-      rgba(251, 191, 36, 0.15),
-      transparent 40%
-    ),
-    radial-gradient(
-      circle at 5% -15%,
-      rgba(20, 184, 166, 0.18),
-      transparent 40%
-    ),
+    radial-gradient(circle at 92% -15%, rgba(251, 191, 36, 0.15), transparent 40%),
+    radial-gradient(circle at 5% -15%, rgba(20, 184, 166, 0.18), transparent 40%),
     linear-gradient(to bottom, #f8fafb 0%, #f2f6f5 100%);
   background-attachment: fixed;
 }

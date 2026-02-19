@@ -1,11 +1,5 @@
 import { Visit } from '../models/visit.model';
-import {
-  addMonths,
-  buildDashboardVm,
-  calculateIncome,
-  filterVisits,
-  sortVisits
-} from './visits-analytics';
+import { addMonths, buildDashboardVm, calculateIncome, filterVisits, sortVisits } from './visits-analytics';
 
 describe('visits-analytics', () => {
   const visits: Visit[] = [
@@ -51,6 +45,8 @@ describe('visits-analytics', () => {
     expect(vm.summary.totalIncome).toBe(1045);
     expect(vm.summary.totalVisits).toBe(3);
     expect(vm.summary.uniquePatients).toBe(2);
+    expect(vm.topDays[0].doctorIncome).toBe(845);
+    expect(vm.topDays[0].totalAmount).toBe(3150);
   });
 
   it('calculateIncome should return 0 for invalid numbers', () => {

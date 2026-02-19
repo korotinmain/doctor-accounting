@@ -1,0 +1,75 @@
+<div class="side-stack">
+  <mat-card class="panel mini mini--summary">
+    <header class="mini__header">
+      <div class="mini__title-group">
+        <mat-icon class="mini__icon">summarize</mat-icon>
+        <h3>Підсумок місяця</h3>
+      </div>
+      <span class="mini__period">{{ selectedMonthLabel }}</span>
+    </header>
+
+    <div class="summary-grid">
+      <article class="summary-item">
+        <span>Прийомів</span>
+        <strong *ngIf="!monthLoading; else summaryVisitsSkeleton">{{ summary.totalVisits }}</strong>
+      </article>
+
+      <article class="summary-item summary-item--income">
+        <span>Дохід лікаря</span>
+        <strong *ngIf="!monthLoading; else summaryIncomeSkeleton">{{
+          summary.totalIncome | currency: 'UAH' : 'symbol' : '1.0-0' : 'uk-UA'
+        }}</strong>
+      </article>
+    </div>
+
+    <ng-template #summaryVisitsSkeleton>
+      <span class="skeleton-inline skeleton-inline--lg"></span>
+    </ng-template>
+    <ng-template #summaryIncomeSkeleton>
+      <span class="skeleton-inline skeleton-inline--lg"></span>
+    </ng-template>
+  </mat-card>
+
+  <mat-card class="panel mini">
+    <header class="mini__header">
+      <div class="mini__title-group">
+        <mat-icon class="mini__icon">emoji_events</mat-icon>
+        <h3>Найсильніші дні</h3>
+      </div>
+      <span class="badge">ТОП 5</span>
+    </header>
+
+    <div class="top-days" *ngIf="!monthLoading && topDays.length; else topDaysState">
+      <div class="top-days__row" *ngFor="let day of topDays">
+        <div>
+          <strong>{{ day.date + 'T00:00:00' | date: 'd MMM' : '' : 'uk-UA' }}</strong>
+          <small>{{ day.visits }} візит(ів)</small>
+        </div>
+        <div class="top-days__metrics">
+          <p>
+            <span>Дохід лікаря</span>
+            <strong class="top-days__income">{{
+              day.doctorIncome | currency: 'UAH' : 'symbol' : '1.0-0' : 'uk-UA'
+            }}</strong>
+          </p>
+          <p>
+            <span>Загальна каса</span>
+            <strong>{{ day.totalAmount | currency: 'UAH' : 'symbol' : '1.0-0' : 'uk-UA' }}</strong>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #topDaysState>
+      <div class="top-days top-days--skeleton" *ngIf="monthLoading; else emptyTopDays">
+        <div class="top-days__row top-days__row--skeleton"></div>
+        <div class="top-days__row top-days__row--skeleton"></div>
+        <div class="top-days__row top-days__row--skeleton"></div>
+      </div>
+    </ng-template>
+
+    <ng-template #emptyTopDays>
+      <p class="muted">Ще немає даних для порівняння днів.</p>
+    </ng-template>
+  </mat-card>
+</div>

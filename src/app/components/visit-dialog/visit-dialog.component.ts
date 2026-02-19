@@ -14,9 +14,11 @@ import {
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 
 @Component({
@@ -29,11 +31,14 @@ import { MatSelectChange, MatSelectModule } from '@angular/material/select';
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     MatSelectModule,
     MatButtonModule
   ],
   templateUrl: './visit-dialog.component.html',
-  styleUrls: ['./visit-dialog.component.scss']
+  styleUrls: ['./visit-dialog.component.scss'],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'uk-UA' }]
 })
 export class VisitDialogComponent implements OnChanges, AfterViewInit {
   @ViewChild('patientNameInput') patientNameInput?: ElementRef<HTMLInputElement>;

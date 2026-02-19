@@ -55,8 +55,15 @@
 
         <mat-form-field appearance="outline" class="modern-field" subscriptSizing="dynamic">
           <mat-label>Дата</mat-label>
-          <mat-icon matPrefix>event</mat-icon>
-          <input matInput type="date" formControlName="visitDate" />
+          <input
+            matInput
+            [matDatepicker]="visitDatePicker"
+            formControlName="visitDate"
+            readonly
+            (click)="visitDatePicker.open()"
+          />
+          <mat-datepicker-toggle matSuffix [for]="visitDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #visitDatePicker></mat-datepicker>
           <mat-error *ngIf="visitDateControl?.touched && visitDateControl?.invalid"> Вкажіть дату візиту </mat-error>
         </mat-form-field>
 

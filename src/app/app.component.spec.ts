@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { Auth } from '@angular/fire/auth';
 import { of } from 'rxjs';
 
 import { AppComponent } from './app.component';
@@ -16,6 +17,12 @@ describe('AppComponent', () => {
             createVisit: async () => undefined,
             updateVisit: async () => undefined,
             deleteVisit: async () => undefined
+          }
+        },
+        {
+          provide: Auth,
+          useValue: {
+            currentUser: { uid: 'spec-user' }
           }
         }
       ]

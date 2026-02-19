@@ -37,8 +37,9 @@ npm install
 - `firestore.rules`
 - `firestore.indexes.json`
 
-Поточні правила в цьому репозиторії відкриті для MVP (`allow read, write: if true;`), щоб додаток працював без авторизації.
-Перед публічним запуском обов'язково увімкни Firebase Auth і зміни правила на `request.auth != null`.
+Поточні правила в цьому репозиторії: `allow read, write: if request.auth != null;`.
+Застосунок використовує анонімну авторизацію Firebase (`signInAnonymously`) при старті.
+У Firebase Console потрібно увімкнути `Authentication -> Sign-in method -> Anonymous`.
 
 ## 4. Локальний запуск
 
@@ -73,4 +74,4 @@ firebase deploy
 
 - Для коректної локалізації в інтерфейсі використовується `uk-UA`.
 - У Firestore зберігається колекція `visits`.
-- Для запиту за місяць використовується індекс `visitDate + createdAt` (DESC).
+- Для стабільного сортування в межах однієї дати використовується `createdAt`.

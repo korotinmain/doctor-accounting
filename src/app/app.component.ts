@@ -1,39 +1,42 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { map, shareReplay, startWith, switchMap } from 'rxjs';
+import { Auth, signInAnonymously } from '@angular/fire/auth';
+import { FirebaseError } from 'firebase/app';
+import {
+  catchError,
+  combineLatest,
+  defer,
+  map,
+  merge,
+  of,
+  shareReplay,
+  startWith,
+  switchMap
+} from 'rxjs';
 
 import { Visit, VisitDraft } from './models/visit.model';
 import { VisitsService } from './services/visits.service';
+import {
+  VisitsSort,
+  addMonths,
+  buildDashboardVm,
+  calculateIncome,
+  filterVisits,
+  sortVisits
+} from './utils/visits-analytics';
 
-interface DailyInsight {
-  date: string;
-  visits: number;
-  income: number;
-}
-
-interface MonthlySummary {
-  totalAmount: number;
-  totalIncome: number;
-  totalVisits: number;
-  uniquePatients: number;
-  averageCheck: number;
-  averagePercent: number;
-}
-
-interface DashboardVm {
+interface LedgerVm {
   visits: Visit[];
-  summary: MonthlySummary;
-  topDays: DailyInsight[];
+  hasQuery: boolean;
 }
 
 @Component({
@@ -42,13 +45,12 @@ interface DashboardVm {
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MatToolbarModule,
     MatIconModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSelectModule,
     MatButtonModule,
-    MatDividerModule,
     MatTableModule,
     MatSnackBarModule
   ],
@@ -56,6 +58,9 @@ interface DashboardVm {
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  @ViewChild('patientNameInput') patientNameInput?: ElementRef<HTMLInputElement>;
+  @ViewChild('amountInput') amountInput?: ElementRef<HTMLInputElement>;
+
   readonly displayedColumns = [
     'visitDate',
     'patientName',
@@ -65,43 +70,115 @@ export class AppComponent {
     'doctorIncome',
     'actions'
   ];
+  readonly procedureOptions = ['Консультація', 'Операція', 'Інше'];
+  readonly percentQuickOptions = [10, 20, 30, 40, 50];
 
   readonly monthControl = this.formBuilder.nonNullable.control(
     this.getCurrentMonth(),
     Validators.required
   );
 
-  readonly visitForm = this.formBuilder.nonNullable.group({
-    visitDate: [this.getToday(), Validators.required],
-    patientName: ['', [Validators.required, Validators.maxLength(120)]],
-    procedureName: ['Консультація', [Validators.required, Validators.maxLength(120)]],
-    amount: [1150, [Validators.required, Validators.min(1)]],
-    percent: [30, [Validators.required, Validators.min(0), Validators.max(100)]],
-    notes: ['']
+  readonly searchControl = this.formBuilder.nonNullable.control('');
+  readonly sortControl = this.formBuilder.nonNullable.control<VisitsSort>('dateDesc');
+
+  readonly visitForm = this.formBuilder.group({
+    visitDate: this.formBuilder.nonNullable.control(this.getToday(), Validators.required),
+    patientName: this.formBuilder.nonNullable.control('', [
+      Validators.required,
+      Validators.maxLength(120)
+    ]),
+    procedureName: this.formBuilder.nonNullable.control('Консультація', [
+      Validators.required,
+      Validators.maxLength(120)
+    ]),
+    amount: this.formBuilder.control<number | null>(null, [
+      Validators.required,
+      Validators.min(1)
+    ]),
+    percent: this.formBuilder.nonNullable.control(30, [
+      Validators.required,
+      Validators.min(0),
+      Validators.max(100)
+    ]),
+    notes: this.formBuilder.nonNullable.control('')
   });
+
+  readonly authReady$ = defer(() => this.ensureAuthenticated()).pipe(
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
 
   readonly projectedIncome$ = this.visitForm.valueChanges.pipe(
     startWith(this.visitForm.getRawValue()),
     map((formValue) =>
-      this.calculateIncome(Number(formValue.amount), Number(formValue.percent))
+      calculateIncome(Number(formValue.amount), Number(formValue.percent))
     )
   );
 
-  readonly vm$ = this.monthControl.valueChanges.pipe(
-    startWith(this.monthControl.value),
-    switchMap((month) => this.visitsService.getVisitsByMonth(month)),
-    map((visits) => this.toViewModel(visits)),
+  readonly monthVisits$ = combineLatest([
+    this.monthControl.valueChanges.pipe(startWith(this.monthControl.value)),
+    this.authReady$
+  ]).pipe(
+    switchMap(([month, authReady]) => {
+      if (!authReady) {
+        return of<Visit[]>([]);
+      }
+
+      return this.visitsService.getVisitsByMonth(month).pipe(
+        catchError((error) => {
+          this.notifyError('Не вдалося завантажити записи за місяць', error);
+          return of<Visit[]>([]);
+        })
+      );
+    }),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  readonly monthLoading$ = merge(
+    this.monthControl.valueChanges.pipe(
+      startWith(this.monthControl.value),
+      map(() => true)
+    ),
+    this.monthVisits$.pipe(map(() => false))
+  ).pipe(
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  readonly vm$ = this.monthVisits$.pipe(
+    map((visits) => buildDashboardVm(visits)),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  readonly ledgerVm$ = combineLatest([
+    this.vm$,
+    this.searchControl.valueChanges.pipe(
+      startWith(this.searchControl.value),
+      map((query) => query.trim().toLowerCase())
+    ),
+    this.sortControl.valueChanges.pipe(startWith(this.sortControl.value))
+  ]).pipe(
+    map(([vm, query, sort]) => {
+      const filteredVisits = filterVisits(vm.visits, query);
+      const sortedVisits = sortVisits(filteredVisits, sort);
+
+      return {
+        visits: sortedVisits,
+        hasQuery: query.length > 0
+      };
+    }),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
   editedVisitId: string | null = null;
   saving = false;
   deletingId: string | null = null;
+  formDialogOpen = false;
+  authErrorMessage: string | null = null;
 
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly visitsService: VisitsService,
-    private readonly snackBar: MatSnackBar
+    private readonly snackBar: MatSnackBar,
+    private readonly auth: Auth
   ) {}
 
   get selectedMonthLabel(): string {
@@ -117,6 +194,16 @@ export class AppComponent {
       month: 'long',
       year: 'numeric'
     }).format(new Date(year, monthNumber - 1, 1));
+  }
+
+  shiftMonth(delta: number): void {
+    const month = this.monthControl.value;
+    const next = addMonths(month, delta, this.getCurrentMonth());
+    this.monthControl.setValue(next);
+  }
+
+  goCurrentMonth(): void {
+    this.monthControl.setValue(this.getCurrentMonth());
   }
 
   async submitVisit(): Promise<void> {
@@ -138,9 +225,9 @@ export class AppComponent {
       }
 
       this.resetForm();
+      this.formDialogOpen = false;
     } catch (error) {
-      console.error(error);
-      this.snackBar.open('Не вдалося зберегти запис', 'OK', { duration: 3200 });
+      this.notifyError('Не вдалося зберегти запис', error);
     } finally {
       this.saving = false;
     }
@@ -152,17 +239,51 @@ export class AppComponent {
     this.visitForm.reset({
       visitDate: visit.visitDate,
       patientName: visit.patientName,
-      procedureName: visit.procedureName,
+      procedureName: this.normalizeProcedureName(visit.procedureName),
       amount: visit.amount,
       percent: visit.percent,
       notes: visit.notes
     });
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    this.formDialogOpen = true;
+    this.focusPreferredField();
   }
 
   cancelEdit(): void {
+    this.formDialogOpen = false;
     this.resetForm();
+  }
+
+  openCreateDialog(): void {
+    this.resetForm();
+    this.formDialogOpen = true;
+    this.focusPreferredField();
+  }
+
+  closeVisitDialog(): void {
+    if (this.saving) {
+      return;
+    }
+
+    this.cancelEdit();
+  }
+
+  clearSearch(): void {
+    this.searchControl.setValue('');
+  }
+
+  applyQuickPercent(value: number): void {
+    this.visitForm.controls.percent.setValue(value);
+    this.visitForm.controls.percent.markAsTouched();
+    this.visitForm.controls.percent.markAsDirty();
+  }
+
+  @HostListener('document:keydown.escape')
+  handleEscapeKey(): void {
+    if (!this.formDialogOpen || this.saving) {
+      return;
+    }
+
+    this.closeVisitDialog();
   }
 
   async deleteVisit(visit: Visit): Promise<void> {
@@ -184,8 +305,7 @@ export class AppComponent {
         this.resetForm();
       }
     } catch (error) {
-      console.error(error);
-      this.snackBar.open('Не вдалося видалити запис', 'OK', { duration: 3200 });
+      this.notifyError('Не вдалося видалити запис', error);
     } finally {
       this.deletingId = null;
     }
@@ -199,72 +319,80 @@ export class AppComponent {
     const formValue = this.visitForm.getRawValue();
 
     return {
-      visitDate: formValue.visitDate,
-      patientName: formValue.patientName,
-      procedureName: formValue.procedureName,
+      visitDate: formValue.visitDate ?? this.getToday(),
+      patientName: formValue.patientName ?? '',
+      procedureName: this.normalizeProcedureName(formValue.procedureName ?? 'Інше'),
       amount: Number(formValue.amount),
       percent: Number(formValue.percent),
-      notes: formValue.notes
+      notes: formValue.notes ?? ''
     };
   }
 
-  private toViewModel(visits: Visit[]): DashboardVm {
-    const totalAmount = visits.reduce((sum, visit) => sum + visit.amount, 0);
-    const totalIncome = visits.reduce((sum, visit) => sum + visit.doctorIncome, 0);
-    const averagePercent =
-      visits.length > 0
-        ? visits.reduce((sum, visit) => sum + visit.percent, 0) / visits.length
-        : 0;
-
-    return {
-      visits,
-      summary: {
-        totalAmount,
-        totalIncome,
-        totalVisits: visits.length,
-        uniquePatients: this.getUniquePatientsCount(visits),
-        averageCheck: visits.length > 0 ? totalAmount / visits.length : 0,
-        averagePercent
-      },
-      topDays: this.getTopDays(visits)
-    };
-  }
-
-  private getUniquePatientsCount(visits: Visit[]): number {
-    const uniqueNames = new Set(
-      visits.map((visit) => visit.patientName.trim().toLowerCase())
-    );
-
-    return uniqueNames.size;
-  }
-
-  private getTopDays(visits: Visit[]): DailyInsight[] {
-    const grouped = new Map<string, DailyInsight>();
-
-    for (const visit of visits) {
-      const existing = grouped.get(visit.visitDate) ?? {
-        date: visit.visitDate,
-        visits: 0,
-        income: 0
-      };
-
-      existing.visits += 1;
-      existing.income += visit.doctorIncome;
-
-      grouped.set(visit.visitDate, existing);
+  private async ensureAuthenticated(): Promise<boolean> {
+    if (this.auth.currentUser) {
+      this.authErrorMessage = null;
+      return true;
     }
 
-    return Array.from(grouped.values())
-      .sort((left, right) => right.income - left.income)
-      .slice(0, 5);
+    try {
+      await signInAnonymously(this.auth);
+      this.authErrorMessage = null;
+      return true;
+    } catch (error) {
+      const code = this.getErrorCode(error);
+
+      if (
+        code === 'auth/admin-restricted-operation' ||
+        code === 'auth/operation-not-allowed'
+      ) {
+        this.authErrorMessage =
+          'Firebase Authentication не дозволяє анонімний вхід. Увімкніть Authentication -> Sign-in method -> Anonymous у Firebase Console.';
+        this.snackBar.open('Увімкніть Anonymous sign-in у Firebase Console', 'OK', {
+          duration: 5000
+        });
+        return false;
+      }
+
+      this.authErrorMessage = 'Не вдалося виконати авторизацію Firebase.';
+      this.notifyError('Не вдалося виконати авторизацію', error);
+      return false;
+    }
   }
 
-  private calculateIncome(amount: number, percent: number): number {
-    if (!Number.isFinite(amount) || !Number.isFinite(percent)) {
-      return 0;
+  private getErrorCode(error: unknown): string | null {
+    if (error instanceof FirebaseError) {
+      return error.code;
     }
 
-    return Math.round((amount * percent) / 100 * 100) / 100;
+    return null;
+  }
+
+  private notifyError(message: string, error: unknown): void {
+    console.error(error);
+    this.snackBar.open(message, 'OK', { duration: 3200 });
+  }
+
+  private focusPreferredField(): void {
+    setTimeout(() => {
+      if (!this.formDialogOpen) {
+        return;
+      }
+
+      const patientName = this.visitForm.controls.patientName.value.trim();
+      const amount = this.visitForm.controls.amount.value;
+
+      if (!patientName) {
+        this.patientNameInput?.nativeElement.focus();
+        return;
+      }
+
+      if (amount === null) {
+        this.amountInput?.nativeElement.focus();
+        return;
+      }
+
+      this.patientNameInput?.nativeElement.focus();
+    }, 0);
   }
 
   private resetForm(): void {
@@ -273,10 +401,14 @@ export class AppComponent {
       visitDate: this.getToday(),
       patientName: '',
       procedureName: 'Консультація',
-      amount: 1150,
+      amount: null,
       percent: 30,
       notes: ''
     });
+  }
+
+  private normalizeProcedureName(value: string): string {
+    return this.procedureOptions.includes(value) ? value : 'Інше';
   }
 
   private getCurrentMonth(): string {

@@ -7,7 +7,7 @@ export interface Visit {
   percent: number;
   doctorIncome: number;
   notes: string;
-  createdAt: number;
+  createdAt?: number;
 }
 
 export interface VisitDraft {

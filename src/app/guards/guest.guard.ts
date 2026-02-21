@@ -1,14 +1,15 @@
 import { inject } from '@angular/core';
-import { Auth, authState } from '@angular/fire/auth';
 import { CanActivateFn, Router } from '@angular/router';
-import { map, take } from 'rxjs';
+import { firstValueFrom, take } from 'rxjs';
 
-export const guestGuard: CanActivateFn = () => {
-  const auth = inject(Auth);
+import { AuthSessionService } from '../services/auth-session.service';
+
+export const guestGuard: CanActivateFn = async () => {
   const router = inject(Router);
+  const authSession = inject(AuthSessionService);
 
-  return authState(auth).pipe(
-    take(1),
-    map((user) => (user ? router.createUrlTree(['/']) : true))
-  );
+  await authSession.waitForAuthReady();
+  const isAuthenticated = await firstValueFrom(authSession.isAuthenticated$.pipe(take(1)));
+
+  return isAuthenticated ? router.createUrlTree(['/']) : true;
 };

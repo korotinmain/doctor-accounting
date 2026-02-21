@@ -130,13 +130,12 @@
   box-shadow:
     0 4px 12px rgba(13, 102, 96, 0.16),
     inset 0 1px 2px rgba(255, 255, 255, 0.7);
+}
 
-  .mat-icon {
-    width: 28px;
-    height: 28px;
-    font-size: 28px;
-    color: #0f766e;
-  }
+.auth-card__logo-image {
+  width: 34px;
+  height: 34px;
+  display: block;
 }
 
 .google-btn {

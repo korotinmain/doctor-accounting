@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="logoTitle logoDesc">
+  <title id="logoTitle">Doctor Accounting Logo</title>
+  <desc id="logoDesc">Rounded teal square with medical briefcase and accounting bars.</desc>
+  <defs>
+    <linearGradient id="logoBg" x1="12" y1="10" x2="116" y2="118" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0f766e" />
+      <stop offset="0.55" stop-color="#0d9488" />
+      <stop offset="1" stop-color="#0f766e" />
+    </linearGradient>
+    <linearGradient id="logoGlass" x1="18" y1="14" x2="90" y2="80" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.34" />
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+
+  <rect x="8" y="8" width="112" height="112" rx="28" fill="url(#logoBg)" />
+  <rect x="8" y="8" width="112" height="112" rx="28" fill="url(#logoGlass)" />
+  <rect
+    x="8"
+    y="8"
+    width="112"
+    height="112"
+    rx="28"
+    fill="none"
+    stroke="#bdf4e9"
+    stroke-opacity="0.45"
+    stroke-width="2"
+  />
+
+  <rect x="33" y="44" width="62" height="49" rx="13" fill="#ecfdf5" />
+  <rect x="51" y="30" width="26" height="16" rx="7" fill="none" stroke="#ecfdf5" stroke-width="6" />
+
+  <rect x="60" y="55" width="8" height="24" rx="3" fill="#0d9488" />
+  <rect x="52" y="63" width="24" height="8" rx="3" fill="#0d9488" />
+
+  <rect x="77" y="70" width="5" height="12" rx="2" fill="#0f766e" />
+  <rect x="84" y="66" width="5" height="16" rx="2" fill="#0f766e" />
+  <rect x="91" y="61" width="5" height="21" rx="2" fill="#0f766e" />
+</svg>

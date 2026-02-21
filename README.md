@@ -32,6 +32,8 @@ npm install
 - `src/environments/environment.development.ts`
 - `src/environments/environment.production.ts`
 
+Для Google Analytics обов'язково має бути заповнений `firebase.measurementId` (GA4 ID, формат `G-XXXXXXXXXX`).
+
 4. Перевір `doctor-accounting/.firebaserc` (поле `projects.default`) — там має бути твій Firebase Project ID.
 
 ## 3. Firestore правила та індекси

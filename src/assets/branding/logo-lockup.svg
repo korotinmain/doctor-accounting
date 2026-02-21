@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 240" role="img" aria-labelledby="lockTitle lockDesc">
+  <title id="lockTitle">Doctor Accounting</title>
+  <desc id="lockDesc">Doctor Accounting wordmark with medical accounting icon.</desc>
+  <defs>
+    <linearGradient id="lockBg" x1="16" y1="12" x2="224" y2="220" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0f766e" />
+      <stop offset="0.55" stop-color="#0d9488" />
+      <stop offset="1" stop-color="#0f766e" />
+    </linearGradient>
+    <linearGradient id="lockGlass" x1="24" y1="20" x2="180" y2="140" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.34" />
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+
+  <rect x="16" y="16" width="208" height="208" rx="52" fill="url(#lockBg)" />
+  <rect x="16" y="16" width="208" height="208" rx="52" fill="url(#lockGlass)" />
+  <rect
+    x="16"
+    y="16"
+    width="208"
+    height="208"
+    rx="52"
+    fill="none"
+    stroke="#bdf4e9"
+    stroke-opacity="0.45"
+    stroke-width="3"
+  />
+
+  <rect x="62" y="84" width="116" height="92" rx="22" fill="#ecfdf5" />
+  <rect x="96" y="56" width="48" height="30" rx="12" fill="none" stroke="#ecfdf5" stroke-width="10" />
+
+  <rect x="113" y="104" width="14" height="44" rx="4" fill="#0d9488" />
+  <rect x="98" y="119" width="44" height="14" rx="4" fill="#0d9488" />
+
+  <rect x="147" y="131" width="9" height="23" rx="3" fill="#0f766e" />
+  <rect x="160" y="124" width="9" height="30" rx="3" fill="#0f766e" />
+  <rect x="173" y="116" width="9" height="38" rx="3" fill="#0f766e" />
+
+  <g fill="#0f766e" font-family="'Plus Jakarta Sans', Inter, 'Segoe UI', sans-serif" font-weight="800">
+    <text x="272" y="108" font-size="44" letter-spacing="5">DOCTOR ACCOUNTING</text>
+    <text x="272" y="176" font-size="74" letter-spacing="-1">Облік прийомів</text>
+  </g>
+</svg>

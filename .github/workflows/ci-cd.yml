@@ -153,6 +153,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install Xvfb
+        run: sudo apt-get update && sudo apt-get install -y xvfb
+
       - name: Resolve Chrome binary
         run: |
           CHROME_BIN="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium-browser || command -v chromium)"
@@ -166,7 +169,7 @@ jobs:
           "$CHROME_BIN" --version
 
       - name: Run unit tests
-        run: npm run test:ci
+        run: xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" npm run test:ci
         env:
           CI: 'true'
 

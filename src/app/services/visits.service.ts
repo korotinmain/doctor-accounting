@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Auth } from '@angular/fire/auth';
 import {
   Firestore,
   addDoc,
@@ -8,8 +9,10 @@ import {
   doc,
   orderBy,
   query,
+  serverTimestamp,
   updateDoc,
-  where
+  where,
+  Timestamp
 } from '@angular/fire/firestore';
 import { Observable, map } from 'rxjs';
 
@@ -21,13 +24,17 @@ const VISITS_COLLECTION = 'visits';
   providedIn: 'root'
 })
 export class VisitsService {
-  constructor(private readonly firestore: Firestore) {}
+  constructor(
+    private readonly firestore: Firestore,
+    private readonly auth: Auth
+  ) {}
 
-  getVisitsByMonth(month: string): Observable<Visit[]> {
+  getVisitsByMonth(month: string, ownerUid: string): Observable<Visit[]> {
     const { start, end } = this.getMonthBounds(month);
     const visitsCollection = collection(this.firestore, VISITS_COLLECTION);
     const visitsQuery = query(
       visitsCollection,
+      where('ownerUid', '==', ownerUid),
       where('visitDate', '>=', start),
       where('visitDate', '<=', end),
       orderBy('visitDate', 'desc')
@@ -35,42 +42,52 @@ export class VisitsService {
 
     return collectionData(visitsQuery, { idField: 'id' }).pipe(
       map((items) =>
-        (items as Visit[]).sort((left, right) => {
-          const byDate = right.visitDate.localeCompare(left.visitDate);
-          if (byDate !== 0) {
-            return byDate;
-          }
+        items
+          .map((item) => this.normalizeVisit(item as Record<string, unknown>))
+          .sort((left, right) => {
+            const byDate = right.visitDate.localeCompare(left.visitDate);
+            if (byDate !== 0) {
+              return byDate;
+            }
 
-          return (right.createdAt ?? 0) - (left.createdAt ?? 0);
-        })
+            return (right.createdAt ?? 0) - (left.createdAt ?? 0);
+          })
       )
     );
   }
 
   async createVisit(draft: VisitDraft): Promise<void> {
+    const ownerUid = this.getCurrentUid();
     const visitsCollection = collection(this.firestore, VISITS_COLLECTION);
-    await addDoc(visitsCollection, this.toCreatePayload(draft));
+    await addDoc(visitsCollection, this.toCreatePayload(draft, ownerUid));
   }
 
   async updateVisit(id: string, draft: VisitDraft): Promise<void> {
+    this.ensureAuthenticated();
     const visitDoc = doc(this.firestore, `${VISITS_COLLECTION}/${id}`);
     await updateDoc(visitDoc, this.toUpdatePayload(draft));
   }
 
   async deleteVisit(id: string): Promise<void> {
+    this.ensureAuthenticated();
     const visitDoc = doc(this.firestore, `${VISITS_COLLECTION}/${id}`);
     await deleteDoc(visitDoc);
   }
 
-  private toCreatePayload(draft: VisitDraft) {
+  private toCreatePayload(draft: VisitDraft, ownerUid: string) {
     return {
       ...this.prepareDraft(draft),
-      createdAt: Date.now()
+      ownerUid,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
     };
   }
 
   private toUpdatePayload(draft: VisitDraft) {
-    return this.prepareDraft(draft);
+    return {
+      ...this.prepareDraft(draft),
+      updatedAt: serverTimestamp()
+    };
   }
 
   private prepareDraft(draft: VisitDraft) {
@@ -104,6 +121,53 @@ export class VisitsService {
   private getCurrentMonth(): string {
     const now = new Date();
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  }
+
+  private normalizeVisit(item: Record<string, unknown>): Visit {
+    return {
+      id: String(item['id'] ?? ''),
+      visitDate: String(item['visitDate'] ?? ''),
+      patientName: String(item['patientName'] ?? ''),
+      procedureName: String(item['procedureName'] ?? ''),
+      amount: this.toNumber(item['amount']),
+      percent: this.toNumber(item['percent']),
+      doctorIncome: this.toNumber(item['doctorIncome']),
+      notes: String(item['notes'] ?? ''),
+      ownerUid: item['ownerUid'] ? String(item['ownerUid']) : undefined,
+      createdAt: this.toMillis(item['createdAt']),
+      updatedAt: this.toMillis(item['updatedAt'])
+    };
+  }
+
+  private toNumber(value: unknown): number {
+    return typeof value === 'number' && Number.isFinite(value) ? value : 0;
+  }
+
+  private toMillis(value: unknown): number | undefined {
+    if (typeof value === 'number' && Number.isFinite(value)) {
+      return value;
+    }
+
+    if (value instanceof Timestamp) {
+      return value.toMillis();
+    }
+
+    return undefined;
+  }
+
+  private ensureAuthenticated(): void {
+    if (!this.auth.currentUser) {
+      throw new Error('Користувач не авторизований.');
+    }
+  }
+
+  private getCurrentUid(): string {
+    const uid = this.auth.currentUser?.uid;
+    if (!uid) {
+      throw new Error('Користувач не авторизований.');
+    }
+
+    return uid;
   }
 
   private round(value: number): number {

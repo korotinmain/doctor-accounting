@@ -10,6 +10,7 @@
     "test:ci": "ng test --watch=false --browsers=ChromeHeadless --progress=false",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "migrate:owner-uid": "node scripts/migrate-owner-uid.mjs",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -38,6 +39,7 @@
     "@angular/cli": "~16.2.1",
     "@angular/compiler-cli": "^16.2.0",
     "@types/jasmine": "~4.3.0",
+    "firebase-admin": "^13.6.1",
     "husky": "^9.1.7",
     "jasmine-core": "~4.6.0",
     "karma": "~6.4.0",

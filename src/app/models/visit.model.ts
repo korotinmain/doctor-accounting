@@ -7,7 +7,9 @@ export interface Visit {
   percent: number;
   doctorIncome: number;
   notes: string;
+  ownerUid?: string;
   createdAt?: number;
+  updatedAt?: number;
 }
 
 export interface VisitDraft {

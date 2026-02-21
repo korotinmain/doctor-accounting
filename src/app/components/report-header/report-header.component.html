@@ -12,10 +12,21 @@
   <div class="top__month">
     <div class="top__month-head">
       <p class="top__month-label">Місяць звіту</p>
-      <button mat-stroked-button type="button" class="top__month-today" (click)="goCurrentMonth()">
-        <mat-icon>today</mat-icon>
-        Сьогодні
-      </button>
+      <div class="top__month-actions">
+        <button mat-stroked-button type="button" class="top__month-today" (click)="goCurrentMonth()">
+          <mat-icon>today</mat-icon>
+          Сьогодні
+        </button>
+        <button mat-stroked-button type="button" class="top__month-logout" (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          Вийти
+        </button>
+      </div>
+    </div>
+
+    <div class="top__session">
+      <strong>{{ userDisplayName || 'Користувач' }}</strong>
+      <span *ngIf="userEmail">{{ userEmail }}</span>
     </div>
     <div class="month-switcher" role="group" aria-label="Вибір місяця звіту">
       <button

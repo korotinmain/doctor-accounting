@@ -5,11 +5,11 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "visitDate",
-          "order": "DESCENDING"
+          "fieldPath": "ownerUid",
+          "order": "ASCENDING"
         },
         {
-          "fieldPath": "createdAt",
+          "fieldPath": "visitDate",
           "order": "DESCENDING"
         }
       ]

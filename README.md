@@ -41,9 +41,14 @@ npm install
 - `firestore.rules`
 - `firestore.indexes.json`
 
-Поточні правила в цьому репозиторії: `allow read, write: if request.auth != null;`.
-Застосунок використовує анонімну авторизацію Firebase (`signInAnonymously`) при старті.
-У Firebase Console потрібно увімкнути `Authentication -> Sign-in method -> Anonymous`.
+Поточні правила в цьому репозиторії: доступ до `visits` тільки для власника документа
+(`ownerUid == request.auth.uid`), із перевіркою структури полів.
+
+Застосунок використовує **Google Authentication only**.
+У Firebase Console потрібно увімкнути:
+
+- `Authentication -> Sign-in method -> Google`
+- (опційно) додати свій домен в authorized domains
 
 ## 4. Локальний запуск
 
@@ -52,6 +57,8 @@ npm start
 ```
 
 Відкрий: `http://localhost:4200`
+
+Після запуску відкриється сторінка входу `/login`, далі доступ до дашборду `/` тільки після Google-входу.
 
 ## 5. Форматування коду (Prettier)
 
@@ -101,6 +108,33 @@ firebase deploy
 - `FIREBASE_PROJECT_ID` — Firebase project id (опційно, за замовчуванням використовується `doctor-accounting-840cb`).
 
 Після цього push у `main` запускає повний CI/CD цикл автоматично.
+
+## 9. Міграція старих visits (ownerUid)
+
+Після переходу на user-scoped правила старі документи без `ownerUid` не будуть доступні.
+Для цього додано скрипт:
+
+```bash
+npm run migrate:owner-uid -- --all-to-uid=YOUR_UID
+```
+
+За замовчуванням це `dry-run` (без запису в БД). Щоб застосувати зміни:
+
+```bash
+npm run migrate:owner-uid -- --apply --all-to-uid=YOUR_UID
+```
+
+Якщо потрібна мапа для різних документів, створи JSON (приклад: `scripts/owner-map.example.json`) і запусти:
+
+```bash
+npm run migrate:owner-uid -- --apply --map-file=./scripts/owner-map.json
+```
+
+Опційно можна явно передати service account:
+
+```bash
+npm run migrate:owner-uid -- --apply --all-to-uid=YOUR_UID --service-account=/path/to/service-account.json
+```
 
 ## Важливо
 

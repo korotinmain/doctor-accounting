@@ -1,0 +1,69 @@
+<div class="shell" *ngIf="facade.vm$ | async as vm; else loadingState">
+  <app-report-header
+    [selectedMonthLabel]="facade.selectedMonthLabel"
+    [userDisplayName]="(authSession.user$ | async)?.displayName || 'Користувач'"
+    [userEmail]="(authSession.user$ | async)?.email || ''"
+    (shiftMonthRequested)="facade.shiftMonth($event)"
+    (currentMonthRequested)="facade.goCurrentMonth()"
+    (logoutRequested)="authSession.signOut()"
+  ></app-report-header>
+
+  <section class="auth-alert" *ngIf="facade.authErrorMessage">
+    <mat-icon>warning_amber</mat-icon>
+    <p>{{ facade.authErrorMessage }}</p>
+  </section>
+
+  <ng-container *ngIf="{ monthLoading: (facade.monthLoading$ | async) ?? true } as view">
+    <app-dashboard-stats [summary]="vm.summary" [monthLoading]="view.monthLoading"></app-dashboard-stats>
+
+    <section class="content-grid">
+      <app-action-panel
+        [selectedMonthLabel]="facade.selectedMonthLabel"
+        [monthLoading]="view.monthLoading"
+        [totalVisits]="vm.summary.totalVisits"
+        (createVisitRequested)="facade.openCreateDialog()"
+      ></app-action-panel>
+
+      <app-side-stack [monthLoading]="view.monthLoading" [topDays]="vm.topDays"></app-side-stack>
+
+      <app-visits-ledger
+        *ngIf="facade.ledgerVm$ | async as ledgerVm"
+        [ledgerVm]="ledgerVm"
+        [monthLoading]="view.monthLoading"
+        [totalVisits]="vm.summary.totalVisits"
+        [searchControl]="facade.searchControl"
+        [sortControl]="facade.sortControl"
+        [deletingId]="facade.deletingId"
+        (createVisitRequested)="facade.openCreateDialog()"
+        (clearSearchRequested)="facade.clearSearch()"
+        (editVisitRequested)="facade.editVisit($event)"
+        (deleteVisitRequested)="facade.deleteVisit($event)"
+      ></app-visits-ledger>
+    </section>
+  </ng-container>
+
+  <app-visit-dialog
+    [open]="facade.formDialogOpen"
+    [saving]="facade.saving"
+    [editedVisitId]="facade.editedVisitId"
+    [visitForm]="facade.visitForm"
+    [procedureOptions]="facade.procedureOptions"
+    [percentQuickOptions]="facade.percentQuickOptions"
+    [projectedIncome]="(facade.projectedIncome$ | async) ?? 0"
+    (closeRequested)="facade.closeVisitDialog()"
+    (submitRequested)="facade.submitVisit()"
+  ></app-visit-dialog>
+</div>
+
+<ng-template #loadingState>
+  <div class="shell shell--loading">
+    <section class="loading loading--hero"></section>
+    <section class="loading-grid">
+      <article class="loading"></article>
+      <article class="loading"></article>
+      <article class="loading"></article>
+      <article class="loading"></article>
+    </section>
+    <section class="loading loading--panel"></section>
+  </div>
+</ng-template>

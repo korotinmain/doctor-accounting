@@ -1,35 +1,4 @@
 <div class="side-stack">
-  <mat-card class="panel mini mini--summary">
-    <header class="mini__header">
-      <div class="mini__title-group">
-        <mat-icon class="mini__icon">summarize</mat-icon>
-        <h3>Підсумок місяця</h3>
-      </div>
-      <span class="mini__period">{{ selectedMonthLabel }}</span>
-    </header>
-
-    <div class="summary-grid">
-      <article class="summary-item">
-        <span>Прийомів</span>
-        <strong *ngIf="!monthLoading; else summaryVisitsSkeleton">{{ summary.totalVisits }}</strong>
-      </article>
-
-      <article class="summary-item summary-item--income">
-        <span>Дохід лікаря</span>
-        <strong *ngIf="!monthLoading; else summaryIncomeSkeleton">{{
-          summary.totalIncome | currency: 'UAH' : 'symbol' : '1.0-0' : 'uk-UA'
-        }}</strong>
-      </article>
-    </div>
-
-    <ng-template #summaryVisitsSkeleton>
-      <span class="skeleton-inline skeleton-inline--lg"></span>
-    </ng-template>
-    <ng-template #summaryIncomeSkeleton>
-      <span class="skeleton-inline skeleton-inline--lg"></span>
-    </ng-template>
-  </mat-card>
-
   <mat-card class="panel mini">
     <header class="mini__header">
       <div class="mini__title-group">

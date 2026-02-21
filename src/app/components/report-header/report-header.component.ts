@@ -12,9 +12,12 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class ReportHeaderComponent {
   @Input({ required: true }) selectedMonthLabel = '';
+  @Input() userDisplayName = '';
+  @Input() userEmail = '';
 
   @Output() shiftMonthRequested = new EventEmitter<number>();
   @Output() currentMonthRequested = new EventEmitter<void>();
+  @Output() logoutRequested = new EventEmitter<void>();
 
   shiftMonth(delta: number): void {
     this.shiftMonthRequested.emit(delta);
@@ -22,5 +25,9 @@ export class ReportHeaderComponent {
 
   goCurrentMonth(): void {
     this.currentMonthRequested.emit();
+  }
+
+  logout(): void {
+    this.logoutRequested.emit();
   }
 }

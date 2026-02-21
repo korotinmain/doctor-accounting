@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Auth, signInAnonymously } from '@angular/fire/auth';
-import { FirebaseError } from 'firebase/app';
-import { catchError, combineLatest, defer, map, merge, of, shareReplay, startWith, switchMap } from 'rxjs';
+import { Auth, authState } from '@angular/fire/auth';
+import { catchError, combineLatest, map, merge, of, shareReplay, startWith, switchMap } from 'rxjs';
 
 import { LedgerVm } from '../models/ledger-view.model';
 import { Visit, VisitDraft } from '../models/visit.model';
@@ -28,7 +27,7 @@ export class VisitsDashboardFacade {
   readonly sortControl = this.formBuilder.nonNullable.control<VisitsSort>('dateDesc');
 
   readonly visitForm = this.formBuilder.group({
-    visitDate: this.formBuilder.nonNullable.control(this.getToday(), Validators.required),
+    visitDate: this.formBuilder.nonNullable.control(this.getTodayDate(), Validators.required),
     patientName: this.formBuilder.nonNullable.control('', [Validators.required, Validators.maxLength(120)]),
     procedureName: this.formBuilder.nonNullable.control('Консультація', [
       Validators.required,
@@ -39,7 +38,7 @@ export class VisitsDashboardFacade {
     notes: this.formBuilder.nonNullable.control('')
   });
 
-  readonly authReady$ = defer(() => this.ensureAuthenticated()).pipe(shareReplay({ bufferSize: 1, refCount: true }));
+  readonly user$ = authState(this.auth).pipe(shareReplay({ bufferSize: 1, refCount: true }));
 
   readonly projectedIncome$ = this.visitForm.valueChanges.pipe(
     startWith(this.visitForm.getRawValue()),
@@ -48,14 +47,17 @@ export class VisitsDashboardFacade {
 
   readonly monthVisits$ = combineLatest([
     this.monthControl.valueChanges.pipe(startWith(this.monthControl.value)),
-    this.authReady$
+    this.user$
   ]).pipe(
-    switchMap(([month, authReady]) => {
-      if (!authReady) {
+    switchMap(([month, user]) => {
+      if (!user) {
+        this.authErrorMessage = 'Увійдіть через Google, щоб працювати з журналом.';
         return of<Visit[]>([]);
       }
 
-      return this.visitsService.getVisitsByMonth(month).pipe(
+      this.authErrorMessage = null;
+
+      return this.visitsService.getVisitsByMonth(month, user.uid).pipe(
         catchError((error) => {
           this.notifyError('Не вдалося завантажити записи за місяць', error);
           return of<Visit[]>([]);
@@ -70,6 +72,7 @@ export class VisitsDashboardFacade {
       startWith(this.monthControl.value),
       map(() => true)
     ),
+    this.user$.pipe(map(() => true)),
     this.monthVisits$.pipe(map(() => false))
   ).pipe(shareReplay({ bufferSize: 1, refCount: true }));
 
@@ -167,7 +170,7 @@ export class VisitsDashboardFacade {
     this.editedVisitId = visit.id;
 
     this.visitForm.reset({
-      visitDate: visit.visitDate,
+      visitDate: this.parseVisitDate(visit.visitDate),
       patientName: visit.patientName,
       procedureName: this.normalizeProcedureName(visit.procedureName),
       amount: visit.amount,
@@ -224,51 +227,16 @@ export class VisitsDashboardFacade {
 
   private toDraft(): VisitDraft {
     const formValue = this.visitForm.getRawValue();
+    const visitDate = formValue.visitDate instanceof Date ? formValue.visitDate : this.getTodayDate();
 
     return {
-      visitDate: formValue.visitDate ?? this.getToday(),
+      visitDate: this.formatDate(visitDate),
       patientName: formValue.patientName ?? '',
       procedureName: this.normalizeProcedureName(formValue.procedureName ?? 'Інше'),
       amount: Number(formValue.amount),
       percent: Number(formValue.percent),
       notes: formValue.notes ?? ''
     };
-  }
-
-  private async ensureAuthenticated(): Promise<boolean> {
-    if (this.auth.currentUser) {
-      this.authErrorMessage = null;
-      return true;
-    }
-
-    try {
-      await signInAnonymously(this.auth);
-      this.authErrorMessage = null;
-      return true;
-    } catch (error) {
-      const code = this.getErrorCode(error);
-
-      if (code === 'auth/admin-restricted-operation' || code === 'auth/operation-not-allowed') {
-        this.authErrorMessage =
-          'Firebase Authentication не дозволяє анонімний вхід. Увімкніть Authentication -> Sign-in method -> Anonymous у Firebase Console.';
-        this.snackBar.open('Увімкніть Anonymous sign-in у Firebase Console', 'OK', {
-          duration: 5000
-        });
-        return false;
-      }
-
-      this.authErrorMessage = 'Не вдалося виконати авторизацію Firebase.';
-      this.notifyError('Не вдалося виконати авторизацію', error);
-      return false;
-    }
-  }
-
-  private getErrorCode(error: unknown): string | null {
-    if (error instanceof FirebaseError) {
-      return error.code;
-    }
-
-    return null;
   }
 
   private notifyError(message: string, error: unknown): void {
@@ -279,7 +247,7 @@ export class VisitsDashboardFacade {
   private resetForm(): void {
     this.editedVisitId = null;
     this.visitForm.reset({
-      visitDate: this.getToday(),
+      visitDate: this.getTodayDate(),
       patientName: '',
       procedureName: 'Консультація',
       amount: null,
@@ -297,11 +265,26 @@ export class VisitsDashboardFacade {
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
   }
 
-  private getToday(): string {
+  private getTodayDate(): Date {
     const now = new Date();
-    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(
-      2,
-      '0'
-    )}`;
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  }
+
+  private formatDate(value: Date): string {
+    const year = value.getFullYear();
+    const month = String(value.getMonth() + 1).padStart(2, '0');
+    const day = String(value.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
+
+  private parseVisitDate(value: string): Date {
+    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+    if (!match) {
+      return this.getTodayDate();
+    }
+
+    const [, year, month, day] = match;
+    return new Date(Number(year), Number(month) - 1, Number(day));
   }
 }

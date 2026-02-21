@@ -2,7 +2,63 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /visits/{visitId} {
-      allow read, write: if request.auth != null;
+      allow create: if isSignedIn()
+        && request.resource.data.ownerUid == request.auth.uid
+        && isValidVisit(request.resource.data);
+
+      allow read, delete: if isOwner(resource.data);
+
+      allow update: if isOwner(resource.data)
+        && request.resource.data.ownerUid == resource.data.ownerUid
+        && request.resource.data.createdAt == resource.data.createdAt
+        && isValidVisit(request.resource.data);
     }
+  }
+
+  function isSignedIn() {
+    return request.auth != null;
+  }
+
+  function isOwner(data) {
+    return isSignedIn()
+      && data.ownerUid is string
+      && data.ownerUid == request.auth.uid;
+  }
+
+  function isValidVisit(data) {
+    return data.keys().hasOnly([
+        'ownerUid',
+        'visitDate',
+        'patientName',
+        'procedureName',
+        'amount',
+        'percent',
+        'doctorIncome',
+        'notes',
+        'createdAt',
+        'updatedAt'
+      ])
+      && data.ownerUid is string
+      && data.visitDate is string
+      && data.visitDate.matches('^\\d{4}-\\d{2}-\\d{2}$')
+      && data.patientName is string
+      && data.patientName.size() > 0
+      && data.patientName.size() <= 120
+      && data.procedureName is string
+      && data.procedureName.size() > 0
+      && data.procedureName.size() <= 120
+      && data.amount is number
+      && data.amount > 0
+      && data.amount <= 1000000
+      && data.percent is number
+      && data.percent >= 0
+      && data.percent <= 100
+      && data.doctorIncome is number
+      && data.doctorIncome >= 0
+      && data.doctorIncome <= data.amount
+      && data.notes is string
+      && data.notes.size() <= 2000
+      && data.createdAt is timestamp
+      && data.updatedAt is timestamp;
   }
 }

@@ -1,0 +1,7 @@
+{
+  "defaultUid": "YOUR_DEFAULT_UID",
+  "byDocId": {
+    "visitDocId1": "UID_FOR_DOC_1",
+    "visitDocId2": "UID_FOR_DOC_2"
+  }
+}

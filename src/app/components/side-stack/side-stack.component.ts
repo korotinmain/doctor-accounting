@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 
-import { DailyInsight, MonthlySummary } from '../../utils/visits-analytics';
+import { DailyInsight } from '../../utils/visits-analytics';
 
 @Component({
   selector: 'app-side-stack',
@@ -14,7 +14,5 @@ import { DailyInsight, MonthlySummary } from '../../utils/visits-analytics';
 })
 export class SideStackComponent {
   @Input() monthLoading = false;
-  @Input({ required: true }) selectedMonthLabel = '';
-  @Input({ required: true }) summary!: MonthlySummary;
   @Input() topDays: DailyInsight[] = [];
 }

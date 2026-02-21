@@ -20,100 +20,111 @@
     </header>
 
     <form [formGroup]="visitForm" (ngSubmit)="submitForm()" class="visit-form visit-form--dialog">
-      <div class="form-grid">
-        <div class="form-section-title full">
+      <section class="form-section">
+        <div class="form-section-title">
           <h3>Пацієнт</h3>
           <p>Базова інформація про пацієнта і тип послуги.</p>
         </div>
 
-        <mat-form-field appearance="outline" class="full modern-field" subscriptSizing="dynamic">
-          <mat-label>ПІБ пацієнта</mat-label>
-          <mat-icon matPrefix>person</mat-icon>
-          <input #patientNameInput matInput formControlName="patientName" />
-          <mat-error *ngIf="patientNameControl?.touched && patientNameControl?.invalid">
-            Вкажіть ПІБ пацієнта
-          </mat-error>
-        </mat-form-field>
+        <div class="form-grid form-grid--single">
+          <mat-form-field appearance="outline" class="modern-field" subscriptSizing="dynamic">
+            <mat-label>ПІБ пацієнта</mat-label>
+            <mat-icon matPrefix>person</mat-icon>
+            <input #patientNameInput matInput formControlName="patientName" />
+            <mat-error *ngIf="patientNameControl?.touched && patientNameControl?.invalid">
+              Вкажіть ПІБ пацієнта
+            </mat-error>
+          </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full modern-field" subscriptSizing="dynamic">
-          <mat-label>Послуга</mat-label>
-          <mat-icon matPrefix>medical_services</mat-icon>
-          <mat-select formControlName="procedureName" (selectionChange)="applyProcedureDefaultPercent($event)">
-            <mat-option *ngFor="let option of procedureOptions" [value]="option">
-              {{ option }}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="procedureNameControl?.touched && procedureNameControl?.invalid">
-            Вкажіть назву послуги
-          </mat-error>
-        </mat-form-field>
+          <mat-form-field appearance="outline" class="modern-field" subscriptSizing="dynamic">
+            <mat-label>Послуга</mat-label>
+            <mat-icon matPrefix>medical_services</mat-icon>
+            <mat-select formControlName="procedureName" (selectionChange)="applyProcedureDefaultPercent($event)">
+              <mat-option *ngFor="let option of procedureOptions" [value]="option">
+                {{ option }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="procedureNameControl?.touched && procedureNameControl?.invalid">
+              Вкажіть назву послуги
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </section>
 
-        <div class="form-section-title full">
+      <section class="form-section">
+        <div class="form-section-title">
           <h3>Фінанси</h3>
           <p>Дата, сума і відсоток лікаря для розрахунку доходу.</p>
         </div>
 
-        <mat-form-field appearance="outline" class="modern-field" subscriptSizing="dynamic">
-          <mat-label>Дата</mat-label>
-          <input
-            matInput
-            [matDatepicker]="visitDatePicker"
-            formControlName="visitDate"
-            readonly
-            (click)="visitDatePicker.open()"
-          />
-          <mat-datepicker-toggle matSuffix [for]="visitDatePicker"></mat-datepicker-toggle>
-          <mat-datepicker #visitDatePicker></mat-datepicker>
-          <mat-error *ngIf="visitDateControl?.touched && visitDateControl?.invalid"> Вкажіть дату візиту </mat-error>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="modern-field" subscriptSizing="dynamic">
-          <mat-label>Сума, грн</mat-label>
-          <mat-icon matPrefix>attach_money</mat-icon>
-          <input #amountInput matInput type="number" min="1" step="1" formControlName="amount" />
-          <mat-error *ngIf="amountControl?.touched && amountControl?.invalid"> Сума має бути більше 0 </mat-error>
-        </mat-form-field>
-
-        <div class="percent-control">
+        <div class="form-grid form-grid--finance">
           <mat-form-field appearance="outline" class="modern-field" subscriptSizing="dynamic">
-            <mat-label>Відсоток лікаря</mat-label>
-            <mat-icon matPrefix>percent</mat-icon>
-            <input matInput type="number" min="0" max="100" step="0.5" formControlName="percent" />
-            <mat-error *ngIf="percentControl?.touched && percentControl?.invalid"> Допустимо від 0 до 100 </mat-error>
+            <mat-label>Дата</mat-label>
+            <input
+              matInput
+              [matDatepicker]="visitDatePicker"
+              formControlName="visitDate"
+              readonly
+              (click)="visitDatePicker.open()"
+            />
+            <mat-datepicker-toggle matSuffix [for]="visitDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #visitDatePicker></mat-datepicker>
+            <mat-error *ngIf="visitDateControl?.touched && visitDateControl?.invalid"> Вкажіть дату візиту </mat-error>
           </mat-form-field>
 
-          <div class="percent-quick" aria-label="Швидкий вибір відсотка">
-            <button
-              type="button"
-              class="percent-quick__btn"
-              *ngFor="let quickPercent of percentQuickOptions"
-              [class.percent-quick__btn--active]="isQuickPercentActive(quickPercent)"
-              (click)="applyQuickPercent(quickPercent)"
-            >
-              {{ quickPercent }}%
-            </button>
+          <mat-form-field appearance="outline" class="modern-field" subscriptSizing="dynamic">
+            <mat-label>Сума, грн</mat-label>
+            <mat-icon matPrefix>attach_money</mat-icon>
+            <input #amountInput matInput type="number" min="1" step="1" formControlName="amount" />
+            <mat-error *ngIf="amountControl?.touched && amountControl?.invalid"> Сума має бути більше 0 </mat-error>
+          </mat-form-field>
+
+          <div class="percent-control">
+            <mat-form-field appearance="outline" class="modern-field" subscriptSizing="dynamic">
+              <mat-label>Відсоток лікаря</mat-label>
+              <mat-icon matPrefix>percent</mat-icon>
+              <input matInput type="number" min="0" max="100" step="0.5" formControlName="percent" />
+              <mat-error *ngIf="percentControl?.touched && percentControl?.invalid"> Допустимо від 0 до 100 </mat-error>
+            </mat-form-field>
+
+            <div class="percent-quick-wrap">
+              <span class="percent-quick__label">Швидкий вибір</span>
+              <div class="percent-quick" aria-label="Швидкий вибір відсотка">
+                <button
+                  type="button"
+                  class="percent-quick__btn"
+                  *ngFor="let quickPercent of percentQuickOptions"
+                  [class.percent-quick__btn--active]="isQuickPercentActive(quickPercent)"
+                  (click)="applyQuickPercent(quickPercent)"
+                >
+                  {{ quickPercent }}%
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="income-preview">
+            <mat-icon class="income-preview__icon">monetization_on</mat-icon>
+            <div class="income-preview__content">
+              <span>Очікуваний дохід</span>
+              <strong>{{ projectedIncome | currency: 'UAH' : 'symbol' : '1.0-0' : 'uk-UA' }}</strong>
+            </div>
           </div>
         </div>
+      </section>
 
-        <div class="income-preview income-preview--sticky">
-          <mat-icon class="income-preview__icon">monetization_on</mat-icon>
-          <div class="income-preview__content">
-            <span>Очікуваний дохід</span>
-            <strong>{{ projectedIncome | currency: 'UAH' : 'symbol' : '1.0-0' : 'uk-UA' }}</strong>
-          </div>
-        </div>
-
-        <div class="form-section-title full">
+      <section class="form-section form-section--notes">
+        <div class="form-section-title">
           <h3>Додатково</h3>
           <p>Коментарі або примітки до прийому.</p>
         </div>
 
-        <mat-form-field appearance="outline" class="full modern-field" subscriptSizing="dynamic">
+        <mat-form-field appearance="outline" class="modern-field" subscriptSizing="dynamic">
           <mat-label>Примітки</mat-label>
           <mat-icon matPrefix>description</mat-icon>
           <textarea matInput rows="2" formControlName="notes"></textarea>
         </mat-form-field>
-      </div>
+      </section>
 
       <div class="form-actions">
         <button mat-stroked-button type="button" (click)="closeDialog()" [disabled]="saving" class="secondary-action">

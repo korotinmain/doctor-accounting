@@ -17,12 +17,12 @@ export interface MonthlySummary {
 export interface DashboardVm {
   visits: Visit[];
   summary: MonthlySummary;
-  topDays: DailyInsight[];
+  dailyStats: DailyInsight[];
 }
 
 export type VisitsSort = 'dateDesc' | 'incomeDesc' | 'amountDesc' | 'patientAsc';
 
-export function buildDashboardVm(visits: Visit[]): DashboardVm {
+export function buildDashboardVm(visits: Visit[], month: string): DashboardVm {
   const totalAmount = visits.reduce((sum, visit) => sum + visit.amount, 0);
   const totalIncome = visits.reduce((sum, visit) => sum + visit.doctorIncome, 0);
 
@@ -34,7 +34,7 @@ export function buildDashboardVm(visits: Visit[]): DashboardVm {
       totalVisits: visits.length,
       uniquePatients: getUniquePatientsCount(visits)
     },
-    topDays: getTopDays(visits)
+    dailyStats: getDailyStats(visits, month)
   };
 }
 
@@ -98,7 +98,10 @@ function getUniquePatientsCount(visits: Visit[]): number {
   return uniqueNames.size;
 }
 
-function getTopDays(visits: Visit[]): DailyInsight[] {
+function getDailyStats(visits: Visit[], month: string): DailyInsight[] {
+  if (!/^\d{4}-\d{2}$/.test(month)) {
+    return [];
+  }
   const grouped = new Map<string, DailyInsight>();
 
   for (const visit of visits) {
@@ -117,6 +120,13 @@ function getTopDays(visits: Visit[]): DailyInsight[] {
   }
 
   return Array.from(grouped.values())
-    .sort((left, right) => right.doctorIncome - left.doctorIncome)
-    .slice(0, 5);
+    .filter((day) => day.totalAmount > 0 || day.doctorIncome > 0)
+    .sort((left, right) => {
+      const byDate = right.date.localeCompare(left.date);
+      if (byDate !== 0) {
+        return byDate;
+      }
+
+      return right.totalAmount - left.totalAmount;
+    });
 }

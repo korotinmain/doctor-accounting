@@ -24,7 +24,7 @@
         (createVisitRequested)="facade.openCreateDialog()"
       ></app-action-panel>
 
-      <app-side-stack [monthLoading]="view.monthLoading" [topDays]="vm.topDays"></app-side-stack>
+      <app-side-stack [monthLoading]="view.monthLoading" [dailyStats]="vm.dailyStats"></app-side-stack>
 
       <app-visits-ledger
         *ngIf="facade.ledgerVm$ | async as ledgerVm"

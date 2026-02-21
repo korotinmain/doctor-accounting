@@ -14,5 +14,5 @@ import { DailyInsight } from '../../utils/visits-analytics';
 })
 export class SideStackComponent {
   @Input() monthLoading = false;
-  @Input() topDays: DailyInsight[] = [];
+  @Input() dailyStats: DailyInsight[] = [];
 }

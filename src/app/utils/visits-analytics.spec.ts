@@ -39,14 +39,22 @@ describe('visits-analytics', () => {
   ];
 
   it('buildDashboardVm should aggregate summary values', () => {
-    const vm = buildDashboardVm(visits);
+    const vm = buildDashboardVm(visits, '2026-02');
 
     expect(vm.summary.totalAmount).toBe(4150);
     expect(vm.summary.totalIncome).toBe(1045);
     expect(vm.summary.totalVisits).toBe(3);
     expect(vm.summary.uniquePatients).toBe(2);
-    expect(vm.topDays[0].doctorIncome).toBe(845);
-    expect(vm.topDays[0].totalAmount).toBe(3150);
+    expect(vm.dailyStats.length).toBe(2);
+    expect(vm.dailyStats[0].date).toBe('2026-02-19');
+    expect(vm.dailyStats[1].date).toBe('2026-02-18');
+
+    const day19 = vm.dailyStats.find((day) => day.date === '2026-02-19');
+    expect(day19?.doctorIncome).toBe(845);
+    expect(day19?.totalAmount).toBe(3150);
+
+    const day20 = vm.dailyStats.find((day) => day.date === '2026-02-20');
+    expect(day20).toBeUndefined();
   });
 
   it('calculateIncome should return 0 for invalid numbers', () => {

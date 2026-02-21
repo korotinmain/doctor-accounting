@@ -76,8 +76,11 @@ export class VisitsDashboardFacade {
     this.monthVisits$.pipe(map(() => false))
   ).pipe(shareReplay({ bufferSize: 1, refCount: true }));
 
-  readonly vm$ = this.monthVisits$.pipe(
-    map((visits) => buildDashboardVm(visits)),
+  readonly vm$ = combineLatest([
+    this.monthVisits$,
+    this.monthControl.valueChanges.pipe(startWith(this.monthControl.value))
+  ]).pipe(
+    map(([visits, month]) => buildDashboardVm(visits, month)),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 

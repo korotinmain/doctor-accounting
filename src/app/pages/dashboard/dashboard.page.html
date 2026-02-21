@@ -1,4 +1,4 @@
-<div class="shell" *ngIf="facade.vm$ | async as vm; else loadingState">
+<main id="main-content" class="shell" tabindex="-1" *ngIf="facade.vm$ | async as vm; else loadingState">
   <app-report-header
     [selectedMonthLabel]="facade.selectedMonthLabel"
     [userDisplayName]="(authSession.user$ | async)?.displayName || 'Користувач'"
@@ -8,7 +8,7 @@
     (logoutRequested)="authSession.signOut()"
   ></app-report-header>
 
-  <section class="auth-alert" *ngIf="facade.authErrorMessage">
+  <section class="auth-alert" *ngIf="facade.authErrorMessage" role="alert" aria-live="assertive">
     <mat-icon>warning_amber</mat-icon>
     <p>{{ facade.authErrorMessage }}</p>
   </section>
@@ -53,10 +53,10 @@
     (closeRequested)="facade.closeVisitDialog()"
     (submitRequested)="facade.submitVisit()"
   ></app-visit-dialog>
-</div>
+</main>
 
 <ng-template #loadingState>
-  <div class="shell shell--loading">
+  <main id="main-content" class="shell shell--loading" tabindex="-1" aria-busy="true">
     <section class="loading loading--hero"></section>
     <section class="loading-grid">
       <article class="loading"></article>
@@ -65,5 +65,5 @@
       <article class="loading"></article>
     </section>
     <section class="loading loading--panel"></section>
-  </div>
+  </main>
 </ng-template>

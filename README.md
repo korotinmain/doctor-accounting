@@ -33,6 +33,7 @@ npm install
 - `src/environments/environment.production.ts`
 
 Для Google Analytics обов'язково має бути заповнений `firebase.measurementId` (GA4 ID, формат `G-XXXXXXXXXX`).
+Для Sentry обов'язково має бути заповнений `sentry.dsn`.
 
 4. Перевір `doctor-accounting/.firebaserc` (поле `projects.default`) — там має бути твій Firebase Project ID.
 
@@ -61,6 +62,7 @@ npm start
 Відкрий: `http://localhost:4200`
 
 Після запуску відкриється сторінка входу `/login`, далі доступ до дашборду `/` тільки після Google-входу.
+Вхід працює через redirect-flow Google (без popup), щоб уникнути browser warning про `window.closed` / COOP.
 
 ## 5. Форматування коду (Prettier)
 
@@ -108,6 +110,7 @@ firebase deploy
 
 - `FIREBASE_SERVICE_ACCOUNT` — JSON ключ service account з доступом до Firebase Hosting.
 - `FIREBASE_PROJECT_ID` — Firebase project id (опційно, за замовчуванням використовується `doctor-accounting-840cb`).
+- `SENTRY_DSN` — DSN для Sentry (опційно, у workflow є fallback-значення).
 
 Після цього push у `main` запускає повний CI/CD цикл автоматично.
 

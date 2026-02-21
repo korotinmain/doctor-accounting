@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 import { AnalyticsTrackingService } from './services/analytics-tracking.service';
+import { SeoMetaService } from './services/seo-meta.service';
 
 @Component({
   selector: 'app-root',
@@ -13,4 +14,6 @@ import { AnalyticsTrackingService } from './services/analytics-tracking.service'
 export class AppComponent {
   // Inject to initialize router-based page_view tracking on app startup.
   private readonly analyticsTracking = inject(AnalyticsTrackingService);
+  // Inject to apply dynamic title/meta tags for SEO.
+  private readonly seoMeta = inject(SeoMetaService);
 }

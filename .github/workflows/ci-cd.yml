@@ -39,6 +39,13 @@ jobs:
               messagingSenderId: '${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}',
               appId: '${{ secrets.FIREBASE_APP_ID }}',
               measurementId: '${{ secrets.FIREBASE_MEASUREMENT_ID }}'
+            },
+            sentry: {
+              enabled: true,
+              dsn: '${{ secrets.SENTRY_DSN || 'https://85b3f26bc53fe08641acb5d899c6050f@o4510924788269056.ingest.de.sentry.io/4510924790104144' }}',
+              tracesSampleRate: 0.2,
+              replaysSessionSampleRate: 0.05,
+              replaysOnErrorSampleRate: 1
             }
           };
           EOF
@@ -54,6 +61,13 @@ jobs:
               messagingSenderId: '${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}',
               appId: '${{ secrets.FIREBASE_APP_ID }}',
               measurementId: '${{ secrets.FIREBASE_MEASUREMENT_ID }}'
+            },
+            sentry: {
+              enabled: true,
+              dsn: '${{ secrets.SENTRY_DSN || 'https://85b3f26bc53fe08641acb5d899c6050f@o4510924788269056.ingest.de.sentry.io/4510924790104144' }}',
+              tracesSampleRate: 0.2,
+              replaysSessionSampleRate: 0.05,
+              replaysOnErrorSampleRate: 1
             }
           };
           EOF
@@ -69,6 +83,13 @@ jobs:
               messagingSenderId: '${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}',
               appId: '${{ secrets.FIREBASE_APP_ID }}',
               measurementId: '${{ secrets.FIREBASE_MEASUREMENT_ID }}'
+            },
+            sentry: {
+              enabled: true,
+              dsn: '${{ secrets.SENTRY_DSN || 'https://85b3f26bc53fe08641acb5d899c6050f@o4510924788269056.ingest.de.sentry.io/4510924790104144' }}',
+              tracesSampleRate: 0.2,
+              replaysSessionSampleRate: 0.05,
+              replaysOnErrorSampleRate: 1
             }
           };
           EOF
@@ -116,6 +137,13 @@ jobs:
               messagingSenderId: '${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}',
               appId: '${{ secrets.FIREBASE_APP_ID }}',
               measurementId: '${{ secrets.FIREBASE_MEASUREMENT_ID }}'
+            },
+            sentry: {
+              enabled: true,
+              dsn: '${{ secrets.SENTRY_DSN || 'https://85b3f26bc53fe08641acb5d899c6050f@o4510924788269056.ingest.de.sentry.io/4510924790104144' }}',
+              tracesSampleRate: 0.2,
+              replaysSessionSampleRate: 0.05,
+              replaysOnErrorSampleRate: 1
             }
           };
           EOF
@@ -131,6 +159,13 @@ jobs:
               messagingSenderId: '${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}',
               appId: '${{ secrets.FIREBASE_APP_ID }}',
               measurementId: '${{ secrets.FIREBASE_MEASUREMENT_ID }}'
+            },
+            sentry: {
+              enabled: true,
+              dsn: '${{ secrets.SENTRY_DSN || 'https://85b3f26bc53fe08641acb5d899c6050f@o4510924788269056.ingest.de.sentry.io/4510924790104144' }}',
+              tracesSampleRate: 0.2,
+              replaysSessionSampleRate: 0.05,
+              replaysOnErrorSampleRate: 1
             }
           };
           EOF
@@ -146,6 +181,13 @@ jobs:
               messagingSenderId: '${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}',
               appId: '${{ secrets.FIREBASE_APP_ID }}',
               measurementId: '${{ secrets.FIREBASE_MEASUREMENT_ID }}'
+            },
+            sentry: {
+              enabled: true,
+              dsn: '${{ secrets.SENTRY_DSN || 'https://85b3f26bc53fe08641acb5d899c6050f@o4510924788269056.ingest.de.sentry.io/4510924790104144' }}',
+              tracesSampleRate: 0.2,
+              replaysSessionSampleRate: 0.05,
+              replaysOnErrorSampleRate: 1
             }
           };
           EOF

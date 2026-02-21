@@ -1,4 +1,4 @@
-<main class="login-page">
+<main id="main-content" class="login-page" tabindex="-1">
   <section class="login-layout">
     <article class="brand-pane">
       <p class="brand-pane__eyebrow">Doctor Accounting</p>
@@ -31,9 +31,10 @@
         [class.google-btn--loading]="signingIn"
         [disabled]="signingIn"
         (click)="signInWithGoogle()"
+        aria-label="Увійти через Google"
       >
         <span class="google-btn__content">
-          <img src="assets/google-g-logo.svg" alt="Google" class="google-btn__icon" />
+          <img src="assets/google-g-logo.svg" alt="" aria-hidden="true" class="google-btn__icon" />
           <span class="google-btn__label">Увійти через Google</span>
         </span>
         <mat-progress-spinner
@@ -46,7 +47,7 @@
       </button>
 
       <p class="auth-card__caption">Google Auth only. Інші способи входу вимкнені.</p>
-      <p class="auth-card__error" *ngIf="errorMessage">{{ errorMessage }}</p>
+      <p class="auth-card__error" *ngIf="errorMessage" role="alert" aria-live="assertive">{{ errorMessage }}</p>
     </mat-card>
   </section>
 </main>

@@ -1,11 +1,24 @@
 <div class="dialog-overlay" *ngIf="open" (click)="closeDialog()">
-  <mat-card class="panel visit-dialog" (click)="$event.stopPropagation()">
+  <mat-card
+    class="panel visit-dialog"
+    (click)="$event.stopPropagation()"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-labelledby]="editedVisitId ? 'visit-dialog-title-edit' : 'visit-dialog-title-create'"
+    [attr.aria-describedby]="editedVisitId ? 'visit-dialog-description-edit' : 'visit-dialog-description-create'"
+    cdkTrapFocus
+    [cdkTrapFocusAutoCapture]="open"
+  >
     <header class="visit-dialog__header">
       <div class="panel__title-group">
         <mat-icon class="panel__icon">{{ editedVisitId ? 'edit_note' : 'add_circle_outline' }}</mat-icon>
         <div>
-          <h2>{{ editedVisitId ? 'Редагування візиту' : 'Новий візит' }}</h2>
-          <p>Внесіть дані пацієнта та фінансову інформацію.</p>
+          <h2 [id]="editedVisitId ? 'visit-dialog-title-edit' : 'visit-dialog-title-create'">
+            {{ editedVisitId ? 'Редагування візиту' : 'Новий візит' }}
+          </h2>
+          <p [id]="editedVisitId ? 'visit-dialog-description-edit' : 'visit-dialog-description-create'">
+            Внесіть дані пацієнта та фінансову інформацію.
+          </p>
         </div>
       </div>
       <button
@@ -30,7 +43,7 @@
           <mat-form-field appearance="outline" class="modern-field" subscriptSizing="dynamic">
             <mat-label>ПІБ пацієнта</mat-label>
             <mat-icon matPrefix>person</mat-icon>
-            <input #patientNameInput matInput formControlName="patientName" />
+            <input #patientNameInput matInput formControlName="patientName" autocomplete="name" />
             <mat-error *ngIf="patientNameControl?.touched && patientNameControl?.invalid">
               Вкажіть ПІБ пацієнта
             </mat-error>
@@ -75,7 +88,7 @@
           <mat-form-field appearance="outline" class="modern-field" subscriptSizing="dynamic">
             <mat-label>Сума, грн</mat-label>
             <mat-icon matPrefix>attach_money</mat-icon>
-            <input #amountInput matInput type="number" min="1" step="1" formControlName="amount" />
+            <input #amountInput matInput type="number" min="1" step="1" formControlName="amount" inputmode="decimal" />
             <mat-error *ngIf="amountControl?.touched && amountControl?.invalid"> Сума має бути більше 0 </mat-error>
           </mat-form-field>
 
@@ -83,7 +96,15 @@
             <mat-form-field appearance="outline" class="modern-field" subscriptSizing="dynamic">
               <mat-label>Відсоток лікаря</mat-label>
               <mat-icon matPrefix>percent</mat-icon>
-              <input matInput type="number" min="0" max="100" step="0.5" formControlName="percent" />
+              <input
+                matInput
+                type="number"
+                min="0"
+                max="100"
+                step="0.5"
+                formControlName="percent"
+                inputmode="decimal"
+              />
               <mat-error *ngIf="percentControl?.touched && percentControl?.invalid"> Допустимо від 0 до 100 </mat-error>
             </mat-form-field>
 

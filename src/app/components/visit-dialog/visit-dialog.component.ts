@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { A11yModule } from '@angular/cdk/a11y';
 import {
   AfterViewInit,
   Component,
@@ -25,6 +26,7 @@ import { MatSelectChange, MatSelectModule } from '@angular/material/select';
   selector: 'app-visit-dialog',
   standalone: true,
   imports: [
+    A11yModule,
     CommonModule,
     ReactiveFormsModule,
     MatIconModule,

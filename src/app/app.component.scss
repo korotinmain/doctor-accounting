@@ -2,3 +2,21 @@
   display: block;
   min-height: 100dvh;
 }
+
+.skip-link {
+  position: absolute;
+  left: 16px;
+  top: -48px;
+  z-index: 9999;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #0f766e;
+  color: #ffffff;
+  font-weight: 700;
+  text-decoration: none;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus-visible {
+  top: 14px;
+}

@@ -1,7 +1,8 @@
 import { Injectable, inject } from '@angular/core';
-import { Auth, GoogleAuthProvider, authState, signInWithPopup, signInWithRedirect, signOut } from '@angular/fire/auth';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Auth, GoogleAuthProvider, authState, signInWithRedirect, signOut } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { FirebaseError } from 'firebase/app';
+import { setUser } from '@sentry/angular';
 import { Observable, map, shareReplay } from 'rxjs';
 
 @Injectable({
@@ -14,22 +15,24 @@ export class AuthSessionService {
   readonly user$ = authState(this.auth).pipe(shareReplay({ bufferSize: 1, refCount: true }));
   readonly isAuthenticated$: Observable<boolean> = this.user$.pipe(map((user) => Boolean(user)));
 
+  constructor() {
+    this.user$.pipe(takeUntilDestroyed()).subscribe((user) => {
+      setUser(
+        user
+          ? {
+              id: user.uid,
+              email: user.email ?? undefined,
+              username: user.displayName ?? undefined
+            }
+          : null
+      );
+    });
+  }
+
   async signInWithGoogle(): Promise<void> {
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ prompt: 'select_account' });
-
-    try {
-      await signInWithPopup(this.auth, provider);
-    } catch (error) {
-      const code = error instanceof FirebaseError ? error.code : '';
-
-      if (code === 'auth/popup-blocked' || code === 'auth/cancelled-popup-request') {
-        await signInWithRedirect(this.auth, provider);
-        return;
-      }
-
-      throw error;
-    }
+    await signInWithRedirect(this.auth, provider);
   }
 
   async signOut(): Promise<void> {

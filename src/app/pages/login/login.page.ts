@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
 import { FirebaseError } from 'firebase/app';
+import { filter } from 'rxjs';
 
 import { AuthSessionService } from '../../services/auth-session.service';
 
@@ -23,7 +25,16 @@ export class LoginPageComponent {
   constructor(
     private readonly authSession: AuthSessionService,
     private readonly router: Router
-  ) {}
+  ) {
+    this.authSession.isAuthenticated$
+      .pipe(
+        filter((isAuthenticated) => isAuthenticated),
+        takeUntilDestroyed()
+      )
+      .subscribe(() => {
+        void this.router.navigateByUrl('/');
+      });
+  }
 
   async signInWithGoogle(): Promise<void> {
     if (this.signingIn) {
@@ -35,13 +46,9 @@ export class LoginPageComponent {
 
     try {
       await this.authSession.signInWithGoogle();
-      await this.router.navigateByUrl('/');
     } catch (error) {
-      if (error instanceof FirebaseError && error.code === 'auth/popup-closed-by-user') {
-        this.errorMessage = 'Вхід скасовано. Спробуйте ще раз.';
-      } else {
-        this.errorMessage = 'Не вдалося увійти через Google. Спробуйте знову.';
-      }
+      this.errorMessage =
+        error instanceof FirebaseError ? 'Не вдалося увійти через Google. Спробуйте знову.' : 'Помилка входу.';
     } finally {
       this.signingIn = false;
     }

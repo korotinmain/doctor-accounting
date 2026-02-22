@@ -22,15 +22,35 @@
       (currentMonthRequested)="facade.goCurrentMonth()"
     ></app-period-control-bar>
 
-    <app-dashboard-stats [summary]="vm.summary" [monthLoading]="view.monthLoading"></app-dashboard-stats>
+    <app-dashboard-stats
+      [summary]="vm.summary"
+      [monthLoading]="view.monthLoading"
+      [history]="vm.history"
+    ></app-dashboard-stats>
 
     <section class="content-grid">
-      <app-action-panel
-        [selectedMonthLabel]="facade.selectedMonthLabel"
-        [monthLoading]="view.monthLoading"
-        [totalVisits]="vm.summary.totalVisits"
-        (createVisitRequested)="facade.openCreateDialog()"
-      ></app-action-panel>
+      <div class="content-grid__main">
+        <app-action-panel
+          [selectedMonthLabel]="facade.selectedMonthLabel"
+          [monthLoading]="view.monthLoading"
+          [totalVisits]="vm.summary.totalVisits"
+          (createVisitRequested)="facade.openCreateDialog()"
+        ></app-action-panel>
+
+        <app-visits-ledger
+          *ngIf="facade.ledgerVm$ | async as ledgerVm"
+          [ledgerVm]="ledgerVm"
+          [monthLoading]="view.monthLoading"
+          [totalVisits]="vm.summary.totalVisits"
+          [searchControl]="facade.searchControl"
+          [sortControl]="facade.sortControl"
+          [deletingId]="facade.deletingId()"
+          (createVisitRequested)="facade.openCreateDialog()"
+          (clearSearchRequested)="facade.clearSearch()"
+          (editVisitRequested)="facade.editVisit($event)"
+          (deleteVisitRequested)="facade.deleteVisit($event)"
+        ></app-visits-ledger>
+      </div>
 
       <app-side-stack
         [monthLoading]="view.monthLoading"
@@ -39,20 +59,6 @@
         [selectedMonth]="facade.monthControl.value"
         (exportRequested)="facade.exportVisitsData(vm.visits)"
       ></app-side-stack>
-
-      <app-visits-ledger
-        *ngIf="facade.ledgerVm$ | async as ledgerVm"
-        [ledgerVm]="ledgerVm"
-        [monthLoading]="view.monthLoading"
-        [totalVisits]="vm.summary.totalVisits"
-        [searchControl]="facade.searchControl"
-        [sortControl]="facade.sortControl"
-        [deletingId]="facade.deletingId()"
-        (createVisitRequested)="facade.openCreateDialog()"
-        (clearSearchRequested)="facade.clearSearch()"
-        (editVisitRequested)="facade.editVisit($event)"
-        (deleteVisitRequested)="facade.deleteVisit($event)"
-      ></app-visits-ledger>
     </section>
   </ng-container>
 

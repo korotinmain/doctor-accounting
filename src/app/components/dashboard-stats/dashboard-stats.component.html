@@ -1,86 +1,61 @@
 <section class="stats" *ngIf="!monthLoading; else statsLoading">
-  <mat-card class="stat stat--income">
-    <div class="stat__head">
-      <div class="stat__label-group">
-        <div class="stat__icon-wrapper stat__icon-wrapper--primary">
-          <mat-icon>account_balance_wallet</mat-icon>
-        </div>
-        <span>Дохід лікаря</span>
+  <article class="stat-card" [ngClass]="'stat-card--' + card.colorKey" *ngFor="let card of cards; let i = index">
+    <div class="stat-card__header">
+      <div class="stat-card__icon">
+        <mat-icon>{{ card.icon }}</mat-icon>
       </div>
-      <span class="stat__chip">Місяць</span>
+      <span class="stat-card__label">{{ card.label }}</span>
+      <div
+        class="stat-card__badge"
+        *ngIf="card.trendPercent !== null"
+        [ngClass]="{
+          'stat-card__badge--up': card.trendPercent > 0,
+          'stat-card__badge--down': card.trendPercent < 0,
+          'stat-card__badge--flat': card.trendPercent === 0
+        }"
+      >
+        {{ formatTrend(card.trendPercent) }}
+      </div>
     </div>
-    <div class="stat__body">
-      <strong class="stat__value">{{ summary.totalIncome | currency: 'UAH' : 'symbol' : '1.0-0' : 'uk-UA' }}</strong>
-      <small class="stat__meta">Після розподілу %</small>
-    </div>
-  </mat-card>
 
-  <mat-card class="stat">
-    <div class="stat__head">
-      <div class="stat__label-group">
-        <div class="stat__icon-wrapper">
-          <mat-icon>payments</mat-icon>
-        </div>
-        <span>Загальна каса</span>
-      </div>
-      <span class="stat__chip">Місяць</span>
+    <div class="stat-card__body">
+      <strong class="stat-card__value">
+        <ng-container *ngIf="card.valueFormat === 'currency'">
+          {{ card.value | currency: 'UAH' : 'symbol' : '1.0-0' : 'uk-UA' }}
+        </ng-container>
+        <ng-container *ngIf="card.valueFormat === 'count'">
+          {{ card.value }}
+        </ng-container>
+      </strong>
     </div>
-    <div class="stat__body">
-      <strong class="stat__value">{{ summary.totalAmount | currency: 'UAH' : 'symbol' : '1.0-0' : 'uk-UA' }}</strong>
-      <small class="stat__meta">До розподілу %</small>
-    </div>
-  </mat-card>
 
-  <mat-card class="stat">
-    <div class="stat__head">
-      <div class="stat__label-group">
-        <div class="stat__icon-wrapper">
-          <mat-icon>event_available</mat-icon>
-        </div>
-        <span>Прийомів</span>
-      </div>
-      <span class="stat__chip">Шт.</span>
-    </div>
-    <div class="stat__body">
-      <strong class="stat__value">{{ summary.totalVisits }}</strong>
-      <small class="stat__meta">Усі записи за період</small>
-    </div>
-  </mat-card>
+    <div class="stat-card__footer">
+      <span class="stat-card__trend-label" *ngIf="card.trendPercent !== null && card.trendPercent !== 0">
+        {{ formatTrend(card.trendPercent) }} {{ card.trendLabel }}
+      </span>
+      <span class="stat-card__trend-label" *ngIf="card.trendPercent === null || card.trendPercent === 0">
+        {{ card.trendLabel }}
+      </span>
 
-  <mat-card class="stat">
-    <div class="stat__head">
-      <div class="stat__label-group">
-        <div class="stat__icon-wrapper">
-          <mat-icon>people</mat-icon>
-        </div>
-        <span>Пацієнтів</span>
+      <div class="stat-card__sparkline" *ngIf="card.chartSeries.length > 1">
+        <apx-chart
+          [series]="[{ data: card.chartSeries }]"
+          [chart]="sparklineChart"
+          [stroke]="sparklineStroke"
+          [fill]="sparklineFill"
+          [colors]="[card.chartColor]"
+          [tooltip]="sparklineTooltip"
+        ></apx-chart>
       </div>
-      <span class="stat__chip">Унік.</span>
     </div>
-    <div class="stat__body">
-      <strong class="stat__value">{{ summary.uniquePatients }}</strong>
-      <small class="stat__meta">Унікальні ПІБ у місяці</small>
-    </div>
-  </mat-card>
+  </article>
 </section>
 
 <ng-template #statsLoading>
   <section class="stats stats--skeleton">
-    <mat-card class="stat stat--skeleton">
+    <div class="stat-card stat-card--skeleton" *ngFor="let _ of [1, 2, 3, 4]">
       <div class="skeleton-line skeleton-line--short"></div>
       <div class="skeleton-line skeleton-line--value"></div>
-    </mat-card>
-    <mat-card class="stat stat--skeleton">
-      <div class="skeleton-line skeleton-line--short"></div>
-      <div class="skeleton-line skeleton-line--value"></div>
-    </mat-card>
-    <mat-card class="stat stat--skeleton">
-      <div class="skeleton-line skeleton-line--short"></div>
-      <div class="skeleton-line skeleton-line--value"></div>
-    </mat-card>
-    <mat-card class="stat stat--skeleton">
-      <div class="skeleton-line skeleton-line--short"></div>
-      <div class="skeleton-line skeleton-line--value"></div>
-    </mat-card>
+    </div>
   </section>
 </ng-template>

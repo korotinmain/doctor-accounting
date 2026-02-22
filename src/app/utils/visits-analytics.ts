@@ -14,15 +14,29 @@ export interface MonthlySummary {
   uniquePatients: number;
 }
 
+export interface MonthlyPoint {
+  month: string;
+  income: number;
+  amount: number;
+  visits: number;
+  patients: number;
+}
+
 export interface DashboardVm {
   visits: Visit[];
   summary: MonthlySummary;
   dailyStats: DailyInsight[];
+  history: MonthlyPoint[];
 }
 
 export type VisitsSort = 'dateDesc' | 'incomeDesc' | 'amountDesc' | 'patientAsc';
 
-export function buildDashboardVm(visits: Visit[], month: string): DashboardVm {
+export function calcTrendPercent(current: number, prev: number): number | null {
+  if (prev === 0) return null;
+  return Math.round(((current - prev) / prev) * 100);
+}
+
+export function buildDashboardVm(visits: Visit[], month: string, history: MonthlyPoint[] = []): DashboardVm {
   const totalAmount = visits.reduce((sum, visit) => sum + visit.amount, 0);
   const totalIncome = visits.reduce((sum, visit) => sum + visit.doctorIncome, 0);
 
@@ -34,7 +48,8 @@ export function buildDashboardVm(visits: Visit[], month: string): DashboardVm {
       totalVisits: visits.length,
       uniquePatients: getUniquePatientsCount(visits)
     },
-    dailyStats: getDailyStats(visits, month)
+    dailyStats: getDailyStats(visits, month),
+    history
   };
 }
 

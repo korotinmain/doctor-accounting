@@ -7,6 +7,7 @@ import { catchError, combineLatest, map, merge, of, shareReplay, startWith, swit
 import { LedgerVm } from '../models/ledger-view.model';
 import { Visit, VisitDraft } from '../models/visit.model';
 import {
+  MonthlyPoint,
   VisitsSort,
   addMonths,
   buildDashboardVm,
@@ -73,6 +74,34 @@ export class VisitsDashboardFacade {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
+  private readonly historyPoints$ = combineLatest([
+    this.monthControl.valueChanges.pipe(startWith(this.monthControl.value)),
+    this.user$
+  ]).pipe(
+    switchMap(([month, user]) => {
+      if (!user) return of<MonthlyPoint[]>([]);
+      const months = Array.from({ length: 6 }, (_, i) => addMonths(month, -(6 - i), month));
+      return combineLatest(
+        months.map((m) =>
+          this.visitsService.getVisitsByMonth(m, user.uid).pipe(
+            map(
+              (arr) =>
+                ({
+                  month: m,
+                  income: arr.reduce((s, v) => s + v.doctorIncome, 0),
+                  amount: arr.reduce((s, v) => s + v.amount, 0),
+                  visits: arr.length,
+                  patients: new Set(arr.map((v) => v.patientName.trim().toLowerCase())).size
+                }) satisfies MonthlyPoint
+            ),
+            catchError(() => of<MonthlyPoint>({ month: m, income: 0, amount: 0, visits: 0, patients: 0 }))
+          )
+        )
+      );
+    }),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
   readonly monthLoading$ = merge(
     this.monthControl.valueChanges.pipe(
       startWith(this.monthControl.value),
@@ -84,9 +113,10 @@ export class VisitsDashboardFacade {
 
   readonly vm$ = combineLatest([
     this.monthVisits$,
-    this.monthControl.valueChanges.pipe(startWith(this.monthControl.value))
+    this.monthControl.valueChanges.pipe(startWith(this.monthControl.value)),
+    this.historyPoints$.pipe(startWith([] as MonthlyPoint[]))
   ]).pipe(
-    map(([visits, month]) => buildDashboardVm(visits, month)),
+    map(([visits, month, history]) => buildDashboardVm(visits, month, history)),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 

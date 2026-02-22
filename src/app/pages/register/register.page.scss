@@ -3,18 +3,18 @@
   min-height: 100dvh;
 }
 
-.login-page {
+.register-page {
   min-height: 100dvh;
   display: grid;
   place-items: center;
   padding: 24px;
   background:
-    radial-gradient(circle at 8% 10%, rgba(20, 184, 166, 0.22), transparent 38%),
-    radial-gradient(circle at 92% 0%, rgba(251, 191, 36, 0.18), transparent 34%),
+    radial-gradient(circle at 8% 10%, rgba(20, 184, 166, 0.2), transparent 38%),
+    radial-gradient(circle at 92% 0%, rgba(251, 191, 36, 0.16), transparent 34%),
     linear-gradient(145deg, #f5f9f8 0%, #edf5f3 52%, #f7fbfa 100%);
 }
 
-.login-layout {
+.register-layout {
   width: min(1140px, 100%);
   border-radius: 28px;
   border: 1px solid rgba(168, 205, 198, 0.55);
@@ -22,10 +22,10 @@
   box-shadow:
     0 24px 56px rgba(7, 42, 39, 0.22),
     0 8px 18px rgba(7, 42, 39, 0.14);
-  padding: 36px;
+  padding: 34px;
   display: grid;
-  grid-template-columns: 1.25fr minmax(320px, 460px);
-  gap: 26px;
+  grid-template-columns: 1.2fr minmax(320px, 470px);
+  gap: 24px;
   align-items: center;
 }
 
@@ -36,12 +36,12 @@
 
   h1 {
     margin: 0;
-    font-size: clamp(2rem, 3.8vw, 3rem);
+    font-size: clamp(2rem, 3.8vw, 2.8rem);
     line-height: 1.05;
     letter-spacing: -0.02em;
     font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
     font-weight: 800;
-    max-width: 18ch;
+    max-width: 16ch;
   }
 }
 
@@ -56,18 +56,20 @@
 
 .brand-pane__lead {
   margin: 0;
-  max-width: 52ch;
+  max-width: 50ch;
   line-height: 1.58;
   color: rgba(236, 253, 245, 0.92);
   font-size: 1rem;
 }
 
-.brand-pane__chips {
-  margin-top: 6px;
+.brand-pane__list {
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
   display: grid;
   gap: 10px;
 
-  span {
+  li {
     width: fit-content;
     display: inline-flex;
     align-items: center;
@@ -95,7 +97,7 @@
   background: linear-gradient(180deg, #ffffff 0%, #f4fbf9 100%);
   padding: 24px;
   display: grid;
-  gap: 12px;
+  gap: 14px;
   color: #0f5953;
 }
 
@@ -191,12 +193,12 @@
   margin-top: 2px;
 }
 
-.primary-btn,
-.google-btn {
+.primary-btn {
   width: 100%;
   min-height: 54px;
   border-radius: 14px;
-  border: 1.5px solid transparent;
+  border: 1.5px solid rgba(10, 117, 107, 0.6);
+  background: linear-gradient(135deg, #0f8f81 0%, #0f766e 100%);
   color: #ffffff;
   font-size: 1rem;
   font-weight: 700;
@@ -208,58 +210,16 @@
   padding: 0 16px;
   font-family: inherit;
   text-align: center;
-  &:disabled {
-    opacity: 0.78;
-    cursor: default;
-  }
-}
-
-.primary-btn {
-  width: 100%;
-  background: linear-gradient(135deg, #0f8f81 0%, #0f766e 100%);
-  border-color: rgba(10, 117, 107, 0.6);
   box-shadow: 0 10px 20px rgba(15, 118, 110, 0.24);
 
   &:hover:not([disabled]) {
     background: linear-gradient(135deg, #0d877a 0%, #0d6c66 100%);
   }
-}
 
-.google-btn {
-  width: 100%;
-  border-color: rgba(171, 194, 187, 0.9);
-  background: #ffffff;
-  color: #183f39;
-
-  &:hover:not([disabled]) {
-    background: #f8fbfa;
-    border-color: rgba(127, 159, 150, 0.95);
+  &:disabled {
+    opacity: 0.78;
+    cursor: default;
   }
-}
-
-.google-btn__content {
-  width: 100%;
-  display: inline-flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  white-space: nowrap;
-}
-
-.google-btn__icon {
-  width: 26px;
-  height: 26px;
-  display: block;
-  flex-shrink: 0;
-}
-
-.google-btn__label {
-  line-height: 1;
-  font-size: 1.02rem;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  color: #0f172a;
 }
 
 .btn-spinner {
@@ -267,32 +227,6 @@
   right: 14px;
   top: 50%;
   transform: translateY(-50%);
-}
-
-.auth-divider {
-  position: relative;
-  text-align: center;
-  margin: 4px 0;
-
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 50% 0 auto;
-    transform: translateY(-50%);
-    border-top: 1px solid #c8ddd8;
-  }
-
-  span {
-    position: relative;
-    z-index: 1;
-    background: #f7fcfa;
-    padding: 0 10px;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #688983;
-    font-weight: 700;
-  }
 }
 
 .auth-card__caption {
@@ -324,22 +258,18 @@
 }
 
 @media (max-width: 980px) {
-  .login-layout {
+  .register-layout {
     grid-template-columns: 1fr;
-    padding: 26px;
-  }
-
-  .brand-pane h1 {
-    max-width: none;
+    padding: 24px;
   }
 }
 
 @media (max-width: 640px) {
-  .login-page {
+  .register-page {
     padding: 14px;
   }
 
-  .login-layout {
+  .register-layout {
     border-radius: 20px;
     padding: 18px;
     gap: 18px;

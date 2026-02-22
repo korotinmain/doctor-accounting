@@ -7,11 +7,14 @@ import {
   AuthError,
   GoogleAuthProvider,
   browserLocalPersistence,
+  createUserWithEmailAndPassword,
   getRedirectResult,
   setPersistence,
+  signInWithEmailAndPassword,
   signInWithPopup,
   signInWithRedirect,
-  signOut
+  signOut,
+  updateProfile
 } from 'firebase/auth';
 import { Observable, map, shareReplay } from 'rxjs';
 
@@ -41,6 +44,13 @@ export class AuthSessionService {
             }
           : null
       );
+
+      if (!user) {
+        const url = this.router.url;
+        if (!url.startsWith('/login') && !url.startsWith('/register')) {
+          void this.router.navigateByUrl('/login', { replaceUrl: true });
+        }
+      }
     });
   }
 
@@ -83,9 +93,24 @@ export class AuthSessionService {
     }
   }
 
+  async signInWithEmailPassword(email: string, password: string): Promise<void> {
+    await this.persistenceReady;
+    await signInWithEmailAndPassword(this.auth, email.trim(), password);
+  }
+
+  async registerWithEmailPassword(fullName: string, email: string, password: string): Promise<void> {
+    await this.persistenceReady;
+    const credentials = await createUserWithEmailAndPassword(this.auth, email.trim(), password);
+
+    const displayName = fullName.trim();
+    if (displayName) {
+      await updateProfile(credentials.user, { displayName });
+    }
+  }
+
   async signOut(): Promise<void> {
     await signOut(this.auth);
-    await this.router.navigate(['/login']);
+    await this.router.navigateByUrl('/login', { replaceUrl: true });
   }
 
   private async handleRedirectResult(): Promise<void> {

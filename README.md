@@ -47,9 +47,14 @@ npm install
 Поточні правила в цьому репозиторії: доступ до `visits` тільки для власника документа
 (`ownerUid == request.auth.uid`), із перевіркою структури полів.
 
-Застосунок використовує **Google Authentication only**.
+Застосунок використовує **Firebase Authentication** з двома методами входу:
+
+- Email/Password
+- Google
+
 У Firebase Console потрібно увімкнути:
 
+- `Authentication -> Sign-in method -> Email/Password`
 - `Authentication -> Sign-in method -> Google`
 - (опційно) додати свій домен в authorized domains
 
@@ -61,8 +66,9 @@ npm start
 
 Відкрий: `http://localhost:4200`
 
-Після запуску відкриється сторінка входу `/login`, далі доступ до дашборду `/` тільки після Google-входу.
-Вхід працює через redirect-flow Google (без popup), щоб уникнути browser warning про `window.closed` / COOP.
+Після запуску відкриється сторінка входу `/login`.
+Сторінка реєстрації: `/register`.
+Доступ до дашборду `/` відкривається після авторизації будь-яким підтримуваним методом.
 
 ## 5. Форматування коду (Prettier)
 

@@ -2,15 +2,15 @@
   <section class="login-layout">
     <article class="brand-pane">
       <p class="brand-pane__eyebrow">Doctor Accounting</p>
-      <h1>Облік прийомів для сучасної приватної практики</h1>
+      <h1>Панель обліку прийомів для приватної практики</h1>
       <p class="brand-pane__lead">
-        Контролюйте фінанси, візити та аналітику в одному місці. Вхід доступний лише через Google акаунт.
+        Керуйте візитами, фінансами та статистикою в єдиному робочому просторі. Увійдіть через email або Google.
       </p>
 
       <div class="brand-pane__chips">
-        <span><mat-icon>verified_user</mat-icon>Захищений доступ</span>
-        <span><mat-icon>query_stats</mat-icon>Аналітика в реальному часі</span>
-        <span><mat-icon>cloud_done</mat-icon>Дані в Firebase</span>
+        <span><mat-icon>verified_user</mat-icon>Безпечна авторизація</span>
+        <span><mat-icon>query_stats</mat-icon>Прозора аналітика</span>
+        <span><mat-icon>cloud_done</mat-icon>Збереження в Firebase</span>
       </div>
     </article>
 
@@ -21,15 +21,57 @@
         </div>
         <div>
           <h2>Вхід у кабінет</h2>
-          <p>Підтвердіть вхід через Google, щоб продовжити.</p>
+          <p>Оберіть зручний спосіб входу.</p>
         </div>
       </div>
 
+      <form class="auth-form" [formGroup]="loginForm" (ngSubmit)="signInWithEmailPassword()">
+        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="auth-field">
+          <mat-icon matPrefix aria-hidden="true">mail</mat-icon>
+          <input matInput type="email" autocomplete="email" formControlName="email" placeholder="Email*" />
+          <mat-error *ngIf="emailInvalid">Вкажіть коректний email.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="auth-field">
+          <mat-icon matPrefix aria-hidden="true">lock</mat-icon>
+          <input
+            matInput
+            [type]="showPassword ? 'text' : 'password'"
+            autocomplete="current-password"
+            formControlName="password"
+            placeholder="Пароль*"
+          />
+          <button
+            mat-icon-button
+            type="button"
+            matSuffix
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="showPassword ? 'Сховати пароль' : 'Показати пароль'"
+          >
+            <mat-icon aria-hidden="true">{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="passwordInvalid">Пароль має містити щонайменше 6 символів.</mat-error>
+        </mat-form-field>
+
+        <button mat-flat-button color="primary" type="submit" class="primary-btn" [disabled]="isBusy">
+          <span>Увійти через email</span>
+          <mat-progress-spinner
+            *ngIf="mode === 'email'"
+            mode="indeterminate"
+            diameter="18"
+            strokeWidth="3"
+            class="btn-spinner"
+          ></mat-progress-spinner>
+        </button>
+      </form>
+
+      <div class="auth-divider" aria-hidden="true"><span>або</span></div>
+
       <button
+        mat-stroked-button
         type="button"
         class="google-btn"
-        [class.google-btn--loading]="signingIn"
-        [disabled]="signingIn"
+        [disabled]="isBusy"
         (click)="signInWithGoogle()"
         aria-label="Увійти через Google"
       >
@@ -38,16 +80,20 @@
           <span class="google-btn__label">Увійти через Google</span>
         </span>
         <mat-progress-spinner
-          *ngIf="signingIn"
+          *ngIf="mode === 'google'"
           mode="indeterminate"
           diameter="18"
           strokeWidth="3"
-          class="google-btn__spinner"
+          class="btn-spinner"
         ></mat-progress-spinner>
       </button>
 
-      <p class="auth-card__caption">Google Auth only. Інші способи входу вимкнені.</p>
       <p class="auth-card__error" *ngIf="errorMessage" role="alert" aria-live="assertive">{{ errorMessage }}</p>
+
+      <p class="auth-card__caption">
+        Ще немає акаунту?
+        <a routerLink="/register">Створити обліковий запис</a>
+      </p>
     </mat-card>
   </section>
 </main>

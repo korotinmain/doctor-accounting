@@ -10,11 +10,23 @@ export const routes: Routes = [
     title: 'Вхід | Doctor Accounting',
     data: {
       seo: {
-        description: 'Безпечний вхід до кабінету Doctor Accounting через Google Authentication.',
+        description: 'Безпечний вхід до кабінету Doctor Accounting через email/password або Google.',
         robots: 'noindex, nofollow'
       }
     },
     loadComponent: () => import('./pages/login/login.page').then((module) => module.LoginPageComponent)
+  },
+  {
+    path: 'register',
+    canActivate: [guestGuard],
+    title: 'Реєстрація | Doctor Accounting',
+    data: {
+      seo: {
+        description: 'Створіть обліковий запис Doctor Accounting для персонального кабінету та обліку прийомів.',
+        robots: 'noindex, nofollow'
+      }
+    },
+    loadComponent: () => import('./pages/register/register.page').then((module) => module.RegisterPageComponent)
   },
   {
     path: '',

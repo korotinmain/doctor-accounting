@@ -1,0 +1,103 @@
+<main id="main-content" class="register-page" tabindex="-1">
+  <section class="register-layout">
+    <article class="brand-pane">
+      <p class="brand-pane__eyebrow">Doctor Accounting</p>
+      <h1>Створення облікового запису</h1>
+      <p class="brand-pane__lead">
+        Зареєструйте профіль для окремого простору даних у Firestore та почніть вести облік прийомів і доходів.
+      </p>
+
+      <ul class="brand-pane__list">
+        <li><mat-icon>person_add_alt_1</mat-icon>Персональний кабінет лікаря</li>
+        <li><mat-icon>verified_user</mat-icon>Захист облікових записів Firebase Auth</li>
+        <li><mat-icon>insights</mat-icon>Ізоляція даних по користувачах</li>
+      </ul>
+    </article>
+
+    <mat-card class="auth-card">
+      <div class="auth-card__head">
+        <div class="auth-card__logo">
+          <img src="assets/branding/logo-mark.svg" alt="Doctor Accounting logo" class="auth-card__logo-image" />
+        </div>
+        <div>
+          <h2>Реєстрація</h2>
+          <p>Заповніть поля, щоб створити акаунт.</p>
+        </div>
+      </div>
+
+      <form class="auth-form" [formGroup]="registerForm" (ngSubmit)="registerWithEmailPassword()">
+        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="auth-field">
+          <mat-icon matPrefix aria-hidden="true">person</mat-icon>
+          <input matInput type="text" autocomplete="name" formControlName="fullName" placeholder="Ім'я та прізвище*" />
+          <mat-error *ngIf="nameInvalid">Вкажіть ім'я (мінімум 2 символи).</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="auth-field">
+          <mat-icon matPrefix aria-hidden="true">mail</mat-icon>
+          <input matInput type="email" autocomplete="email" formControlName="email" placeholder="Email*" />
+          <mat-error *ngIf="emailInvalid">Вкажіть коректний email.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="auth-field">
+          <mat-icon matPrefix aria-hidden="true">lock</mat-icon>
+          <input
+            matInput
+            [type]="showPassword ? 'text' : 'password'"
+            autocomplete="new-password"
+            formControlName="password"
+            placeholder="Пароль*"
+          />
+          <button
+            mat-icon-button
+            type="button"
+            matSuffix
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="showPassword ? 'Сховати пароль' : 'Показати пароль'"
+          >
+            <mat-icon aria-hidden="true">{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="passwordInvalid">Пароль має містити щонайменше 6 символів.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" subscriptSizing="dynamic" class="auth-field">
+          <mat-icon matPrefix aria-hidden="true">verified_user</mat-icon>
+          <input
+            matInput
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            autocomplete="new-password"
+            formControlName="confirmPassword"
+            placeholder="Підтвердіть пароль*"
+          />
+          <button
+            mat-icon-button
+            type="button"
+            matSuffix
+            (click)="toggleConfirmPasswordVisibility()"
+            [attr.aria-label]="showConfirmPassword ? 'Сховати пароль' : 'Показати пароль'"
+          >
+            <mat-icon aria-hidden="true">{{ showConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="confirmPasswordInvalid">Паролі мають співпадати.</mat-error>
+        </mat-form-field>
+
+        <button mat-flat-button color="primary" type="submit" class="primary-btn" [disabled]="submitting">
+          <span>Створити акаунт</span>
+          <mat-progress-spinner
+            *ngIf="submitting"
+            mode="indeterminate"
+            diameter="18"
+            strokeWidth="3"
+            class="btn-spinner"
+          ></mat-progress-spinner>
+        </button>
+      </form>
+
+      <p class="auth-card__error" *ngIf="errorMessage" role="alert" aria-live="assertive">{{ errorMessage }}</p>
+
+      <p class="auth-card__caption">
+        Вже є акаунт?
+        <a routerLink="/login">Увійти</a>
+      </p>
+    </mat-card>
+  </section>
+</main>

@@ -1,25 +1,48 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FirebaseError } from 'firebase/app';
 import { filter } from 'rxjs';
 
 import { AuthSessionService } from '../../services/auth-session.service';
 
+type LoginMode = 'google' | 'email' | null;
+
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink,
+    MatCardModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatProgressSpinnerModule
+  ],
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss']
 })
 export class LoginPageComponent implements OnInit {
-  signingIn = false;
+  private readonly fb = inject(FormBuilder);
+
+  readonly loginForm = this.fb.nonNullable.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]]
+  });
+
+  mode: LoginMode = null;
+  showPassword = false;
   errorMessage: string | null = null;
 
   constructor(
@@ -36,6 +59,20 @@ export class LoginPageComponent implements OnInit {
       });
   }
 
+  get isBusy(): boolean {
+    return this.mode !== null;
+  }
+
+  get emailInvalid(): boolean {
+    const control = this.loginForm.controls.email;
+    return control.invalid && (control.dirty || control.touched);
+  }
+
+  get passwordInvalid(): boolean {
+    const control = this.loginForm.controls.password;
+    return control.invalid && (control.dirty || control.touched);
+  }
+
   async ngOnInit(): Promise<void> {
     await this.authSession.waitForAuthReady();
 
@@ -50,11 +87,11 @@ export class LoginPageComponent implements OnInit {
   }
 
   async signInWithGoogle(): Promise<void> {
-    if (this.signingIn) {
+    if (this.isBusy) {
       return;
     }
 
-    this.signingIn = true;
+    this.mode = 'google';
     this.errorMessage = null;
 
     try {
@@ -66,8 +103,37 @@ export class LoginPageComponent implements OnInit {
     } catch (error) {
       this.errorMessage = this.resolveAuthErrorMessage(error);
     } finally {
-      this.signingIn = false;
+      this.mode = null;
     }
+  }
+
+  async signInWithEmailPassword(): Promise<void> {
+    if (this.isBusy) {
+      return;
+    }
+
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
+
+    const { email, password } = this.loginForm.getRawValue();
+
+    this.mode = 'email';
+    this.errorMessage = null;
+
+    try {
+      await this.authSession.signInWithEmailPassword(email, password);
+      await this.router.navigateByUrl('/');
+    } catch (error) {
+      this.errorMessage = this.resolveAuthErrorMessage(error);
+    } finally {
+      this.mode = null;
+    }
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
   }
 
   private resolveAuthErrorMessage(error: unknown): string {
@@ -81,17 +147,27 @@ export class LoginPageComponent implements OnInit {
       case 'auth/popup-blocked':
         return 'Браузер заблокував pop-up вікно входу. Дозвольте pop-up для цього сайту і повторіть.';
       case 'auth/unauthorized-domain':
-        return 'Цей домен не дозволений у Firebase Auth (Authorized domains). Додайте поточний домен у Firebase Console.';
+        return 'Цей домен не дозволений у Firebase Auth. Додайте домен у Firebase Console.';
       case 'auth/operation-not-allowed':
-        return 'Google Sign-In вимкнено у Firebase Authentication.';
+        return 'У Firebase вимкнено цей метод входу. Увімкніть його в Authentication -> Sign-in method.';
       case 'auth/network-request-failed':
         return 'Помилка мережі під час входу. Перевірте інтернет і спробуйте ще раз.';
       case 'auth/redirect-no-user':
         return 'Після повернення з Google сесію не зчитано. Увімкніть cookies/storage для сайту і спробуйте ще раз.';
       case 'auth/user-token-expired':
         return 'Сесію завершено. Спробуйте увійти ще раз.';
+      case 'auth/invalid-email':
+        return 'Невірний формат email.';
+      case 'auth/user-disabled':
+        return 'Цей користувач заблокований.';
+      case 'auth/user-not-found':
+      case 'auth/wrong-password':
+      case 'auth/invalid-credential':
+        return 'Невірний email або пароль.';
+      case 'auth/too-many-requests':
+        return 'Забагато спроб входу. Спробуйте пізніше.';
       default:
-        return code ? `Не вдалося увійти через Google (${code}).` : 'Помилка входу. Спробуйте ще раз.';
+        return code ? `Не вдалося увійти (${code}).` : 'Помилка входу. Спробуйте ще раз.';
     }
   }
 }

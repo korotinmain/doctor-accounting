@@ -109,6 +109,8 @@ export class AuthSessionService {
   }
 
   async signOut(): Promise<void> {
+    sessionStorage.removeItem(AuthSessionService.pendingRedirectKey);
+    this.redirectErrorCode = null;
     await signOut(this.auth);
     await this.router.navigateByUrl('/login', { replaceUrl: true });
   }

@@ -1,0 +1,183 @@
+:host {
+  display: block;
+}
+
+.control-bar {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(208, 220, 216, 0.95);
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(10, 30, 26, 0.05);
+}
+
+.control-bar__label-group {
+  display: grid;
+  gap: 1px;
+  min-width: 128px;
+  flex-shrink: 0;
+}
+
+.control-bar__eyebrow {
+  margin: 0;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6f8b85;
+  font-weight: 700;
+}
+
+.control-bar__title {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.15;
+  color: #214f48;
+  font-weight: 700;
+}
+
+.month-picker {
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid rgba(190, 213, 206, 0.95);
+  background: #f8fbfa;
+  padding: 3px;
+  display: grid;
+  grid-template-columns: 34px 1fr 34px;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  max-width: 520px;
+  margin-inline: auto;
+
+  &:focus-visible {
+    outline: 2px solid rgba(89, 139, 127, 0.55);
+    outline-offset: 1px;
+  }
+}
+
+.month-picker__btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  border: 1px solid rgba(182, 203, 197, 0.95);
+  background: #ffffff;
+  color: #2d6a62;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  cursor: pointer;
+
+  .mat-icon {
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+    line-height: 18px;
+    margin: 0;
+    display: block;
+  }
+
+  &:hover {
+    background: #f1f8f6;
+  }
+}
+
+.month-picker__center {
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+}
+
+.month-picker__value {
+  font-size: 1rem;
+  line-height: 1;
+  font-weight: 700;
+  color: #1f4f49;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: capitalize;
+
+  &--loading {
+    color: transparent;
+    border-radius: 8px;
+    min-width: 130px;
+    min-height: 18px;
+    background: linear-gradient(90deg, #ecf3f1 25%, #e1ece9 50%, #ecf3f1 75%);
+    background-size: 220% 100%;
+    animation: shimmer 1.2s linear infinite;
+  }
+}
+
+.control-bar__today {
+  min-height: 38px;
+  border-radius: 10px;
+  border: 1px solid rgba(191, 213, 206, 0.95);
+  background: #f9fcfb;
+  color: #2f6961;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  white-space: nowrap;
+  cursor: pointer;
+  margin-left: auto;
+
+  .mat-icon {
+    font-size: 17px;
+    width: 17px;
+    height: 17px;
+    line-height: 17px;
+  }
+
+  &--active {
+    border-color: rgba(168, 202, 193, 0.95);
+    background: #f3f9f7;
+    color: #245b53;
+  }
+}
+
+@media (max-width: 1024px) {
+  .control-bar {
+    flex-wrap: wrap;
+    gap: 9px;
+  }
+
+  .control-bar__label-group {
+    display: none;
+  }
+
+  .month-picker {
+    order: 1;
+    margin-inline: 0;
+    max-width: none;
+    flex: 1 1 320px;
+  }
+
+  .control-bar__today {
+    order: 2;
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .control-bar {
+    padding: 9px;
+  }
+
+  .month-picker__value {
+    font-size: 0.94rem;
+  }
+
+  .control-bar__today {
+    width: 100%;
+  }
+}

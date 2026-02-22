@@ -24,6 +24,11 @@ $doctor-accounting-theme: mat.define-light-theme(
 
 @include mat.all-component-themes($doctor-accounting-theme);
 
+// Material design tokens (global component shape)
+html {
+  --mat-menu-container-shape: 12px;
+}
+
 // Modern Material Design overrides
 .mat-mdc-text-field-wrapper {
   border-radius: 12px !important;
@@ -81,19 +86,19 @@ $doctor-accounting-theme: mat.define-light-theme(
 .mat-mdc-raised-button:not(:disabled),
 .mat-mdc-flat-button:not(:disabled) {
   box-shadow:
-    0 3px 10px rgba(15, 118, 110, 0.18),
-    0 1px 4px rgba(15, 118, 110, 0.12) !important;
+    0 2px 6px rgba(15, 118, 110, 0.12),
+    0 1px 3px rgba(15, 118, 110, 0.08) !important;
 
   &:hover {
     box-shadow:
-      0 8px 20px rgba(15, 118, 110, 0.28),
-      0 4px 8px rgba(15, 118, 110, 0.18) !important;
+      0 4px 10px rgba(15, 118, 110, 0.16),
+      0 2px 5px rgba(15, 118, 110, 0.11) !important;
   }
 
   &:active {
     box-shadow:
-      0 4px 12px rgba(15, 118, 110, 0.22),
-      0 2px 6px rgba(15, 118, 110, 0.14) !important;
+      0 2px 6px rgba(15, 118, 110, 0.14),
+      0 1px 3px rgba(15, 118, 110, 0.1) !important;
   }
 }
 
@@ -107,19 +112,128 @@ $doctor-accounting-theme: mat.define-light-theme(
   }
 }
 
+.cta-visit.mat-mdc-button-base {
+  min-height: 46px !important;
+  padding: 0 20px !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(8, 95, 88, 0.95) !important;
+  background: linear-gradient(145deg, #11a89c 0%, #0f867c 48%, #0d6962 100%) !important;
+  color: #f5fffc !important;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  box-shadow:
+    0 10px 22px rgba(12, 96, 88, 0.23),
+    0 4px 10px rgba(12, 96, 88, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.17) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.015em !important;
+  text-transform: none !important;
+  transform: translateY(0);
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease,
+    filter 0.2s ease !important;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      112deg,
+      rgba(255, 255, 255, 0) 5%,
+      rgba(255, 255, 255, 0.16) 34%,
+      rgba(255, 255, 255, 0) 58%
+    );
+    transform: translateX(-110%);
+    transition: transform 0.38s ease;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .mdc-button__label {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .mat-icon {
+    width: 19px;
+    height: 19px;
+    font-size: 19px;
+    line-height: 19px;
+    margin-right: 10px;
+    margin-inline-end: 10px;
+    color: #f5fffc;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.29) 0%, rgba(255, 255, 255, 0.15) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.34);
+    border-radius: 999px;
+    padding: 3px;
+    box-sizing: content-box;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.28),
+      0 1px 3px rgba(4, 48, 43, 0.25);
+    transition: transform 0.2s ease;
+    position: relative;
+    z-index: 1;
+  }
+
+  &:hover:not([disabled]) {
+    border-color: rgba(8, 80, 74, 0.98) !important;
+    background: linear-gradient(145deg, #11b0a3 0%, #0f9186 48%, #0c726a 100%) !important;
+    box-shadow:
+      0 13px 24px rgba(12, 96, 88, 0.26),
+      0 5px 12px rgba(12, 96, 88, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    transform: translateY(-1px);
+    filter: saturate(1.03);
+
+    &::before {
+      transform: translateX(105%);
+    }
+
+    .mat-icon {
+      transform: translateX(1px);
+    }
+  }
+
+  &:active:not([disabled]) {
+    transform: translateY(0);
+    box-shadow:
+      0 6px 13px rgba(12, 96, 88, 0.2),
+      0 2px 6px rgba(12, 96, 88, 0.14),
+      inset 0 2px 5px rgba(6, 63, 57, 0.22) !important;
+  }
+
+  &:focus-visible {
+    outline: 3px solid rgba(16, 185, 164, 0.45);
+    outline-offset: 2px;
+  }
+
+  &[disabled] {
+    border-color: rgba(145, 171, 165, 0.65) !important;
+    background: linear-gradient(145deg, #90b6af 0%, #83a9a3 100%) !important;
+    box-shadow: none !important;
+    color: rgba(244, 250, 248, 0.95) !important;
+  }
+}
+
 .mat-mdc-card {
   border-radius: 18px !important;
   box-shadow:
-    0 3px 14px rgba(10, 30, 26, 0.07),
-    0 1px 5px rgba(10, 30, 26, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    0 2px 8px rgba(10, 30, 26, 0.05),
+    0 1px 3px rgba(10, 30, 26, 0.03) !important;
+  transition:
+    box-shadow 0.2s ease,
+    border-color 0.2s ease !important;
 
   &:hover {
     box-shadow:
-      0 6px 24px rgba(10, 30, 26, 0.1),
       0 3px 10px rgba(10, 30, 26, 0.06),
-      inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+      0 1px 4px rgba(10, 30, 26, 0.04) !important;
   }
 }
 
@@ -149,6 +263,20 @@ $doctor-accounting-theme: mat.define-light-theme(
     color: #14b8a6 !important;
     font-weight: 700 !important;
   }
+}
+
+.confirm-dialog-backdrop {
+  background: rgba(8, 24, 21, 0.36) !important;
+  backdrop-filter: blur(2px);
+}
+
+.confirm-dialog-panel .mat-mdc-dialog-surface {
+  border-radius: 14px !important;
+  border: 1px solid rgba(206, 220, 215, 0.95);
+  box-shadow:
+    0 16px 34px rgba(8, 28, 24, 0.18),
+    0 6px 14px rgba(8, 28, 24, 0.1) !important;
+  background: #ffffff !important;
 }
 
 // Modern icon styling

@@ -142,12 +142,12 @@
 
 .auth-form {
   display: grid;
-  gap: 6px;
+  gap: 10px;
 }
 
 .auth-field {
   width: 100%;
-  margin-bottom: 2px;
+  margin: 0;
 }
 
 .auth-field ::ng-deep {
@@ -185,12 +185,18 @@
   }
 
   .mat-mdc-form-field-subscript-wrapper {
-    margin-top: 4px;
+    margin-top: 0;
+    padding: 0;
+  }
+
+  .mat-mdc-form-field-bottom-align::before {
+    content: none;
+    display: none;
   }
 }
 
 .auth-form .primary-btn {
-  margin-top: 2px;
+  margin-top: 4px;
 }
 
 .primary-btn {

@@ -1,33 +1,64 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-report-header',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule],
+  imports: [CommonModule, MatIconModule, MatMenuModule],
   templateUrl: './report-header.component.html',
   styleUrls: ['./report-header.component.scss']
 })
 export class ReportHeaderComponent {
-  @Input({ required: true }) selectedMonthLabel = '';
   @Input() userDisplayName = '';
   @Input() userEmail = '';
+  @Input() userPhotoUrl = '';
 
-  @Output() shiftMonthRequested = new EventEmitter<number>();
-  @Output() currentMonthRequested = new EventEmitter<void>();
   @Output() logoutRequested = new EventEmitter<void>();
 
-  shiftMonth(delta: number): void {
-    this.shiftMonthRequested.emit(delta);
+  get resolvedDisplayName(): string {
+    return this.userDisplayName || this.getEmailLocalPart(this.userEmail) || 'Користувач';
   }
 
-  goCurrentMonth(): void {
-    this.currentMonthRequested.emit();
+  get triggerDisplayName(): string {
+    const source = this.resolvedDisplayName.trim();
+    const tokens = source.split(/\s+/).filter(Boolean);
+    if (tokens.length <= 1) {
+      return source;
+    }
+
+    return `${tokens[0]} ${tokens[1]}`;
+  }
+
+  get userHint(): string {
+    return this.userEmail || this.resolvedDisplayName;
+  }
+
+  get avatarText(): string {
+    if (this.userPhotoUrl) {
+      return '';
+    }
+
+    const source = this.resolvedDisplayName.trim();
+    if (!source) {
+      return 'К';
+    }
+
+    const tokens = source.split(/\s+/).filter(Boolean);
+    if (tokens.length === 1) {
+      return tokens[0][0]?.toUpperCase() ?? 'К';
+    }
+
+    return `${tokens[0][0] ?? ''}${tokens[1][0] ?? ''}`.toUpperCase();
   }
 
   logout(): void {
     this.logoutRequested.emit();
+  }
+
+  private getEmailLocalPart(email: string): string {
+    const localPart = email.split('@')[0];
+    return localPart || '';
   }
 }

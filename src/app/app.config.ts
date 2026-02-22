@@ -5,6 +5,7 @@ import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { getAnalytics, provideAnalytics } from '@angular/fire/analytics';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { getAuth, provideAuth } from '@angular/fire/auth';
+import { MatDialogModule } from '@angular/material/dialog';
 import * as Sentry from '@sentry/angular';
 
 import { routes } from './app.routes';
@@ -17,6 +18,7 @@ export const appConfig: ApplicationConfig = {
     { provide: ErrorHandler, useValue: Sentry.createErrorHandler({ showDialog: false }) },
     { provide: LOCALE_ID, useValue: 'uk-UA' },
     importProvidersFrom(
+      MatDialogModule,
       provideFirebaseApp(() => initializeApp(environment.firebase)),
       provideAuth(() => getAuth()),
       provideFirestore(() => getFirestore()),

@@ -14,9 +14,15 @@
           <ng-container *ngIf="!monthLoading">{{ totalVisits }} записів</ng-container>
         </ng-template>
       </span>
-      <button mat-flat-button color="primary" type="button" class="ledger__add-btn" (click)="openCreateDialog()">
+      <button
+        mat-flat-button
+        color="primary"
+        type="button"
+        class="cta-visit ledger__add-btn"
+        (click)="openCreateDialog()"
+      >
         <mat-icon>add</mat-icon>
-        Додати
+        Новий візит
       </button>
     </div>
   </header>
@@ -191,7 +197,13 @@
     <mat-icon class="empty-state__icon">playlist_add</mat-icon>
     <h3>Поки немає записів</h3>
     <p>Додайте перший прийом, щоб журнал почав формуватись.</p>
-    <button mat-flat-button color="primary" type="button" class="empty-state__cta" (click)="openCreateDialog()">
+    <button
+      mat-flat-button
+      color="primary"
+      type="button"
+      class="cta-visit empty-state__cta"
+      (click)="openCreateDialog()"
+    >
       <mat-icon>add</mat-icon>
       Новий візит
     </button>

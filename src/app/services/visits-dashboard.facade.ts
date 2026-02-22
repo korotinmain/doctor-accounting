@@ -14,7 +14,13 @@ import {
   filterVisits,
   sortVisits
 } from '../utils/visits-analytics';
+import { ConfirmDialogService } from './confirm-dialog.service';
 import { VisitsService } from './visits.service';
+
+type ReportPeriod = {
+  year: number;
+  month: number;
+};
 
 @Injectable()
 export class VisitsDashboardFacade {
@@ -51,7 +57,7 @@ export class VisitsDashboardFacade {
   ]).pipe(
     switchMap(([month, user]) => {
       if (!user) {
-        this.authErrorMessage = 'Увійдіть через Google, щоб працювати з журналом.';
+        this.authErrorMessage = 'Увійдіть в акаунт, щоб працювати з журналом.';
         return of<Visit[]>([]);
       }
 
@@ -114,22 +120,42 @@ export class VisitsDashboardFacade {
     private readonly formBuilder: FormBuilder,
     private readonly visitsService: VisitsService,
     private readonly snackBar: MatSnackBar,
-    private readonly auth: Auth
+    private readonly auth: Auth,
+    private readonly confirmDialog: ConfirmDialogService
   ) {}
 
   get selectedMonthLabel(): string {
-    const month = this.monthControl.value;
-
-    if (!/^\d{4}-\d{2}$/.test(month)) {
+    const period = this.selectedPeriod;
+    if (!period) {
       return '';
     }
-
-    const [year, monthNumber] = month.split('-').map(Number);
 
     return new Intl.DateTimeFormat('uk-UA', {
       month: 'long',
       year: 'numeric'
-    }).format(new Date(year, monthNumber - 1, 1));
+    }).format(new Date(period.year, period.month - 1, 1));
+  }
+
+  get selectedPeriod(): ReportPeriod | null {
+    const month = this.monthControl.value;
+
+    if (!/^\d{4}-\d{2}$/.test(month)) {
+      return null;
+    }
+
+    const [year, monthNumber] = month.split('-').map(Number);
+    return {
+      year,
+      month: monthNumber
+    };
+  }
+
+  get isCurrentMonthSelected(): boolean {
+    return this.monthControl.value === this.getCurrentMonth();
+  }
+
+  get hasUnsavedChanges(): boolean {
+    return this.formDialogOpen && this.visitForm.dirty;
   }
 
   shiftMonth(delta: number): void {
@@ -205,8 +231,26 @@ export class VisitsDashboardFacade {
     this.searchControl.setValue('');
   }
 
+  resetStateForSignOut(): void {
+    this.formDialogOpen = false;
+    this.saving = false;
+    this.deletingId = null;
+    this.authErrorMessage = null;
+    this.searchControl.setValue('', { emitEvent: false });
+    this.sortControl.setValue('dateDesc', { emitEvent: false });
+    this.monthControl.setValue(this.getCurrentMonth(), { emitEvent: false });
+    this.resetForm();
+  }
+
   async deleteVisit(visit: Visit): Promise<void> {
-    const confirmed = window.confirm(`Видалити запис для ${visit.patientName} (${visit.visitDate})?`);
+    const confirmed = await this.confirmDialog.confirm({
+      title: 'Видалити запис?',
+      message: `Запис для ${visit.patientName} (${visit.visitDate}) буде видалено без можливості відновлення.`,
+      confirmText: 'Видалити',
+      cancelText: 'Скасувати',
+      tone: 'danger',
+      icon: 'delete_outline'
+    });
 
     if (!confirmed) {
       return;

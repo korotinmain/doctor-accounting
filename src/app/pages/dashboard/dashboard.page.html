@@ -1,12 +1,12 @@
 <main id="main-content" class="shell" tabindex="-1" *ngIf="facade.vm$ | async as vm; else loadingState">
-  <app-report-header
-    [selectedMonthLabel]="facade.selectedMonthLabel"
-    [userDisplayName]="(authSession.user$ | async)?.displayName || 'Користувач'"
-    [userEmail]="(authSession.user$ | async)?.email || ''"
-    (shiftMonthRequested)="facade.shiftMonth($event)"
-    (currentMonthRequested)="facade.goCurrentMonth()"
-    (logoutRequested)="authSession.signOut()"
-  ></app-report-header>
+  <ng-container *ngIf="userView$ | async as user">
+    <app-report-header
+      [userDisplayName]="user.displayName"
+      [userEmail]="user.email"
+      [userPhotoUrl]="user.photoUrl"
+      (logoutRequested)="logout()"
+    ></app-report-header>
+  </ng-container>
 
   <section class="auth-alert" *ngIf="facade.authErrorMessage" role="alert" aria-live="assertive">
     <mat-icon>warning_amber</mat-icon>
@@ -14,6 +14,14 @@
   </section>
 
   <ng-container *ngIf="{ monthLoading: (facade.monthLoading$ | async) ?? true } as view">
+    <app-period-control-bar
+      [selectedMonthLabel]="facade.selectedMonthLabel"
+      [monthLoading]="view.monthLoading"
+      [isCurrentMonth]="facade.isCurrentMonthSelected"
+      (shiftMonthRequested)="facade.shiftMonth($event)"
+      (currentMonthRequested)="facade.goCurrentMonth()"
+    ></app-period-control-bar>
+
     <app-dashboard-stats [summary]="vm.summary" [monthLoading]="view.monthLoading"></app-dashboard-stats>
 
     <section class="content-grid">

@@ -1,0 +1,26 @@
+<div class="confirm" [class.confirm--danger]="data.tone === 'danger'">
+  <div class="confirm__head">
+    <span class="confirm__icon" aria-hidden="true">
+      <mat-icon>{{ data.icon }}</mat-icon>
+    </span>
+    <div>
+      <h2 mat-dialog-title>{{ data.title }}</h2>
+      <p>{{ data.message }}</p>
+    </div>
+  </div>
+
+  <div mat-dialog-actions class="confirm__actions">
+    <button mat-stroked-button type="button" class="confirm__btn confirm__btn--cancel" (click)="close(false)">
+      {{ data.cancelText }}
+    </button>
+    <button
+      mat-flat-button
+      type="button"
+      class="confirm__btn"
+      [class.confirm__btn--danger]="data.tone === 'danger'"
+      (click)="close(true)"
+    >
+      {{ data.confirmText }}
+    </button>
+  </div>
+</div>

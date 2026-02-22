@@ -1,0 +1,40 @@
+<section class="control-bar" aria-label="Панель керування періодом">
+  <div class="control-bar__label-group">
+    <p class="control-bar__eyebrow">Період</p>
+    <h2 class="control-bar__title">Місяць звіту</h2>
+  </div>
+
+  <div
+    class="month-picker"
+    role="group"
+    aria-label="Вибір місяця звіту"
+    tabindex="0"
+    (keydown)="onMonthPickerKeydown($event)"
+  >
+    <button type="button" class="month-picker__btn" aria-label="Попередній місяць" (click)="shiftMonth(-1)">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+
+    <div class="month-picker__center" [attr.aria-busy]="monthLoading">
+      <span class="month-picker__value" [class.month-picker__value--loading]="monthLoading">{{
+        selectedMonthLabel
+      }}</span>
+    </div>
+
+    <button type="button" class="month-picker__btn" aria-label="Наступний місяць" (click)="shiftMonth(1)">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+
+  <button
+    type="button"
+    class="control-bar__today"
+    [attr.aria-pressed]="isCurrentMonth"
+    [class.control-bar__today--active]="isCurrentMonth"
+    aria-label="Перейти до поточного місяця"
+    (click)="goCurrentMonth()"
+  >
+    <mat-icon>today</mat-icon>
+    Сьогодні
+  </button>
+</section>

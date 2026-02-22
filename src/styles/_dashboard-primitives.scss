@@ -1,10 +1,8 @@
 .panel {
-  border-radius: 16px;
-  border: 1px solid rgba(220, 230, 240, 0.9);
-  box-shadow:
-    0 3px 10px rgba(20, 39, 65, 0.04),
-    0 1px 3px rgba(20, 39, 65, 0.02);
-  background: #ffffff;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-panel);
+  background: var(--color-surface);
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;
@@ -13,9 +11,7 @@
   padding: 16px 18px;
 
   &:hover {
-    box-shadow:
-      0 6px 16px rgba(20, 39, 65, 0.06),
-      0 2px 5px rgba(20, 39, 65, 0.03);
+    box-shadow: var(--shadow-hover);
     border-color: rgba(205, 218, 232, 0.92);
   }
 }
@@ -49,10 +45,10 @@
   font-size: 20px;
   line-height: 36px;
   text-align: center;
-  color: #7189a3;
-  background: #f0f4f8;
-  border: 1px solid rgba(220, 230, 240, 0.9);
-  border-radius: 10px;
+  color: var(--color-text-muted);
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;

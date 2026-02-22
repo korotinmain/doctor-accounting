@@ -1,0 +1,38 @@
+// ─ Design tokens ──────────────────────────────────────────────────────────────
+// CSS custom properties available globally — no import needed in component SCSS.
+// SCSS variables ($bp-*) are for media queries: @use 'tokens' as t in component.
+
+:root {
+  // ── Brand palette ──────────────────────────────────────────────────────────
+  --color-primary: #0f766e;
+  --color-primary-500: #14b8a6;
+  --color-primary-400: #3dbbb7;
+  --color-primary-surface: #f5fbfb;
+  --color-primary-pale: #eef7f6;
+
+  // ── Neutrals ───────────────────────────────────────────────────────────────
+  --color-text-heading: #1c2c47;
+  --color-text-body: #2a3646;
+  --color-text-muted: #7189a3;
+  --color-text-hint: #8995ab;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f0f4f8;
+
+  // ── Borders ────────────────────────────────────────────────────────────────
+  --color-border: rgba(220, 230, 240, 0.9);
+  --color-border-teal: rgba(180, 215, 212, 0.75);
+
+  // ── Radii ──────────────────────────────────────────────────────────────────
+  --radius-card: 16px;
+  --radius-btn: 12px;
+  --radius-sm: 10px;
+
+  // ── Shadows ────────────────────────────────────────────────────────────────
+  --shadow-card: 0 2px 8px rgba(15, 118, 110, 0.05), 0 1px 3px rgba(18, 36, 59, 0.03);
+  --shadow-hover: 0 6px 16px rgba(20, 39, 65, 0.06), 0 2px 5px rgba(20, 39, 65, 0.03);
+  --shadow-panel: 0 3px 10px rgba(20, 39, 65, 0.04), 0 1px 3px rgba(20, 39, 65, 0.02);
+}
+
+// ── Breakpoint SCSS variables (use with @use 'tokens' as t; → t.$bp-tablet) ─
+$bp-tablet: 1024px;
+$bp-mobile: 640px;

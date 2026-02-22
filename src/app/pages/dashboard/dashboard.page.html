@@ -8,9 +8,9 @@
     ></app-report-header>
   </ng-container>
 
-  <section class="auth-alert" *ngIf="facade.authErrorMessage" role="alert" aria-live="assertive">
+  <section class="auth-alert" *ngIf="facade.authErrorMessage()" role="alert" aria-live="assertive">
     <mat-icon>warning_amber</mat-icon>
-    <p>{{ facade.authErrorMessage }}</p>
+    <p>{{ facade.authErrorMessage() }}</p>
   </section>
 
   <ng-container *ngIf="{ monthLoading: (facade.monthLoading$ | async) ?? true } as view">
@@ -37,6 +37,7 @@
         [dailyStats]="vm.dailyStats"
         [visits]="vm.visits"
         [selectedMonth]="facade.monthControl.value"
+        (exportRequested)="facade.exportVisitsData(vm.visits)"
       ></app-side-stack>
 
       <app-visits-ledger
@@ -46,7 +47,7 @@
         [totalVisits]="vm.summary.totalVisits"
         [searchControl]="facade.searchControl"
         [sortControl]="facade.sortControl"
-        [deletingId]="facade.deletingId"
+        [deletingId]="facade.deletingId()"
         (createVisitRequested)="facade.openCreateDialog()"
         (clearSearchRequested)="facade.clearSearch()"
         (editVisitRequested)="facade.editVisit($event)"
@@ -56,9 +57,9 @@
   </ng-container>
 
   <app-visit-dialog
-    [open]="facade.formDialogOpen"
-    [saving]="facade.saving"
-    [editedVisitId]="facade.editedVisitId"
+    [open]="facade.formDialogOpen()"
+    [saving]="facade.saving()"
+    [editedVisitId]="facade.editedVisitId()"
     [visitForm]="facade.visitForm"
     [procedureOptions]="facade.procedureOptions"
     [percentQuickOptions]="facade.percentQuickOptions"

@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { NgIf } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -18,7 +18,7 @@ import { AuthSessionService } from '../../services/auth-session.service';
   selector: 'app-register-page',
   standalone: true,
   imports: [
-    CommonModule,
+    NgIf,
     ReactiveFormsModule,
     RouterLink,
     MatCardModule,
@@ -29,7 +29,8 @@ import { AuthSessionService } from '../../services/auth-session.service';
     MatProgressSpinnerModule
   ],
   templateUrl: './register.page.html',
-  styleUrls: ['./register.page.scss']
+  styleUrls: ['./register.page.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RegisterPageComponent implements OnInit {
   private readonly fb = inject(FormBuilder);

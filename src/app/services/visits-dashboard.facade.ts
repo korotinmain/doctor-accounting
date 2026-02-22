@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Auth, authState } from '@angular/fire/auth';
@@ -57,11 +57,11 @@ export class VisitsDashboardFacade {
   ]).pipe(
     switchMap(([month, user]) => {
       if (!user) {
-        this.authErrorMessage = 'Увійдіть в акаунт, щоб працювати з журналом.';
+        this.authErrorMessage.set('Увійдіть в акаунт, щоб працювати з журналом.');
         return of<Visit[]>([]);
       }
 
-      this.authErrorMessage = null;
+      this.authErrorMessage.set(null);
 
       return this.visitsService.getVisitsByMonth(month, user.uid).pipe(
         catchError((error) => {
@@ -110,11 +110,11 @@ export class VisitsDashboardFacade {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  editedVisitId: string | null = null;
-  saving = false;
-  deletingId: string | null = null;
-  formDialogOpen = false;
-  authErrorMessage: string | null = null;
+  readonly editedVisitId = signal<string | null>(null);
+  readonly saving = signal(false);
+  readonly deletingId = signal<string | null>(null);
+  readonly formDialogOpen = signal(false);
+  readonly authErrorMessage = signal<string | null>(null);
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -155,7 +155,7 @@ export class VisitsDashboardFacade {
   }
 
   get hasUnsavedChanges(): boolean {
-    return this.formDialogOpen && this.visitForm.dirty;
+    return this.formDialogOpen() && this.visitForm.dirty;
   }
 
   shiftMonth(delta: number): void {
@@ -175,11 +175,11 @@ export class VisitsDashboardFacade {
     }
 
     const draft = this.toDraft();
-    this.saving = true;
+    this.saving.set(true);
 
     try {
-      if (this.editedVisitId) {
-        await this.visitsService.updateVisit(this.editedVisitId, draft);
+      if (this.editedVisitId()) {
+        await this.visitsService.updateVisit(this.editedVisitId()!, draft);
         this.snackBar.open('Запис оновлено', 'OK', { duration: 2400 });
       } else {
         await this.visitsService.createVisit(draft);
@@ -187,16 +187,16 @@ export class VisitsDashboardFacade {
       }
 
       this.resetForm();
-      this.formDialogOpen = false;
+      this.formDialogOpen.set(false);
     } catch (error) {
       this.notifyError('Не вдалося зберегти запис', error);
     } finally {
-      this.saving = false;
+      this.saving.set(false);
     }
   }
 
   editVisit(visit: Visit): void {
-    this.editedVisitId = visit.id;
+    this.editedVisitId.set(visit.id);
 
     this.visitForm.reset({
       visitDate: this.parseVisitDate(visit.visitDate),
@@ -206,21 +206,21 @@ export class VisitsDashboardFacade {
       percent: visit.percent,
       notes: visit.notes
     });
-    this.formDialogOpen = true;
+    this.formDialogOpen.set(true);
   }
 
   cancelEdit(): void {
-    this.formDialogOpen = false;
+    this.formDialogOpen.set(false);
     this.resetForm();
   }
 
   openCreateDialog(): void {
     this.resetForm();
-    this.formDialogOpen = true;
+    this.formDialogOpen.set(true);
   }
 
   closeVisitDialog(): void {
-    if (this.saving) {
+    if (this.saving()) {
       return;
     }
 
@@ -232,10 +232,10 @@ export class VisitsDashboardFacade {
   }
 
   resetStateForSignOut(): void {
-    this.formDialogOpen = false;
-    this.saving = false;
-    this.deletingId = null;
-    this.authErrorMessage = null;
+    this.formDialogOpen.set(false);
+    this.saving.set(false);
+    this.deletingId.set(null);
+    this.authErrorMessage.set(null);
     this.searchControl.setValue('', { emitEvent: false });
     this.sortControl.setValue('dateDesc', { emitEvent: false });
     this.monthControl.setValue(this.getCurrentMonth(), { emitEvent: false });
@@ -256,20 +256,85 @@ export class VisitsDashboardFacade {
       return;
     }
 
-    this.deletingId = visit.id;
+    this.deletingId.set(visit.id);
 
     try {
       await this.visitsService.deleteVisit(visit.id);
       this.snackBar.open('Запис видалено', 'OK', { duration: 2400 });
 
-      if (this.editedVisitId === visit.id) {
+      if (this.editedVisitId() === visit.id) {
         this.resetForm();
       }
     } catch (error) {
       this.notifyError('Не вдалося видалити запис', error);
     } finally {
-      this.deletingId = null;
+      this.deletingId.set(null);
     }
+  }
+
+  exportVisitsData(visits: Visit[]): void {
+    if (typeof document === 'undefined') return;
+
+    const monthPrefix = this.monthControl.value;
+    const rows = visits
+      .filter((visit) => visit.visitDate.startsWith(`${monthPrefix}-`))
+      .sort((left, right) => left.visitDate.localeCompare(right.visitDate));
+
+    if (!rows.length) return;
+
+    const groups = new Map<string, typeof rows>();
+    for (const visit of rows) {
+      const existing = groups.get(visit.visitDate) ?? [];
+      existing.push(visit);
+      groups.set(visit.visitDate, existing);
+    }
+
+    const q = (s: string | number) => `"${String(s).replace(/"/g, '""')}"`;
+    const sep = ';';
+    const lines: string[] = [];
+    let grandAmount = 0;
+    let grandIncome = 0;
+
+    for (const [date, dayVisits] of groups.entries()) {
+      const shortDate = new Intl.DateTimeFormat('uk-UA', { day: 'numeric', month: 'short' }).format(
+        new Date(date + 'T00:00:00')
+      );
+
+      lines.push([q('Дата'), q('ПІБ'), q('Сума'), q('%')].join(sep));
+      let dayAmount = 0;
+      let dayIncome = 0;
+      let firstRow = true;
+
+      for (const visit of dayVisits) {
+        dayAmount += visit.amount;
+        dayIncome += visit.doctorIncome;
+        lines.push(
+          [firstRow ? q(shortDate) : q(''), q(visit.patientName), q(visit.amount), q(visit.doctorIncome)].join(sep)
+        );
+        firstRow = false;
+      }
+
+      lines.push([q(''), q(''), q(dayAmount), q(dayIncome)].join(sep));
+      lines.push('');
+      grandAmount += dayAmount;
+      grandIncome += dayIncome;
+    }
+
+    lines.push([q('ЗАГАЛОМ'), q(''), q(grandAmount), q(grandIncome)].join(sep));
+
+    const csv = '\uFEFF' + lines.join('\r\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    const rawName = this.auth.currentUser?.displayName ?? this.auth.currentUser?.email?.split('@')[0] ?? 'export';
+    const safeName = rawName
+      .replace(/[^\w\u0400-\u04FF\s-]/g, '')
+      .trim()
+      .replace(/\s+/g, '_');
+    anchor.download = `${safeName}_${monthPrefix}.csv`;
+    anchor.click();
+    URL.revokeObjectURL(url);
   }
 
   private toDraft(): VisitDraft {
@@ -292,7 +357,7 @@ export class VisitsDashboardFacade {
   }
 
   private resetForm(): void {
-    this.editedVisitId = null;
+    this.editedVisitId.set(null);
     this.visitForm.reset({
       visitDate: this.getTodayDate(),
       patientName: '',

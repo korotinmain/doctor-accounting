@@ -54,10 +54,12 @@ export function filterVisits(visits: Visit[], query: string): Visit[] {
     return visits;
   }
 
+  const normalizedQuery = query.toLowerCase();
+
   return visits.filter((visit) => {
     const searchData = [visit.patientName, visit.procedureName, visit.notes, visit.visitDate].join(' ').toLowerCase();
 
-    return searchData.includes(query);
+    return searchData.includes(normalizedQuery);
   });
 }
 

@@ -78,6 +78,35 @@ describe('visits-analytics', () => {
     expect(byDate[2].id).toBe('3');
   });
 
+  it('sortVisits should sort by incomeDesc', () => {
+    const byIncome = sortVisits(visits, 'incomeDesc');
+    expect(byIncome[0].doctorIncome).toBeGreaterThanOrEqual(byIncome[1].doctorIncome);
+    expect(byIncome[1].doctorIncome).toBeGreaterThanOrEqual(byIncome[2].doctorIncome);
+  });
+
+  it('sortVisits should sort by amountDesc', () => {
+    const byAmount = sortVisits(visits, 'amountDesc');
+    expect(byAmount[0].amount).toBeGreaterThanOrEqual(byAmount[1].amount);
+    expect(byAmount[1].amount).toBeGreaterThanOrEqual(byAmount[2].amount);
+  });
+
+  it('calculateIncome should correctly compute income for valid inputs', () => {
+    expect(calculateIncome(1000, 30)).toBe(300);
+    expect(calculateIncome(2500, 20)).toBe(500);
+    expect(calculateIncome(0, 50)).toBe(0);
+  });
+
+  it('filterVisits should be case-insensitive', () => {
+    expect(filterVisits(visits, 'КОРОТІН').length).toBe(2);
+    expect(filterVisits(visits, 'Іваненко').length).toBe(1);
+  });
+
+  it('buildDashboardVm should return empty dailyStats for invalid month format', () => {
+    const vm = buildDashboardVm(visits, 'invalid');
+    expect(vm.dailyStats.length).toBe(0);
+    expect(vm.summary.totalVisits).toBe(3);
+  });
+
   it('addMonths should shift month and fallback on invalid input', () => {
     expect(addMonths('2026-02', -1, '2026-02')).toBe('2026-01');
     expect(addMonths('2026-12', 1, '2026-02')).toBe('2027-01');

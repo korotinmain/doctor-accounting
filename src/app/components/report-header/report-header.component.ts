@@ -1,13 +1,14 @@
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { NgIf } from '@angular/common';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-report-header',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [NgIf, MatIconModule],
   templateUrl: './report-header.component.html',
-  styleUrls: ['./report-header.component.scss']
+  styleUrls: ['./report-header.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReportHeaderComponent {
   @Input() userDisplayName = '';

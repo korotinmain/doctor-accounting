@@ -1,13 +1,13 @@
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-period-control-bar',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [MatIconModule],
   templateUrl: './period-control-bar.component.html',
-  styleUrls: ['./period-control-bar.component.scss']
+  styleUrls: ['./period-control-bar.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PeriodControlBarComponent {
   @Input({ required: true }) selectedMonthLabel = '';

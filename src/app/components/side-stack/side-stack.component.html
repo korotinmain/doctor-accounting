@@ -72,7 +72,11 @@
       <div class="day-overview__divider"></div>
 
       <section class="overview-actions">
-        <button type="button" class="overview-actions__btn overview-actions__btn--primary" (click)="exportData()">
+        <button
+          type="button"
+          class="overview-actions__btn overview-actions__btn--primary"
+          (click)="exportRequested.emit()"
+        >
           <mat-icon>download</mat-icon>
           Експорт даних
         </button>

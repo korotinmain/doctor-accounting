@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { NgIf } from '@angular/common';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,9 +7,10 @@ import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-action-panel',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule],
+  imports: [NgIf, MatCardModule, MatIconModule, MatButtonModule],
   templateUrl: './action-panel.component.html',
-  styleUrls: ['./action-panel.component.scss']
+  styleUrls: ['./action-panel.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActionPanelComponent {
   @Input({ required: true }) selectedMonthLabel = '';

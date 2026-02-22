@@ -1,10 +1,9 @@
-import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { CurrencyPipe, NgFor, NgIf } from '@angular/common';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 
 import { Visit } from '../../models/visit.model';
-import { AuthSessionService } from '../../services/auth-session.service';
 import { DailyInsight } from '../../utils/visits-analytics';
 
 type CalendarCell =
@@ -21,17 +20,18 @@ type CalendarCell =
 @Component({
   selector: 'app-side-stack',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatIconModule],
+  imports: [NgIf, NgFor, CurrencyPipe, MatCardModule, MatIconModule],
   templateUrl: './side-stack.component.html',
-  styleUrls: ['./side-stack.component.scss']
+  styleUrls: ['./side-stack.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SideStackComponent implements OnInit {
-  private readonly authSession = inject(AuthSessionService);
-
   @Input() monthLoading = false;
   @Input() dailyStats: DailyInsight[] = [];
   @Input() visits: Visit[] = [];
   @Input() selectedMonth = '';
+
+  @Output() exportRequested = new EventEmitter<void>();
 
   selectedDay: string | null = null;
 
@@ -130,82 +130,6 @@ export class SideStackComponent implements OnInit {
       });
     }
     return cells;
-  }
-
-  exportData(): void {
-    if (typeof document === 'undefined') return;
-
-    const { year, month } = this.resolvedPeriod;
-    const monthPrefix = `${year}-${String(month).padStart(2, '0')}`;
-    const rows = this.visits
-      .filter((visit) => visit.visitDate.startsWith(`${monthPrefix}-`))
-      .sort((left, right) => left.visitDate.localeCompare(right.visitDate));
-
-    if (!rows.length) return;
-
-    // Group by date
-    const groups = new Map<string, typeof rows>();
-    for (const visit of rows) {
-      const existing = groups.get(visit.visitDate) ?? [];
-      existing.push(visit);
-      groups.set(visit.visitDate, existing);
-    }
-
-    const q = (s: string | number) => `"${String(s).replace(/"/g, '""')}"`;
-    const sep = ';';
-    const lines: string[] = [];
-
-    let grandAmount = 0;
-    let grandIncome = 0;
-
-    for (const [date, dayVisits] of groups.entries()) {
-      const shortDate = new Intl.DateTimeFormat('uk-UA', { day: 'numeric', month: 'short' }).format(
-        new Date(date + 'T00:00:00')
-      );
-
-      // Day header
-      lines.push([q('Дата'), q('ПІБ'), q('Сума'), q('%')].join(sep));
-
-      let dayAmount = 0;
-      let dayIncome = 0;
-      let firstRow = true;
-
-      for (const visit of dayVisits) {
-        dayAmount += visit.amount;
-        dayIncome += visit.doctorIncome;
-        lines.push(
-          [firstRow ? q(shortDate) : q(''), q(visit.patientName), q(visit.amount), q(visit.doctorIncome)].join(sep)
-        );
-        firstRow = false;
-      }
-
-      // Day subtotal
-      lines.push([q(''), q(''), q(dayAmount), q(dayIncome)].join(sep));
-      // Empty separator row
-      lines.push('');
-
-      grandAmount += dayAmount;
-      grandIncome += dayIncome;
-    }
-
-    // Grand total
-    lines.push([q('СУМА'), q(''), q(grandAmount), q(grandIncome)].join(sep));
-
-    // BOM for Excel UTF-8 detection
-    const csv = '\uFEFF' + lines.join('\r\n');
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement('a');
-    anchor.href = url;
-    const rawName =
-      this.authSession.currentUser?.displayName ?? this.authSession.currentUser?.email?.split('@')[0] ?? 'export';
-    const safeName = rawName
-      .replace(/[^\w\u0400-\u04FF\s-]/g, '')
-      .trim()
-      .replace(/\s+/g, '_');
-    anchor.download = `${safeName}_${monthPrefix}.csv`;
-    anchor.click();
-    URL.revokeObjectURL(url);
   }
 
   printReport(): void {

@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { NgIf } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,7 +20,7 @@ type LoginMode = 'google' | 'email' | null;
   selector: 'app-login-page',
   standalone: true,
   imports: [
-    CommonModule,
+    NgIf,
     ReactiveFormsModule,
     RouterLink,
     MatCardModule,
@@ -31,7 +31,8 @@ type LoginMode = 'google' | 'email' | null;
     MatProgressSpinnerModule
   ],
   templateUrl: './login.page.html',
-  styleUrls: ['./login.page.scss']
+  styleUrls: ['./login.page.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginPageComponent implements OnInit {
   private readonly fb = inject(FormBuilder);

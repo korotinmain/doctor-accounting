@@ -1,7 +1,8 @@
-import { CommonModule } from '@angular/common';
+import { CurrencyPipe, NgFor, NgIf } from '@angular/common';
 import { A11yModule } from '@angular/cdk/a11y';
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
@@ -27,7 +28,9 @@ import { MatSelectChange, MatSelectModule } from '@angular/material/select';
   standalone: true,
   imports: [
     A11yModule,
-    CommonModule,
+    NgIf,
+    NgFor,
+    CurrencyPipe,
     ReactiveFormsModule,
     MatIconModule,
     MatCardModule,
@@ -40,7 +43,8 @@ import { MatSelectChange, MatSelectModule } from '@angular/material/select';
   ],
   templateUrl: './visit-dialog.component.html',
   styleUrls: ['./visit-dialog.component.scss'],
-  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'uk-UA' }]
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'uk-UA' }],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VisitDialogComponent implements OnChanges, AfterViewInit {
   @ViewChild('patientNameInput') patientNameInput?: ElementRef<HTMLInputElement>;

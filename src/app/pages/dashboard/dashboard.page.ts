@@ -1,26 +1,27 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { AsyncPipe, NgIf } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { User } from 'firebase/auth';
 import { map, shareReplay } from 'rxjs';
 
-import { ActionPanelComponent } from '../../components/action-panel/action-panel.component';
-import { DashboardStatsComponent } from '../../components/dashboard-stats/dashboard-stats.component';
-import { PeriodControlBarComponent } from '../../components/period-control-bar/period-control-bar.component';
-import { ReportHeaderComponent } from '../../components/report-header/report-header.component';
-import { SideStackComponent } from '../../components/side-stack/side-stack.component';
-import { VisitDialogComponent } from '../../components/visit-dialog/visit-dialog.component';
-import { VisitsLedgerComponent } from '../../components/visits-ledger/visits-ledger.component';
-import { AuthSessionService } from '../../services/auth-session.service';
-import { ConfirmDialogService } from '../../services/confirm-dialog.service';
-import { VisitsDashboardFacade } from '../../services/visits-dashboard.facade';
+import {
+  ActionPanelComponent,
+  DashboardStatsComponent,
+  PeriodControlBarComponent,
+  ReportHeaderComponent,
+  SideStackComponent,
+  VisitDialogComponent,
+  VisitsLedgerComponent
+} from '../../components';
+import { AuthSessionService, ConfirmDialogService, VisitsDashboardFacade } from '../../services';
 
 @Component({
   selector: 'app-dashboard-page',
   standalone: true,
   imports: [
-    CommonModule,
+    NgIf,
+    AsyncPipe,
     MatIconModule,
     MatSnackBarModule,
     ReportHeaderComponent,
@@ -33,7 +34,8 @@ import { VisitsDashboardFacade } from '../../services/visits-dashboard.facade';
   ],
   templateUrl: './dashboard.page.html',
   styleUrls: ['./dashboard.page.scss'],
-  providers: [VisitsDashboardFacade]
+  providers: [VisitsDashboardFacade],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardPageComponent {
   readonly userView$ = this.authSession.user$.pipe(

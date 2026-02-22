@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { CurrencyPipe, DatePipe, DecimalPipe, NgFor, NgIf } from '@angular/common';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -17,7 +17,11 @@ import { VisitsSort } from '../../utils/visits-analytics';
   selector: 'app-visits-ledger',
   standalone: true,
   imports: [
-    CommonModule,
+    NgIf,
+    NgFor,
+    CurrencyPipe,
+    DatePipe,
+    DecimalPipe,
     ReactiveFormsModule,
     MatIconModule,
     MatCardModule,
@@ -28,7 +32,8 @@ import { VisitsSort } from '../../utils/visits-analytics';
     MatTableModule
   ],
   templateUrl: './visits-ledger.component.html',
-  styleUrls: ['./visits-ledger.component.scss']
+  styleUrls: ['./visits-ledger.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VisitsLedgerComponent {
   @Input({ required: true }) ledgerVm!: LedgerVm;

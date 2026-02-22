@@ -11,6 +11,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "migrate:owner-uid": "node scripts/migrate-owner-uid.mjs",
+    "import:visits": "node scripts/import-visits.mjs",
     "prepare": "husky"
   },
   "lint-staged": {

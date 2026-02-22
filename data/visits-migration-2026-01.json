@@ -1,0 +1,326 @@
+[
+  {
+    "ownerUid": "EoJNR9JHUPM0oDpnxEn1lcaWyzd2",
+    "patientName": "Білута Оксана Ярославівна",
+    "procedureName": "Консультація",
+    "amount": 950,
+    "doctorIncome": 285,
+    "percent": 30,
+    "visitDate": "2026-01-07",
+    "createdAt": "2026-02-21T16:45:37+02:00",
+    "updatedAt": "2026-02-21T16:45:37+02:00"
+  },
+  {
+    "ownerUid": "EoJNR9JHUPM0oDpnxEn1lcaWyzd2",
+    "patientName": "Гевак Роксолана Вікторівна",
+    "procedureName": "Консультація",
+    "amount": 1150,
+    "doctorIncome": 345,
+    "percent": 30,
+    "visitDate": "2026-01-07",
+    "createdAt": "2026-02-21T16:45:37+02:00",
+    "updatedAt": "2026-02-21T16:45:37+02:00"
+  },
+  {
+    "ownerUid": "EoJNR9JHUPM0oDpnxEn1lcaWyzd2",
+    "patientName": "Дяківнич Степан Миколаєвич",
+    "procedureName": "Консультація",
+    "amount": 1150,
+    "doctorIncome": 345,
+    "percent": 30,
+    "visitDate": "2026-01-07",
+    "createdAt": "2026-02-21T16:45:37+02:00",
+    "updatedAt": "2026-02-21T16:45:37+02:00"
+  },
+  {
+    "ownerUid": "EoJNR9JHUPM0oDpnxEn1lcaWyzd2",
+    "patientName": "Гах Владислав Романович",
+    "procedureName": "Консультація",
+    "amount": 840,
+    "doctorIncome": 252,
+    "percent": 30,
+    "visitDate": "2026-01-07",
+    "createdAt": "2026-02-21T16:45:37+02:00",
+    "updatedAt": "2026-02-21T16:45:37+02:00"
+  },
+  {
+    "ownerUid": "EoJNR9JHUPM0oDpnxEn1lcaWyzd2",
+    "patientName": "Петріченко Ольга Ігорівна",
+    "procedureName": "Консультація",
+    "amount": 450,
+    "doctorIncome": 135,
+    "percent": 30,
+    "visitDate": "2026-01-07",
+    "createdAt": "2026-02-21T16:45:37+02:00",
+    "updatedAt": "2026-02-21T16:45:37+02:00"
+  },
+  {
+    "ownerUid": "EoJNR9JHUPM0oDpnxEn1lcaWyzd2",
+    "patientName": "Сорока Анна Богданівна",
+    "procedureName": "Консультація",
+    "amount": 850,
+    "doctorIncome": 255,
+    "percent": 30,
+    "visitDate": "2026-01-07",
+    "createdAt": "2026-02-21T16:45:37+02:00",
+    "updatedAt": "2026-02-21T16:45:37+02:00"
+  },
+  {
+    "ownerUid": "EoJNR9JHUPM0oDpnxEn1lcaWyzd2",
+    "patientName": "Хомин Дмитро Володимирович",
+    "procedureName": "Консультація",
+    "amount": 1150,
+    "doctorIncome": 345,
+    "percent": 30,
+    "visitDate": "2026-01-07",
+    "createdAt": "2026-02-21T16:45:37+02:00",
+    "updatedAt": "2026-02-21T16:45:37+02:00"
+  },
+  {
+    "ownerUid": "EoJNR9JHUPM0oDpnxEn1lcaWyzd2",
+    "patientName": "Ткач Ян Миколаєвич",
+    "procedureName": "Консультація",
+    "amount": 550,
+    "doctorIncome": 165,
+    "percent": 30,
+    "visitDate": "2026-01-07",
+    "createdAt": "2026-02-21T16:45:37+02:00",
+    "updatedAt": "2026-02-21T16:45:37+02:00"
+  },
+  {
+    "ownerUid": "EoJNR9JHUPM0oDpnxEn1lcaWyzd2",
+    "patientName": "Юрочко Наталія Павлівна",
+    "procedureName": "Консультація",
+    "amount": 1150,
+    "doctorIncome": 345,
+    "percent": 30,
+    "visitDate": "2026-01-07",
+    "createdAt": "2026-02-21T16:45:37+02:00",
+    "updatedAt": "2026-02-21T16:45:37+02:00"
+  },
+
+  {
+    "ownerUid": "EoJNR9JHUPM0oDpnxEn1lcaWyzd2",
+    "patientName": "Пеленичка Стефанія Назаріївна",
+    "procedureName": "Операція",
+    "amount": 16500,
+    "doctorIncome": 1650,
+    "percent": 10,
+    "visitDate": "2026-01-13",
+    "createdAt": "2026-02-21T16:45:37+02:00",
+    "updatedAt": "2026-02-21T16:45:37+02:00"
+  },
+  {
+    "ownerUid": "EoJNR9JHUPM0oDpnxEn1lcaWyzd2",
+    "patientName": "Пеленичка Стефанія Назаріївна",
+    "procedureName": "Операція",
+    "amount": 1815,
+    "doctorIncome": 181.5,
+    "percent": 10,
+    "visitDate": "2026-01-13",
+    "createdAt": "2026-02-21T16:45:37+02:00",
+    "updatedAt": "2026-02-21T16:45:37+02:00"
+  },
+
+  {
+    "ownerUid": "EoJNR9JHUPM0oDpnxEn1lcaWyzd2",
+    "patientName": "Ярусевич Каріна Маркіянівна",
+    "procedureName": "Консультація",
+    "amount": 840,
+    "doctorIncome": 252,
+    "percent": 30,
+    "visitDate": "2026-01-14",
+    "createdAt": "2026-02-21T16:45:37+02:00",
+    "updatedAt": "2026-02-21T16:45:37+02:00"
+  },
+  {
+    "ownerUid": "EoJNR9JHUPM0oDpnxEn1lcaWyzd2",
+    "patientName": "Грущак Елизавета Андріївна",
+    "procedureName": "Консультація",
+    "amount": 920,
+    "doctorIncome": 276,
+    "percent": 30,
+    "visitDate": "2026-01-14",
+    "createdAt": "2026-02-21T16:45:37+02:00",
+    "updatedAt": "2026-02-21T16:45:37+02:00"
+  },
+  {
+    "ownerUid": "EoJNR9JHUPM0oDpnxEn1lcaWyzd2",
+    "patientName": "Грущак Елизавета Андріївна",
+    "procedureName": "Консультація",
+    "amount": 920,
+    "doctorIncome": 276,
+    "percent": 30,
+    "visitDate": "2026-01-14",
+    "createdAt": "2026-02-21T16:45:37+02:00",
+    "updatedAt": "2026-02-21T16:45:37+02:00"
+  },
+  {
+    "ownerUid": "EoJNR9JHUPM0oDpnxEn1lcaWyzd2",
+    "patientName": "Возьна Анастасія Богданівна",
+    "procedureName": "Консультація",
+    "amount": 1150,
+    "doctorIncome": 345,
+    "percent": 30,
+    "visitDate": "2026-01-14",
+    "createdAt": "2026-02-21T16:45:37+02:00",
+    "updatedAt": "2026-02-21T16:45:37+02:00"
+  },
+  {
+    "ownerUid": "EoJNR9JHUPM0oDpnxEn1lcaWyzd2",
+    "patientName": "Варшаломідзе Юлія Євстахіївна",
+    "procedureName": "Консультація",
+    "amount": 1150,
+    "doctorIncome": 345,
+    "percent": 30,
+    "visitDate": "2026-01-14",
+    "createdAt": "2026-02-21T16:45:37+02:00",
+    "updatedAt": "2026-02-21T16:45:37+02:00"
+  },
+  {
+    "ownerUid": "EoJNR9JHUPM0oDpnxEn1lcaWyzd2",
+    "patientName": "Варшаломідзе Юлія Євстахіївна",
+    "procedureName": "Консультація",
+    "amount": 950,
+    "doctorIncome": 285,
+    "percent": 30,
+    "visitDate": "2026-01-14",
+    "createdAt": "2026-02-21T16:45:37+02:00",
+    "updatedAt": "2026-02-21T16:45:37+02:00"
+  },
+
+  {
+    "ownerUid": "EoJNR9JHUPM0oDpnxEn1lcaWyzd2",
+    "patientName": "Федоряк Яна Олександрівна",
+    "procedureName": "Операція",
+    "amount": 24300,
+    "doctorIncome": 2430,
+    "percent": 10,
+    "visitDate": "2026-01-21",
+    "createdAt": "2026-02-21T16:45:37+02:00",
+    "updatedAt": "2026-02-21T16:45:37+02:00"
+  },
+  {
+    "ownerUid": "EoJNR9JHUPM0oDpnxEn1lcaWyzd2",
+    "patientName": "Федоряк Яна Олександрівна",
+    "procedureName": "Операція",
+    "amount": 1815,
+    "doctorIncome": 181.5,
+    "percent": 10,
+    "visitDate": "2026-01-21",
+    "createdAt": "2026-02-21T16:45:37+02:00",
+    "updatedAt": "2026-02-21T16:45:37+02:00"
+  },
+  {
+    "ownerUid": "EoJNR9JHUPM0oDpnxEn1lcaWyzd2",
+    "patientName": "Труба Олександр Романович",
+    "procedureName": "Операція",
+    "amount": 23100,
+    "doctorIncome": 2310,
+    "percent": 10,
+    "visitDate": "2026-01-21",
+    "createdAt": "2026-02-21T16:45:37+02:00",
+    "updatedAt": "2026-02-21T16:45:37+02:00"
+  },
+  {
+    "ownerUid": "EoJNR9JHUPM0oDpnxEn1lcaWyzd2",
+    "patientName": "Савик Орест Олегович",
+    "procedureName": "Операція",
+    "amount": 23100,
+    "doctorIncome": 2310,
+    "percent": 10,
+    "visitDate": "2026-01-21",
+    "createdAt": "2026-02-21T16:45:37+02:00",
+    "updatedAt": "2026-02-21T16:45:37+02:00"
+  },
+
+  {
+    "ownerUid": "EoJNR9JHUPM0oDpnxEn1lcaWyzd2",
+    "patientName": "Павлюк Андрій Назарович",
+    "procedureName": "Консультація",
+    "amount": 1150,
+    "doctorIncome": 345,
+    "percent": 30,
+    "visitDate": "2026-01-21",
+    "createdAt": "2026-02-21T16:45:37+02:00",
+    "updatedAt": "2026-02-21T16:45:37+02:00"
+  },
+  {
+    "ownerUid": "EoJNR9JHUPM0oDpnxEn1lcaWyzd2",
+    "patientName": "Ахаева Анастасія Іванівна",
+    "procedureName": "Консультація",
+    "amount": 450,
+    "doctorIncome": 135,
+    "percent": 30,
+    "visitDate": "2026-01-21",
+    "createdAt": "2026-02-21T16:45:37+02:00",
+    "updatedAt": "2026-02-21T16:45:37+02:00"
+  },
+  {
+    "ownerUid": "EoJNR9JHUPM0oDpnxEn1lcaWyzd2",
+    "patientName": "Шередько Галина Борисівна",
+    "procedureName": "Консультація",
+    "amount": 1035,
+    "doctorIncome": 310.5,
+    "percent": 30,
+    "visitDate": "2026-01-21",
+    "createdAt": "2026-02-21T16:45:37+02:00",
+    "updatedAt": "2026-02-21T16:45:37+02:00"
+  },
+  {
+    "ownerUid": "EoJNR9JHUPM0oDpnxEn1lcaWyzd2",
+    "patientName": "Шередько Галина Борисівна",
+    "procedureName": "Консультація",
+    "amount": 840,
+    "doctorIncome": 252,
+    "percent": 30,
+    "visitDate": "2026-01-21",
+    "createdAt": "2026-02-21T16:45:37+02:00",
+    "updatedAt": "2026-02-21T16:45:37+02:00"
+  },
+  {
+    "ownerUid": "EoJNR9JHUPM0oDpnxEn1lcaWyzd2",
+    "patientName": "Будз Андрій Степанович",
+    "procedureName": "Консультація",
+    "amount": 840,
+    "doctorIncome": 252,
+    "percent": 30,
+    "visitDate": "2026-01-21",
+    "createdAt": "2026-02-21T16:45:37+02:00",
+    "updatedAt": "2026-02-21T16:45:37+02:00"
+  },
+
+  {
+    "ownerUid": "EoJNR9JHUPM0oDpnxEn1lcaWyzd2",
+    "patientName": "Лобур Вероніка Миколаївна",
+    "procedureName": "Консультація",
+    "amount": 920,
+    "doctorIncome": 276,
+    "percent": 30,
+    "visitDate": "2026-01-28",
+    "createdAt": "2026-02-21T16:45:37+02:00",
+    "updatedAt": "2026-02-21T16:45:37+02:00"
+  },
+  {
+    "ownerUid": "EoJNR9JHUPM0oDpnxEn1lcaWyzd2",
+    "patientName": "Артим Тимур Васильович",
+    "procedureName": "Консультація",
+    "amount": 950,
+    "doctorIncome": 285,
+    "percent": 30,
+    "visitDate": "2026-01-28",
+    "createdAt": "2026-02-21T16:45:37+02:00",
+    "updatedAt": "2026-02-21T16:45:37+02:00"
+  },
+  {
+    "ownerUid": "EoJNR9JHUPM0oDpnxEn1lcaWyzd2",
+    "patientName": "Липа Яна Богданівна",
+    "procedureName": "Консультація",
+    "amount": 950,
+    "doctorIncome": 285,
+    "percent": 30,
+    "visitDate": "2026-01-28",
+    "createdAt": "2026-02-21T16:45:37+02:00",
+    "updatedAt": "2026-02-21T16:45:37+02:00"
+  }
+]

@@ -46,6 +46,7 @@ firebase-debug.log
 src/environments/environment.local.ts
 src/environments/environment.development.local.ts
 src/environments/environment.production.local.ts
+service-account.json
 
 # System files
 .DS_Store

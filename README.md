@@ -147,6 +147,64 @@ npm run migrate:owner-uid -- --apply --map-file=./scripts/owner-map.json
 npm run migrate:owner-uid -- --apply --all-to-uid=YOUR_UID --service-account=/path/to/service-account.json
 ```
 
+## 10. Швидкий імпорт visits з Excel/CSV/JSON
+
+Для масового переносу додано скрипт:
+
+```bash
+npm run import:visits -- --file=./data/visits-january.csv --uid=YOUR_UID
+```
+
+За замовчуванням це `dry-run` (нічого не записує в БД), показує summary + preview.
+
+Щоб реально імпортувати:
+
+```bash
+npm run import:visits -- --apply --file=./data/visits-january.csv --uid=YOUR_UID
+```
+
+JSON (коли в кожному записі вже є `ownerUid`):
+
+```bash
+# dry-run
+npm run import:visits -- --file=./data/visits-january.json
+
+# apply
+npm run import:visits -- --apply --file=./data/visits-january.json
+```
+
+Якщо потрібно, `--uid` може примусово перевизначити `ownerUid` для всіх рядків JSON:
+
+```bash
+npm run import:visits -- --apply --file=./data/visits-january.json --uid=YOUR_UID
+```
+
+Для CSV/TSV підтримувані колонки:
+
+- обов'язково: `Дата`, `ПІБ`, `Сума`, `%`
+- опційно: `Послуга`, `Примітки`
+
+Особливості:
+
+- якщо у колонці `%` значення > 100, скрипт вважає це **сумою доходу лікаря** і сам обчислює відсоток;
+- порожня дата в рядку бере дату з попереднього рядка (зручно для блоків, як у ваших таблицях);
+- рядки без ПІБ або суми пропускаються;
+- якщо в ПІБ є `(операція)`, скрипт автоматично ставить послугу `Операція`;
+- для JSON читає поля `ownerUid`, `visitDate`, `patientName`, `procedureName`, `amount`, `percent` / `doctorIncome`, `notes` (опційно `createdAt`/`updatedAt`).
+
+Корисні опції:
+
+```bash
+# Якщо дата без року (наприклад, 7-січ.), можна явно задати рік
+npm run import:visits -- --file=./data/visits.csv --uid=YOUR_UID --year=2026
+
+# TSV з таб-роздільником
+npm run import:visits -- --file=./data/visits.tsv --uid=YOUR_UID --delimiter=tab
+
+# Явний service account (якщо не налаштовані ADC/FIREBASE_SERVICE_ACCOUNT_JSON)
+npm run import:visits -- --apply --file=./data/visits.csv --uid=YOUR_UID --service-account=/path/to/service-account.json
+```
+
 ## Важливо
 
 - Для коректної локалізації в інтерфейсі використовується `uk-UA`.

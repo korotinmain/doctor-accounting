@@ -47,6 +47,8 @@
 .table-wrap {
   margin-top: 11px;
   overflow: auto;
+  max-height: calc(100vh - 200px);
+  min-height: 280px;
   border-radius: 14px;
   border: 1px solid rgba(222, 230, 238, 0.9);
   background: #ffffff;

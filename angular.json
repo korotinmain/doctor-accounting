@@ -32,7 +32,8 @@
             "inlineStyleLanguage": "scss",
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": ["src/styles.scss"],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": ["apexcharts"]
           },
           "configurations": {
             "production": {
@@ -45,7 +46,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "1260kb",
+                  "maximumWarning": "1280kb",
                   "maximumError": "1500kb"
                 },
                 {

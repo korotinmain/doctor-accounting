@@ -9,40 +9,29 @@
     </div>
   </div>
 
-  <div class="top__account" *ngIf="resolvedDisplayName || userEmail">
-    <button
-      type="button"
-      class="top__account-trigger"
-      [matMenuTriggerFor]="accountMenu"
-      #accountMenuTrigger="matMenuTrigger"
-      [class.top__account-trigger--open]="accountMenuTrigger.menuOpen"
-      [attr.aria-label]="'Меню користувача: ' + resolvedDisplayName"
-      [attr.title]="userHint"
-    >
-      <span class="top__avatar" [class.top__avatar--image]="!!userPhotoUrl" aria-hidden="true">
-        <img *ngIf="userPhotoUrl; else avatarTextTpl" [src]="userPhotoUrl" alt="" />
-        <ng-template #avatarTextTpl>{{ avatarText }}</ng-template>
-      </span>
-      <span class="top__account-name">{{ triggerDisplayName }}</span>
-      <mat-icon class="top__account-caret">expand_more</mat-icon>
+  <div class="top__actions">
+    <button type="button" class="top__notify" aria-label="Сповіщення">
+      <mat-icon>notifications_none</mat-icon>
+      <span class="top__notify-dot" aria-hidden="true"></span>
     </button>
-  </div>
-</header>
 
-<mat-menu #accountMenu="matMenu" panelClass="account-menu-panel" xPosition="before" yPosition="below">
-  <div class="account-menu">
-    <div class="account-menu__profile" [attr.title]="userHint">
-      <span class="account-menu__avatar" [class.account-menu__avatar--image]="!!userPhotoUrl" aria-hidden="true">
-        <img *ngIf="userPhotoUrl; else dropdownAvatarTextTpl" [src]="userPhotoUrl" alt="" />
-        <ng-template #dropdownAvatarTextTpl>{{ avatarText }}</ng-template>
-      </span>
-      <strong>{{ resolvedDisplayName }}</strong>
-      <span>{{ userEmail || 'Email не вказано' }}</span>
+    <span class="top__actions-divider" *ngIf="resolvedDisplayName || userEmail" aria-hidden="true"></span>
+
+    <div class="top__account" *ngIf="resolvedDisplayName || userEmail">
+      <div class="top__account-trigger" [attr.title]="userHint">
+        <span class="top__avatar" [class.top__avatar--image]="!!userPhotoUrl" aria-hidden="true">
+          <img *ngIf="userPhotoUrl; else avatarTextTpl" [src]="userPhotoUrl" alt="" />
+          <ng-template #avatarTextTpl>{{ avatarText }}</ng-template>
+        </span>
+        <span class="top__account-name">{{ triggerDisplayName }}</span>
+      </div>
     </div>
 
-    <button mat-menu-item type="button" class="account-menu__logout" (click)="logout()">
+    <span class="top__actions-divider" *ngIf="resolvedDisplayName || userEmail" aria-hidden="true"></span>
+
+    <button type="button" class="top__logout" *ngIf="resolvedDisplayName || userEmail" (click)="logout()">
       <mat-icon>logout</mat-icon>
       <span>Вийти</span>
     </button>
   </div>
-</mat-menu>
+</header>

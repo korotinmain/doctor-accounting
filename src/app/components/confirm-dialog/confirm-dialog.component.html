@@ -3,11 +3,11 @@
     <span class="confirm__icon" aria-hidden="true">
       <mat-icon>{{ data.icon }}</mat-icon>
     </span>
-    <div>
-      <h2 mat-dialog-title>{{ data.title }}</h2>
-      <p>{{ data.message }}</p>
-    </div>
+    <h2 class="confirm__title" mat-dialog-title>{{ data.title }}</h2>
+    <p class="confirm__message">{{ data.message }}</p>
   </div>
+
+  <div class="confirm__divider" aria-hidden="true"></div>
 
   <div mat-dialog-actions class="confirm__actions">
     <button mat-stroked-button type="button" class="confirm__btn confirm__btn--cancel" (click)="close(false)">
@@ -16,7 +16,7 @@
     <button
       mat-flat-button
       type="button"
-      class="confirm__btn"
+      class="confirm__btn confirm__btn--confirm"
       [class.confirm__btn--danger]="data.tone === 'danger'"
       (click)="close(true)"
     >

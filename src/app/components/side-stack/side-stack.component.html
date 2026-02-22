@@ -1,61 +1,97 @@
 <div class="side-stack">
-  <mat-card class="panel mini">
-    <header class="mini__header">
-      <div class="mini__title-group">
-        <mat-icon class="mini__icon">calendar_month</mat-icon>
-        <div class="mini__title-copy">
-          <h3>Статистика по днях</h3>
-          <p>Дні з балансом за вибраний місяць</p>
+  <mat-card class="panel mini day-overview">
+    <header class="day-overview__header">
+      <div class="day-overview__title-group">
+        <mat-icon class="day-overview__icon">analytics</mat-icon>
+        <div class="day-overview__title-copy">
+          <h3>Огляд дня</h3>
+          <p>{{ todayLabel }}</p>
         </div>
       </div>
-      <span class="mini__badge">За датою</span>
     </header>
 
-    <div class="daily-stats" *ngIf="!monthLoading && dailyStats.length; else dailyStatsState">
-      <div class="daily-stats__row" *ngFor="let day of dailyStats">
-        <div class="daily-stats__top">
-          <div class="daily-stats__date">
-            <mat-icon>event</mat-icon>
-            <strong>{{ day.date + 'T00:00:00' | date: 'd MMM' : '' : 'uk-UA' }}</strong>
-          </div>
-          <span class="daily-stats__visits">
-            <mat-icon>check_circle</mat-icon>
-            {{ day.visits }} візит(ів)
-          </span>
+    <div *ngIf="!monthLoading; else sideLoadingState">
+      <!-- ─ Статистика ──────────────────────────────────────────────── -->
+      <section class="overview-stats">
+        <div class="overview-stats__summary">
+          <span>Візитів {{ activeStatsLabel }}</span>
+          <strong>{{ visitLabel(todayStats.visits) }}</strong>
         </div>
 
-        <div class="daily-stats__metrics">
-          <article class="daily-stats__metric">
-            <span class="daily-stats__label">
-              <mat-icon>payments</mat-icon>
-              Дохід лікаря
-            </span>
-            <strong class="daily-stats__income">{{
-              day.doctorIncome | currency: 'UAH' : 'symbol' : '1.0-0' : 'uk-UA'
-            }}</strong>
-          </article>
-          <article class="daily-stats__metric">
-            <span class="daily-stats__label">
-              <mat-icon>account_balance_wallet</mat-icon>
-              Загальна каса
-            </span>
-            <strong>{{ day.totalAmount | currency: 'UAH' : 'symbol' : '1.0-0' : 'uk-UA' }}</strong>
-          </article>
+        <article class="overview-metric overview-metric--income">
+          <span class="overview-metric__label">
+            <mat-icon>person</mat-icon>
+            Дохід лікаря
+          </span>
+          <strong>{{ todayStats.doctorIncome | currency: 'UAH' : 'symbol' : '1.0-0' : 'uk-UA' }}</strong>
+        </article>
+
+        <article class="overview-metric overview-metric--total">
+          <span class="overview-metric__label">
+            <mat-icon>payments</mat-icon>
+            Загальна каса
+          </span>
+          <strong>{{ todayStats.totalAmount | currency: 'UAH' : 'symbol' : '1.0-0' : 'uk-UA' }}</strong>
+        </article>
+      </section>
+
+      <!-- ─ Календар ──────────────────────────────────────────────── -->
+      <div class="day-overview__divider"></div>
+
+      <section class="overview-calendar">
+        <p class="overview-calendar__label">Календар &mdash; {{ calendarMonthTitle }}</p>
+
+        <div class="overview-calendar__weekdays">
+          <span *ngFor="let label of weekdayLabels">{{ label }}</span>
         </div>
-      </div>
+
+        <div class="overview-calendar__grid">
+          <button
+            type="button"
+            class="overview-calendar__cell"
+            *ngFor="let cell of calendarCells; trackBy: trackByCell"
+            [disabled]="cell.type === 'empty' || (cell.type === 'day' && !cell.hasVisits && !cell.isToday)"
+            [class.overview-calendar__cell--empty]="cell.type === 'empty'"
+            [class.overview-calendar__cell--has-visits]="cell.type === 'day' && cell.hasVisits"
+            [class.overview-calendar__cell--today]="cell.type === 'day' && cell.isToday && !isDaySelected(cell.day)"
+            [class.overview-calendar__cell--selected]="cell.type === 'day' && isDaySelected(cell.day)"
+            (click)="cell.type === 'day' && (cell.hasVisits || cell.isToday) && selectDay(cell.day)"
+          >
+            <ng-container *ngIf="cell.type === 'day'">{{ cell.day }}</ng-container>
+          </button>
+        </div>
+
+        <p class="overview-calendar__hint" *ngIf="!selectedDay">Натисніть на день, щоб побачити статистику</p>
+        <p class="overview-calendar__hint overview-calendar__hint--active" *ngIf="selectedDay">
+          Показано: {{ activeStatsLabel }} &mdash;
+          <button type="button" class="overview-calendar__reset" (click)="selectedDay = null">скинути</button>
+        </p>
+      </section>
+
+      <!-- ─ Дії ──────────────────────────────────────────────────── -->
+      <div class="day-overview__divider"></div>
+
+      <section class="overview-actions">
+        <button type="button" class="overview-actions__btn overview-actions__btn--primary" (click)="exportData()">
+          <mat-icon>download</mat-icon>
+          Експорт даних
+        </button>
+
+        <button type="button" class="overview-actions__btn" (click)="printReport()">
+          <mat-icon>print</mat-icon>
+          Друк звіту
+        </button>
+
+        <p>Дані за {{ calendarMonthLabel }}.</p>
+      </section>
     </div>
 
-    <ng-template #dailyStatsState>
-      <div class="daily-stats daily-stats--skeleton" *ngIf="monthLoading; else emptyDailyStats">
-        <div class="daily-stats__row daily-stats__row--skeleton"></div>
-        <div class="daily-stats__row daily-stats__row--skeleton"></div>
-        <div class="daily-stats__row daily-stats__row--skeleton"></div>
-        <div class="daily-stats__row daily-stats__row--skeleton"></div>
+    <ng-template #sideLoadingState>
+      <div class="overview-loading">
+        <div class="skeleton-line skeleton-line--long"></div>
+        <div class="skeleton-line skeleton-line--long"></div>
+        <div class="skeleton-line skeleton-line--long"></div>
       </div>
-    </ng-template>
-
-    <ng-template #emptyDailyStats>
-      <p class="muted">У цьому місяці ще немає днів із балансом.</p>
     </ng-template>
   </mat-card>
 </div>

@@ -3,74 +3,91 @@
 }
 
 .control-bar {
-  min-height: 48px;
+  min-height: 64px;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(208, 220, 216, 0.95);
+  gap: 14px;
+  padding: 14px 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(200, 220, 218, 0.75);
   background: #ffffff;
-  box-shadow: 0 2px 8px rgba(10, 30, 26, 0.05);
+  box-shadow:
+    0 2px 8px rgba(15, 118, 110, 0.05),
+    0 1px 3px rgba(18, 36, 59, 0.03);
+  position: relative;
+  overflow: hidden;
+  justify-content: space-between;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 16px;
+    bottom: 16px;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+    background: linear-gradient(to bottom, #3dbbb7, #12967f);
+  }
 }
 
 .control-bar__label-group {
   display: grid;
-  gap: 1px;
-  min-width: 128px;
+  gap: 3px;
+  min-width: 166px;
   flex-shrink: 0;
 }
 
 .control-bar__eyebrow {
   margin: 0;
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #6f8b85;
-  font-weight: 700;
+  color: #8995ab;
+  font-weight: 600;
 }
 
 .control-bar__title {
   margin: 0;
   font-size: 0.95rem;
-  line-height: 1.15;
-  color: #214f48;
+  line-height: 1.2;
+  color: #2a3646;
   font-weight: 700;
 }
 
 .month-picker {
-  height: 44px;
-  border-radius: 12px;
-  border: 1px solid rgba(190, 213, 206, 0.95);
-  background: #f8fbfa;
-  padding: 3px;
+  border-radius: 14px;
+  border: 1px solid rgba(180, 215, 212, 0.75);
+  background: linear-gradient(145deg, #f5fbfb 0%, #eef7f6 100%);
+  padding: 6px;
   display: grid;
-  grid-template-columns: 34px 1fr 34px;
+  grid-template-columns: 38px 1fr 38px;
   align-items: center;
-  gap: 7px;
-  width: 100%;
-  max-width: 520px;
-  margin-inline: auto;
+  gap: 6px;
+  flex: 1;
+  max-width: 480px;
+  min-width: 0;
 
   &:focus-visible {
-    outline: 2px solid rgba(89, 139, 127, 0.55);
+    outline: 2px solid rgba(77, 184, 180, 0.4);
     outline-offset: 1px;
   }
 }
 
 .month-picker__btn {
-  width: 28px;
-  height: 28px;
-  border-radius: 9px;
-  border: 1px solid rgba(182, 203, 197, 0.95);
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid rgba(190, 218, 215, 0.85);
   background: #ffffff;
-  color: #2d6a62;
+  color: #3d7a76;
   padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   line-height: 1;
   cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(15, 118, 110, 0.06);
 
   .mat-icon {
     width: 18px;
@@ -78,11 +95,20 @@
     font-size: 18px;
     line-height: 18px;
     margin: 0;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   &:hover {
-    background: #f1f8f6;
+    background: #e8f5f4;
+    border-color: rgba(15, 118, 110, 0.3);
+    color: #0f766e;
+    box-shadow: 0 2px 6px rgba(15, 118, 110, 0.12);
+  }
+
+  &:active {
+    transform: scale(0.94);
   }
 }
 
@@ -93,11 +119,12 @@
 }
 
 .month-picker__value {
-  font-size: 1rem;
-  line-height: 1;
+  font-size: clamp(1rem, 1.3vw, 1.2rem);
+  line-height: 1.2;
   font-weight: 700;
-  color: #1f4f49;
-  letter-spacing: -0.01em;
+  font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+  color: #0f2e2b;
+  letter-spacing: -0.015em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -106,8 +133,8 @@
   &--loading {
     color: transparent;
     border-radius: 8px;
-    min-width: 130px;
-    min-height: 18px;
+    min-width: 120px;
+    min-height: 16px;
     background: linear-gradient(90deg, #ecf3f1 25%, #e1ece9 50%, #ecf3f1 75%);
     background-size: 220% 100%;
     animation: shimmer 1.2s linear infinite;
@@ -115,33 +142,46 @@
 }
 
 .control-bar__today {
-  min-height: 38px;
-  border-radius: 10px;
-  border: 1px solid rgba(191, 213, 206, 0.95);
-  background: #f9fcfb;
-  color: #2f6961;
-  font-size: 0.82rem;
+  min-height: 40px;
+  border-radius: 12px;
+  border: 1px solid rgba(185, 215, 212, 0.85);
+  background: #ffffff;
+  color: #275c58;
+  font-size: 0.88rem;
   font-weight: 700;
-  padding: 0 12px;
+  padding: 0 14px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 5px;
   white-space: nowrap;
   cursor: pointer;
-  margin-left: auto;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(15, 118, 110, 0.06);
 
   .mat-icon {
-    font-size: 17px;
-    width: 17px;
-    height: 17px;
-    line-height: 17px;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+    color: #0f766e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &:hover {
+    background: #e8f5f4;
+    border-color: rgba(15, 118, 110, 0.3);
+    color: #0f766e;
+    box-shadow: 0 2px 6px rgba(15, 118, 110, 0.1);
   }
 
   &--active {
-    border-color: rgba(168, 202, 193, 0.95);
-    background: #f3f9f7;
-    color: #245b53;
+    border-color: rgba(15, 118, 110, 0.3);
+    background: #e3f3f2;
+    color: #0a5e58;
   }
 }
 
@@ -170,11 +210,17 @@
 
 @media (max-width: 640px) {
   .control-bar {
-    padding: 9px;
+    min-height: auto;
+    padding: 10px 12px;
+  }
+
+  .month-picker {
+    height: 42px;
+    grid-template-columns: 34px 1fr 34px;
   }
 
   .month-picker__value {
-    font-size: 0.94rem;
+    font-size: 1rem;
   }
 
   .control-bar__today {

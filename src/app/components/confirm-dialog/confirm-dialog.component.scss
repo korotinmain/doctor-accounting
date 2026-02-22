@@ -3,92 +3,166 @@
 }
 
 .confirm {
-  padding: 16px;
-  display: grid;
-  gap: 14px;
+  padding: 24px 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
+// Optional top accent bar for danger variant (injected via ::before on host)
+.confirm--danger {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    border-radius: 26px 26px 0 0;
+    background: linear-gradient(90deg, #d35449 0%, #e07268 100%);
+  }
+}
+
+// ── Head ─────────────────────────────────────────────────────────
 .confirm__head {
-  display: grid;
-  grid-template-columns: 38px 1fr;
-  align-items: start;
-  gap: 10px;
-
-  h2 {
-    margin: 0;
-    font-size: 1.05rem;
-    line-height: 1.25;
-    color: #1f4b45;
-    font-weight: 700;
-  }
-
-  p {
-    margin: 5px 0 0;
-    color: #5f7c76;
-    line-height: 1.45;
-    font-size: 0.9rem;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  padding-bottom: 20px;
 }
 
 .confirm__icon {
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: 12px;
-  border: 1px solid rgba(194, 215, 208, 0.95);
-  background: #edf6f3;
-  display: grid;
-  place-items: center;
+  border: 1px solid rgba(207, 220, 233, 0.95);
+  background: #f2f7fd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 40px;
+  overflow: hidden;
+  flex-shrink: 0;
 
   .mat-icon {
-    width: 20px;
-    height: 20px;
-    font-size: 20px;
-    color: #2f7269;
+    width: 22px;
+    height: 22px;
+    font-size: 22px;
+    color: #4d6386;
   }
 }
 
+.confirm__title {
+  margin: 0;
+  font-size: 1.15rem;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  color: #0f2233;
+  font-weight: 800;
+  font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+}
+
+.confirm__message {
+  margin: 0;
+  color: #5f748f;
+  line-height: 1.5;
+  font-size: 0.93rem;
+  font-weight: 500;
+}
+
+// ── Divider ───────────────────────────────────────────────────────
+.confirm__divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(220, 230, 240, 0.85);
+  margin: 0;
+}
+
+// ── Actions ──────────────────────────────────────────────────────
 .confirm__actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
-  flex-wrap: nowrap;
-  gap: 8px;
-  padding: 0;
-  margin: 0;
+  gap: 10px;
+  padding: 18px 0 0 !important;
+  margin: 0 !important;
+  min-height: unset !important;
 }
 
 .confirm__btn {
-  min-width: 140px;
-  min-height: 38px !important;
-  border-radius: 10px !important;
+  min-width: 120px;
+  min-height: 42px !important;
+  border-radius: 12px !important;
   font-weight: 700 !important;
   letter-spacing: 0.01em !important;
+  font-size: 0.95rem !important;
 }
 
 .confirm__btn--cancel {
-  margin-right: auto;
-  border-color: rgba(188, 208, 202, 0.95) !important;
+  border-color: rgba(200, 214, 230, 0.95) !important;
   background: #ffffff !important;
-  color: #3a5f59 !important;
+  color: #4a607e !important;
+
+  &:hover:not([disabled]) {
+    background: #f5f8fb !important;
+    border-color: rgba(175, 195, 215, 0.95) !important;
+  }
+}
+
+.confirm__btn--confirm {
+  background: #0f766e !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(15, 118, 110, 0.22) !important;
+
+  &:hover:not([disabled]) {
+    background: #0d6660 !important;
+    box-shadow: 0 6px 16px rgba(15, 118, 110, 0.28) !important;
+  }
 }
 
 .confirm__btn--danger {
-  margin-left: auto;
+  background: linear-gradient(145deg, #d35449 0%, #c94338 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(198, 75, 63, 0.24) !important;
+
+  &:hover:not([disabled]) {
+    background: linear-gradient(145deg, #d85e53 0%, #d04840 100%) !important;
+    box-shadow: 0 6px 16px rgba(198, 75, 63, 0.3) !important;
+  }
 }
 
+// ── Danger icon ──────────────────────────────────────────────────
 .confirm--danger {
   .confirm__icon {
-    border-color: rgba(235, 197, 193, 0.95);
-    background: #fff2f1;
+    border-color: rgba(236, 194, 190, 0.95);
+    background: #fff1ef;
 
     .mat-icon {
-      color: #bf3c32;
+      color: #c33f35;
     }
   }
+}
 
-  .confirm__btn--danger {
-    background: #c14339 !important;
-    color: #ffffff !important;
+@media (max-width: 680px) {
+  .confirm {
+    padding: 20px 18px 16px;
+  }
+
+  .confirm__title {
+    font-size: 1.05rem;
+  }
+
+  .confirm__message {
+    font-size: 0.88rem;
+    padding-left: 0;
+  }
+
+  .confirm__btn {
+    min-width: 100px;
+    min-height: 40px !important;
   }
 }

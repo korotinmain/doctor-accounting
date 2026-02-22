@@ -9,12 +9,15 @@
     [cdkTrapFocusAutoCapture]="open"
   >
     <header class="visit-dialog__header">
-      <div class="panel__title-group">
-        <mat-icon class="panel__icon">{{ editedVisitId ? 'edit_note' : 'add_circle_outline' }}</mat-icon>
-        <div>
+      <div class="visit-dialog__header-main">
+        <span class="visit-dialog__badge" aria-hidden="true">
+          <mat-icon>{{ editedVisitId ? 'edit' : 'add' }}</mat-icon>
+        </span>
+        <div class="visit-dialog__title-wrap">
           <h2 [id]="editedVisitId ? 'visit-dialog-title-edit' : 'visit-dialog-title-create'">
             {{ editedVisitId ? 'Редагування візиту' : 'Новий візит' }}
           </h2>
+          <p>{{ editedVisitId ? 'Оновіть дані прийому пацієнта' : 'Додайте інформацію про прийом пацієнта' }}</p>
         </div>
       </div>
       <button

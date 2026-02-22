@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-report-header',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatMenuModule],
+  imports: [CommonModule, MatIconModule],
   templateUrl: './report-header.component.html',
   styleUrls: ['./report-header.component.scss']
 })

@@ -3,10 +3,11 @@
 }
 
 .shell {
-  width: min(1280px, calc(100% - 48px));
-  margin: 32px auto 48px;
+  width: min(1400px, calc(100% - 48px));
+  margin: 0 auto 36px;
+  padding-top: 20px;
   display: grid;
-  gap: 24px;
+  gap: 16px;
   animation: fadeIn 0.5s ease-out;
 }
 
@@ -71,8 +72,8 @@
 
 .content-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
-  gap: 20px;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 380px);
+  gap: 16px;
   align-items: start;
 }
 
@@ -88,8 +89,9 @@
 
 @media (max-width: 820px) {
   .shell {
-    width: calc(100% - 24px);
-    margin: 16px auto 28px;
+    width: calc(100% - 20px);
+    margin: 0 auto 28px;
+    padding-top: 14px;
     gap: 18px;
   }
 

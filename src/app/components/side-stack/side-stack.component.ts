@@ -103,8 +103,9 @@ export class SideStackComponent implements OnInit, OnChanges {
   }
 
   get bestProfitableDay(): string {
-    if (!this.dailyStats.length) return '—';
-    const best = this.dailyStats.reduce((a, b) => (b.doctorIncome > a.doctorIncome ? b : a));
+    const activeDays = this.dailyStats.filter((d) => d.visits > 0);
+    if (!activeDays.length) return '—';
+    const best = activeDays.reduce((a, b) => (b.doctorIncome > a.doctorIncome ? b : a));
     const date = new Date(best.date + 'T00:00:00');
     return new Intl.DateTimeFormat('uk-UA', { day: 'numeric', month: 'long' }).format(date);
   }

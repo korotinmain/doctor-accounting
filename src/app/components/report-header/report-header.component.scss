@@ -1,5 +1,8 @@
 :host {
   display: block;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .top {
@@ -8,12 +11,11 @@
   justify-content: space-between;
   gap: 16px;
   min-height: 68px;
-  border-radius: 16px;
   padding: 8px clamp(16px, 2.2vw, 26px);
   border: 0;
   border-bottom: 1px solid var(--color-border);
   background: var(--color-surface);
-  box-shadow: 0 1px 3px rgba(var(--color-dark-rgb), 0.02);
+  box-shadow: 0 2px 8px rgba(var(--color-dark-rgb), 0.06);
 }
 
 .top__brand {
@@ -65,7 +67,6 @@
   gap: 10px;
 }
 
-.top__notify,
 .top__settings {
   width: 38px;
   height: 38px;
@@ -97,29 +98,6 @@
   }
 }
 
-.top__notify-dot {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-  background: var(--color-danger);
-  animation: notify-pulse 2.4s ease-out infinite;
-}
-
-@keyframes notify-pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.55);
-  }
-  60% {
-    box-shadow: 0 0 0 5px rgba(220, 38, 38, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
-  }
-}
-
 .top__actions-divider {
   width: 1px;
   height: 30px;
@@ -132,16 +110,17 @@
 }
 
 .top__account-trigger {
-  height: 44px;
+  min-height: 44px;
+  height: auto;
   border-radius: 14px;
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
+  border: none;
+  background: transparent;
   color: var(--color-text-body);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 9px;
-  padding: 4px 13px 4px 5px;
+  padding: 4px 5px;
   line-height: 1;
   cursor: default;
   user-select: none;
@@ -180,6 +159,31 @@
   white-space: nowrap;
   font-size: 0.9rem;
   font-weight: 700;
+  color: var(--color-text-body);
+  line-height: 1.25;
+}
+
+.top__account-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  line-height: 1;
+}
+
+.top__account-role {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  line-height: 1.2;
+}
+
+.top__account-chevron {
+  width: 18px !important;
+  height: 18px !important;
+  font-size: 18px !important;
+  line-height: 18px !important;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
 }
 
 .top__logout {
@@ -267,7 +271,7 @@
     padding-inline: 8px;
   }
 
-  .top__account-name {
+  .top__account-info {
     display: none;
   }
 

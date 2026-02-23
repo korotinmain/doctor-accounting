@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Auth, authState } from '@angular/fire/auth';
 import { catchError, combineLatest, map, merge, of, shareReplay, startWith, switchMap } from 'rxjs';
@@ -18,6 +19,7 @@ import {
 import { ConfirmDialogService } from './confirm-dialog.service';
 import { UserSettingsService } from './user-settings.service';
 import { VisitsService } from './visits.service';
+import { VisitDialogComponent, VisitDialogData } from '../components/visit-dialog/visit-dialog.component';
 
 type ReportPeriod = {
   year: number;
@@ -154,13 +156,16 @@ export class VisitsDashboardFacade {
   readonly formDialogOpen = signal(false);
   readonly authErrorMessage = signal<string | null>(null);
 
+  private dialogRef: MatDialogRef<VisitDialogComponent> | null = null;
+
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly visitsService: VisitsService,
     private readonly snackBar: MatSnackBar,
     private readonly auth: Auth,
     private readonly confirmDialog: ConfirmDialogService,
-    private readonly userSettings: UserSettingsService
+    private readonly userSettings: UserSettingsService,
+    private readonly dialog: MatDialog
   ) {}
 
   get selectedMonthLabel(): string {
@@ -224,9 +229,6 @@ export class VisitsDashboardFacade {
         await this.visitsService.createVisit(draft);
         this.snackBar.open('Запис додано', 'OK', { duration: 2400 });
       }
-
-      this.resetForm();
-      this.formDialogOpen.set(false);
     } catch (error) {
       this.notifyError('Не вдалося зберегти запис', error);
     } finally {
@@ -245,17 +247,18 @@ export class VisitsDashboardFacade {
       percent: visit.percent,
       notes: visit.notes
     });
-    this.formDialogOpen.set(true);
+    this.openVisitDialog();
   }
 
   cancelEdit(): void {
     this.formDialogOpen.set(false);
+    this.dialogRef = null;
     this.resetForm();
   }
 
   openCreateDialog(): void {
     this.resetForm();
-    this.formDialogOpen.set(true);
+    this.openVisitDialog();
   }
 
   closeVisitDialog(): void {
@@ -263,7 +266,7 @@ export class VisitsDashboardFacade {
       return;
     }
 
-    this.cancelEdit();
+    this.dialogRef?.close();
   }
 
   clearSearch(): void {
@@ -271,6 +274,8 @@ export class VisitsDashboardFacade {
   }
 
   resetStateForSignOut(): void {
+    this.dialogRef?.close();
+    this.dialogRef = null;
     this.formDialogOpen.set(false);
     this.saving.set(false);
     this.deletingId.set(null);
@@ -439,6 +444,41 @@ export class VisitsDashboardFacade {
     anchor.download = `${safeName}_${monthPrefix}.xls`;
     anchor.click();
     URL.revokeObjectURL(url);
+  }
+
+  private openVisitDialog(): void {
+    const data: VisitDialogData = {
+      editedVisitId: this.editedVisitId,
+      saving: this.saving,
+      visitForm: this.visitForm,
+      procedureOptions: this.procedureOptions,
+      percentQuickOptions: this.percentQuickOptions,
+      projectedIncome$: this.projectedIncome$
+    };
+
+    this.dialogRef = this.dialog.open(VisitDialogComponent, {
+      data,
+      width: '760px',
+      maxWidth: '96vw',
+      maxHeight: '96vh',
+      panelClass: 'visit-dialog-panel',
+      backdropClass: 'visit-dialog-backdrop',
+      autoFocus: false,
+      restoreFocus: true,
+      disableClose: true
+    });
+
+    this.formDialogOpen.set(true);
+
+    this.dialogRef.afterClosed().subscribe(async (result) => {
+      try {
+        if (result === 'submit') {
+          await this.submitVisit();
+        }
+      } finally {
+        this.cancelEdit();
+      }
+    });
   }
 
   private toDraft(): VisitDraft {

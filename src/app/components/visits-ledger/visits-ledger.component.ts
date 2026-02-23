@@ -1,4 +1,4 @@
-import { CurrencyPipe, DatePipe, DecimalPipe, NgFor, NgIf } from '@angular/common';
+import { CurrencyPipe, DatePipe, DecimalPipe, NgClass, NgFor, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -12,6 +12,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
 
 import { LedgerVm } from '../../models/ledger-view.model';
@@ -24,6 +25,7 @@ import { VisitsSort } from '../../utils/visits-analytics';
   imports: [
     NgIf,
     NgFor,
+    NgClass,
     CurrencyPipe,
     DatePipe,
     DecimalPipe,
@@ -31,6 +33,7 @@ import { VisitsSort } from '../../utils/visits-analytics';
     MatIconModule,
     MatCardModule,
     MatButtonModule,
+    MatMenuModule,
     MatTableModule
   ],
   templateUrl: './visits-ledger.component.html',
@@ -62,39 +65,37 @@ export class VisitsLedgerComponent implements OnChanges {
   ];
 
   readonly pageSize = 10;
-  currentPage = 1;
+  visibleCount = 10;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['ledgerVm']) {
-      this.currentPage = 1;
+      this.visibleCount = this.pageSize;
     }
   }
 
   get pagedVisits(): Visit[] {
-    const start = (this.currentPage - 1) * this.pageSize;
-    return this.ledgerVm.visits.slice(start, start + this.pageSize);
+    return this.ledgerVm.visits.slice(0, this.visibleCount);
   }
 
-  get totalPages(): number {
-    return Math.max(1, Math.ceil(this.ledgerVm.visits.length / this.pageSize));
+  get shownCount(): number {
+    return Math.min(this.visibleCount, this.ledgerVm.visits.length);
   }
 
-  get pageNumbers(): number[] {
-    const total = this.totalPages;
-    const current = this.currentPage;
-    if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
-    const pages: number[] = [1];
-    if (current > 3) pages.push(-1); // ellipsis
-    const start = Math.max(2, current - 1);
-    const end = Math.min(total - 1, current + 1);
-    for (let i = start; i <= end; i++) pages.push(i);
-    if (current < total - 2) pages.push(-1); // ellipsis
-    pages.push(total);
-    return pages;
+  get hasMore(): boolean {
+    return this.visibleCount < this.ledgerVm.visits.length;
   }
 
-  goToPage(page: number): void {
-    this.currentPage = Math.max(1, Math.min(page, this.totalPages));
+  loadMore(): void {
+    this.visibleCount += this.pageSize;
+  }
+
+  procedureClass(name: string): string {
+    const lower = name.toLowerCase();
+    if (lower.includes('узд') || lower.includes('ультразвук')) return 'proc--teal';
+    if (lower.includes('операц') || lower.includes('хірург')) return 'proc--blue';
+    if (lower.includes('консультац')) return '';
+    const sum = name.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+    return ['', 'proc--teal', 'proc--blue'][sum % 3];
   }
 
   trackByVisitId(_: number, visit: Visit): string {

@@ -2,46 +2,35 @@
   display: block;
 }
 
+// ── Container ────────────────────────────────────────────────────────
 .control-bar {
   min-height: 64px;
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
   padding: 14px 20px;
   border-radius: 16px;
-  border: 1px solid rgba(var(--color-600-rgb), 0.75);
+  border: 1px solid var(--color-border);
   background: var(--color-surface);
   box-shadow:
-    0 2px 8px rgba(var(--color-600-rgb), 0.05),
+    0 2px 8px rgba(var(--color-dark-rgb), 0.04),
     0 1px 3px rgba(var(--color-dark-rgb), 0.03);
-  position: relative;
-  overflow: hidden;
   justify-content: space-between;
-
-  &::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 16px;
-    bottom: 16px;
-    width: 3px;
-    border-radius: 0 3px 3px 0;
-    background: linear-gradient(to bottom, var(--color-primary-light), var(--color-primary));
-  }
 }
 
+// ── Label group (left) ───────────────────────────────────────────────
 .control-bar__label-group {
   display: grid;
   gap: 3px;
-  min-width: 166px;
+  min-width: 150px;
   flex-shrink: 0;
 }
 
 .control-bar__eyebrow {
   margin: 0;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.09em;
   color: var(--color-text-muted);
   font-weight: 600;
 }
@@ -54,40 +43,34 @@
   font-weight: 700;
 }
 
+// ── Month picker (center) ────────────────────────────────────────────
 .month-picker {
-  border-radius: 14px;
-  border: 1px solid rgba(var(--color-600-rgb), 0.75);
-  background: var(--color-surface-alt);
-  padding: 6px;
-  display: grid;
-  grid-template-columns: 38px 1fr 38px;
+  display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 16px;
   flex: 1;
-  max-width: 480px;
-  min-width: 0;
+  justify-content: center;
 
   &:focus-visible {
-    outline: 2px solid rgba(var(--color-600-rgb), 0.4);
-    outline-offset: 1px;
+    outline: none;
   }
 }
 
 .month-picker__btn {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border-radius: 10px;
-  border: 1px solid rgba(var(--color-600-rgb), 0.85);
+  border: 1px solid var(--color-border);
   background: var(--color-surface);
-  color: var(--color-primary);
+  color: var(--color-text-body);
   padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   line-height: 1;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 1px 3px rgba(var(--color-600-rgb), 0.06);
+  transition: all 0.18s ease;
+  flex-shrink: 0;
 
   .mat-icon {
     width: 18px;
@@ -101,10 +84,8 @@
   }
 
   &:hover {
-    background: var(--color-surface-mid);
-    border-color: rgba(var(--color-600-rgb), 0.3);
-    color: var(--color-primary);
-    box-shadow: 0 2px 6px rgba(var(--color-600-rgb), 0.12);
+    background: var(--color-surface-alt);
+    border-color: var(--color-border);
   }
 
   &:active {
@@ -121,20 +102,18 @@
 .month-picker__center {
   display: flex;
   justify-content: center;
-  min-width: 0;
+  min-width: 180px;
 }
 
 .month-picker__value {
-  font-size: clamp(1rem, 1.3vw, 1.2rem);
+  font-size: 1.05rem;
   line-height: 1.2;
   font-weight: 700;
   font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
-  color: var(--color-900);
-  letter-spacing: -0.015em;
+  color: var(--color-text-body);
+  letter-spacing: -0.01em;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-transform: capitalize;
+  text-align: center;
 
   &--loading {
     color: transparent;
@@ -152,54 +131,51 @@
   }
 }
 
+// ── Today button (right) ─────────────────────────────────────────────
 .control-bar__today {
   min-height: 40px;
   border-radius: 12px;
-  border: 1px solid rgba(var(--color-600-rgb), 0.85);
-  background: var(--color-surface);
-  color: var(--color-primary);
+  border: none;
+  background: var(--color-primary);
+  color: #fff;
   font-size: 0.88rem;
   font-weight: 700;
-  padding: 0 14px;
+  padding: 0 18px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 6px;
   white-space: nowrap;
   cursor: pointer;
   flex-shrink: 0;
-  transition: all 0.2s ease;
-  box-shadow: 0 1px 3px rgba(var(--color-600-rgb), 0.06);
+  transition: opacity 0.18s ease;
 
   .mat-icon {
     font-size: 18px;
     width: 18px;
     height: 18px;
     line-height: 18px;
-    color: var(--color-primary);
+    color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
   &:hover {
-    background: var(--color-surface-mid);
-    border-color: rgba(var(--color-600-rgb), 0.3);
-    color: var(--color-primary);
-    box-shadow: 0 2px 6px rgba(var(--color-600-rgb), 0.1);
+    opacity: 0.88;
   }
 
   &--active {
-    border-color: rgba(var(--color-600-rgb), 0.3);
-    background: var(--color-surface-mid);
-    color: var(--color-primary);
+    opacity: 0.7;
+    cursor: default;
   }
 }
 
+// ── Responsive ───────────────────────────────────────────────────────
 @media (max-width: 1024px) {
   .control-bar {
     flex-wrap: wrap;
-    gap: 9px;
+    gap: 10px;
   }
 
   .control-bar__label-group {
@@ -208,14 +184,11 @@
 
   .month-picker {
     order: 1;
-    margin-inline: 0;
-    max-width: none;
-    flex: 1 1 320px;
+    flex: 1 1 auto;
   }
 
   .control-bar__today {
     order: 2;
-    margin-left: 0;
   }
 }
 
@@ -225,13 +198,12 @@
     padding: 10px 12px;
   }
 
-  .month-picker {
-    height: 42px;
-    grid-template-columns: 34px 1fr 34px;
+  .month-picker__center {
+    min-width: 140px;
   }
 
   .month-picker__value {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
 
   .control-bar__today {

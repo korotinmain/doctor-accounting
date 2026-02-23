@@ -2,6 +2,12 @@
   display: block;
 }
 
+.dashboard-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
 .shell {
   width: min(1400px, calc(100% - 48px));
   margin: 0 auto 36px;

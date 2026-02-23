@@ -10,11 +10,6 @@
   </div>
 
   <div class="top__actions">
-    <button type="button" class="top__notify" aria-label="Сповіщення">
-      <mat-icon>notifications_none</mat-icon>
-      <span class="top__notify-dot" aria-hidden="true"></span>
-    </button>
-
     <a routerLink="/settings" class="top__settings" aria-label="Налаштування">
       <mat-icon>settings</mat-icon>
     </a>
@@ -27,7 +22,10 @@
           <img *ngIf="userPhotoUrl; else avatarTextTpl" [src]="userPhotoUrl" alt="" />
           <ng-template #avatarTextTpl>{{ avatarText }}</ng-template>
         </span>
-        <span class="top__account-name">{{ triggerDisplayName }}</span>
+        <div class="top__account-info">
+          <span class="top__account-name">{{ triggerDisplayName }}</span>
+          <span class="top__account-role">Лікар</span>
+        </div>
       </div>
     </div>
 

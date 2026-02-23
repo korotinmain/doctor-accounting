@@ -1,39 +1,44 @@
-import { CurrencyPipe, NgFor, NgIf } from '@angular/common';
-import { A11yModule } from '@angular/cdk/a11y';
+import { NgFor, NgIf } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  EventEmitter,
-  HostListener,
-  Input,
-  OnChanges,
-  Output,
-  SimpleChanges,
+  Inject,
+  OnInit,
+  Signal,
   ViewChild
 } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
+import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
+
+export interface VisitDialogData {
+  editedVisitId: Signal<string | null>;
+  saving: Signal<boolean>;
+  visitForm: FormGroup;
+  procedureOptions: string[];
+  percentQuickOptions: number[];
+  projectedIncome$: Observable<number>;
+}
 
 @Component({
   selector: 'app-visit-dialog',
   standalone: true,
   imports: [
-    A11yModule,
     NgIf,
     NgFor,
-    CurrencyPipe,
     ReactiveFormsModule,
     MatIconModule,
-    MatCardModule,
+    MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
@@ -46,54 +51,39 @@ import { MatSelectChange, MatSelectModule } from '@angular/material/select';
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'uk-UA' }],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class VisitDialogComponent implements OnChanges, AfterViewInit {
+export class VisitDialogComponent implements OnInit, AfterViewInit {
   @ViewChild('patientNameInput') patientNameInput?: ElementRef<HTMLInputElement>;
   @ViewChild('amountInput') amountInput?: ElementRef<HTMLInputElement>;
 
-  @Input() open = false;
-  @Input() saving = false;
-  @Input() editedVisitId: string | null = null;
-  @Input() projectedIncome = 0;
-  @Input() procedureOptions: string[] = [];
-  @Input() percentQuickOptions: number[] = [];
-  @Input({ required: true }) visitForm!: FormGroup;
-
   readonly maxVisitDate = new Date();
 
-  @Output() closeRequested = new EventEmitter<void>();
-  @Output() submitRequested = new EventEmitter<void>();
+  constructor(
+    public readonly dialogRef: MatDialogRef<VisitDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public readonly data: VisitDialogData
+  ) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['open'] && this.open) {
-      this.scheduleFocus();
-    }
+  ngOnInit(): void {
+    this.dialogRef.backdropClick().subscribe(() => this.closeDialog());
+    this.dialogRef
+      .keydownEvents()
+      .pipe(filter((e) => e.key === 'Escape'))
+      .subscribe(() => this.closeDialog());
   }
 
   ngAfterViewInit(): void {
-    if (this.open) {
-      this.scheduleFocus();
-    }
-  }
-
-  @HostListener('document:keydown.escape')
-  handleEscapeKey(): void {
-    if (!this.open || this.saving) {
-      return;
-    }
-
-    this.closeRequested.emit();
+    this.scheduleFocus();
   }
 
   closeDialog(): void {
-    if (this.saving) {
+    if (this.data.saving()) {
       return;
     }
 
-    this.closeRequested.emit();
+    this.dialogRef.close();
   }
 
   submitForm(): void {
-    this.submitRequested.emit();
+    this.dialogRef.close('submit');
   }
 
   applyQuickPercent(value: number): void {
@@ -128,31 +118,27 @@ export class VisitDialogComponent implements OnChanges, AfterViewInit {
   }
 
   get patientNameControl() {
-    return this.visitForm.get('patientName');
+    return this.data.visitForm.get('patientName');
   }
 
   get procedureNameControl() {
-    return this.visitForm.get('procedureName');
+    return this.data.visitForm.get('procedureName');
   }
 
   get visitDateControl() {
-    return this.visitForm.get('visitDate');
+    return this.data.visitForm.get('visitDate');
   }
 
   get amountControl() {
-    return this.visitForm.get('amount');
+    return this.data.visitForm.get('amount');
   }
 
   get percentControl() {
-    return this.visitForm.get('percent');
+    return this.data.visitForm.get('percent');
   }
 
   private scheduleFocus(): void {
     setTimeout(() => {
-      if (!this.open) {
-        return;
-      }
-
       const patientName = String(this.patientNameControl?.value ?? '').trim();
       const amount = this.amountControl?.value;
 

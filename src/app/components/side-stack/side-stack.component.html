@@ -4,52 +4,50 @@
     <header class="sc-header">
       <div class="sc-title-group">
         <h3 class="sc-title">Статистика по днях</h3>
-        <p class="sc-sub" *ngIf="!monthLoading">
+        <p class="sc-sub" [class.sc-sub--skeleton]="monthLoading">
           {{ activeDaysCount }} {{ activeDaysCount === 1 ? 'активний день' : 'активних дні(в)' }} за місяць
         </p>
-        <span class="sc-sub sc-sub--skeleton" *ngIf="monthLoading"></span>
       </div>
-      <button type="button" class="sc-more" aria-label="Більше">
-        <mat-icon>more_vert</mat-icon>
-      </button>
     </header>
 
-    <ng-container *ngIf="!monthLoading; else statsCardSkeleton">
-      <ul class="sc-stat-list">
-        <li class="sc-stat-item">
-          <span class="sc-stat-icon sc-stat-icon--gold">
-            <mat-icon>emoji_events</mat-icon>
-          </span>
-          <span class="sc-stat-text"
-            >Найприбутковіший день &mdash; <strong>{{ bestProfitableDay }}</strong></span
-          >
-        </li>
-        <li class="sc-stat-item">
-          <span class="sc-stat-icon sc-stat-icon--blue">
-            <mat-icon>bar_chart</mat-icon>
-          </span>
-          <span class="sc-stat-text"
-            >Середній % &mdash; <strong class="sc-accent">{{ avgIncomePercent }}%</strong></span
-          >
-        </li>
-        <li class="sc-stat-item">
-          <span class="sc-stat-icon sc-stat-icon--amber">
-            <mat-icon>circle</mat-icon>
-          </span>
-          <span class="sc-stat-text"
-            ><strong class="sc-accent">{{ topProcedure.percent }}%</strong> доходу &mdash; {{ topProcedure.name }}</span
-          >
-        </li>
-      </ul>
-    </ng-container>
+    <div class="sc-stats-body" [class.sc-stats-body--loading]="monthLoading">
+      <ng-container *ngIf="activeDaysCount > 0; else statsEmpty">
+        <ul class="sc-stat-list">
+          <li class="sc-stat-item">
+            <span class="sc-stat-icon sc-stat-icon--gold">
+              <mat-icon>emoji_events</mat-icon>
+            </span>
+            <span class="sc-stat-text"
+              >Найприбутковіший день &mdash; <strong>{{ bestProfitableDay }}</strong></span
+            >
+          </li>
+          <li class="sc-stat-item">
+            <span class="sc-stat-icon sc-stat-icon--blue">
+              <mat-icon>bar_chart</mat-icon>
+            </span>
+            <span class="sc-stat-text"
+              >Середній % &mdash; <strong class="sc-accent">{{ avgIncomePercent }}%</strong></span
+            >
+          </li>
+          <li class="sc-stat-item">
+            <span class="sc-stat-icon sc-stat-icon--amber">
+              <mat-icon>radio_button_checked</mat-icon>
+            </span>
+            <span class="sc-stat-text"
+              ><strong class="sc-accent">{{ topProcedure.percent }}%</strong> доходу &mdash;
+              {{ topProcedure.name }}</span
+            >
+          </li>
+        </ul>
+      </ng-container>
 
-    <ng-template #statsCardSkeleton>
-      <div class="sc-skeleton-list">
-        <div class="skeleton-line skeleton-line--long"></div>
-        <div class="skeleton-line skeleton-line--long"></div>
-        <div class="skeleton-line skeleton-line--long"></div>
-      </div>
-    </ng-template>
+      <ng-template #statsEmpty>
+        <div class="sc-empty">
+          <mat-icon>bar_chart</mat-icon>
+          <p>Записів за цей місяць ще немає</p>
+        </div>
+      </ng-template>
+    </div>
   </mat-card>
 
   <!-- ══ Card 2: Активність за місяць ═══════════════════════════════ -->
@@ -59,12 +57,9 @@
         <h3 class="sc-title">Активність за місяць</h3>
         <p class="sc-sub">{{ calendarMonthLabel }}</p>
       </div>
-      <button type="button" class="sc-more" aria-label="Більше">
-        <mat-icon>more_vert</mat-icon>
-      </button>
     </header>
 
-    <ng-container *ngIf="!monthLoading; else activitySkeleton">
+    <div class="sc-activity-body" [class.sc-activity-body--loading]="monthLoading">
       <!-- Weekday labels -->
       <div class="ac-weekdays">
         <span *ngFor="let label of weekdayLabels">{{ label }}</span>
@@ -102,23 +97,14 @@
           (click)="exportRequested.emit()"
           [disabled]="!visits.length"
         >
-          <mat-icon>upload</mat-icon>
-          {{ exportFormat === 'excel' ? 'Експорт у Excel' : 'Експорт у CSV' }}
+          <mat-icon>file_download</mat-icon>
+          {{ exportFormat === 'excel' ? 'Excel' : 'CSV' }}
         </button>
         <button type="button" class="ac-btn" (click)="printReport()">
-          <mat-icon>history</mat-icon>
+          <mat-icon>print</mat-icon>
           Друк звіту
         </button>
       </div>
-    </ng-container>
-
-    <ng-template #activitySkeleton>
-      <div class="sc-skeleton-list">
-        <div class="skeleton-line skeleton-line--long"></div>
-        <div class="skeleton-line skeleton-line--long"></div>
-        <div class="skeleton-line skeleton-line--long"></div>
-        <div class="skeleton-line skeleton-line--long"></div>
-      </div>
-    </ng-template>
+    </div>
   </mat-card>
 </div>

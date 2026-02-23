@@ -3,22 +3,22 @@
   <header class="ledger__header">
     <div class="ledger__title-row">
       <div class="ledger__title-group">
-        <mat-icon class="panel__icon">list_alt</mat-icon>
-        <h2>Журнал візитів</h2>
-      </div>
-
-      <div class="ledger__meta">
-        <span class="ledger__chip ledger__chip--period" *ngIf="selectedMonthLabel">
-          <mat-icon>calendar_today</mat-icon>
-          {{ selectedMonthLabel }}
+        <span class="ledger__badge">
+          <mat-icon>content_paste</mat-icon>
         </span>
-        <span class="ledger__chip ledger__chip--count">
-          <ng-container *ngIf="monthLoading"><span class="skeleton-inline"></span></ng-container>
-          <ng-container *ngIf="!monthLoading && ledgerVm.hasQuery"
-            >{{ ledgerVm.visits.length }} з {{ totalVisits }}</ng-container
-          >
-          <ng-container *ngIf="!monthLoading && !ledgerVm.hasQuery">{{ totalVisits }} записів</ng-container>
-        </span>
+        <div class="ledger__title-info">
+          <h2>Журнал візитів</h2>
+          <div class="ledger__subtitle">
+            <span class="ledger__period" *ngIf="selectedMonthLabel">{{ selectedMonthLabel }}</span>
+            <ng-container *ngIf="!monthLoading">
+              <span class="ledger__count" *ngIf="!ledgerVm.hasQuery">{{ totalVisits }} записів</span>
+              <span class="ledger__count" *ngIf="ledgerVm.hasQuery"
+                >{{ ledgerVm.visits.length }} з {{ totalVisits }}</span
+              >
+            </ng-container>
+            <span class="skeleton-inline" *ngIf="monthLoading"></span>
+          </div>
+        </div>
       </div>
 
       <button mat-flat-button color="primary" type="button" class="ledger__cta" (click)="openCreateDialog()">
@@ -84,13 +84,22 @@
 
         <ng-container matColumnDef="patientName">
           <th mat-header-cell *matHeaderCellDef>Пацієнт</th>
-          <td mat-cell *matCellDef="let visit">{{ visit.patientName }}</td>
+          <td mat-cell *matCellDef="let visit">
+            <div class="patient-cell">
+              <span class="patient-avatar patient-avatar--{{ visit.patientName.charCodeAt(0) % 5 }}">{{
+                visit.patientName[0]?.toUpperCase()
+              }}</span>
+              {{ visit.patientName }}
+            </div>
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="procedureName">
           <th mat-header-cell *matHeaderCellDef>Послуга</th>
           <td mat-cell *matCellDef="let visit">
-            <span class="visit-procedure">{{ visit.procedureName }}</span>
+            <span class="visit-procedure" [ngClass]="procedureClass(visit.procedureName)">{{
+              visit.procedureName
+            }}</span>
             <small *ngIf="visit.notes">{{ visit.notes }}</small>
           </td>
         </ng-container>
@@ -104,7 +113,12 @@
 
         <ng-container matColumnDef="percent">
           <th mat-header-cell *matHeaderCellDef>%</th>
-          <td mat-cell *matCellDef="let visit">{{ visit.percent | number: '1.0-1' }}%</td>
+          <td mat-cell *matCellDef="let visit">
+            <div class="percent-cell">
+              <div class="percent-bar"><div class="percent-bar__fill" [style.width.%]="visit.percent"></div></div>
+              <span>{{ visit.percent | number: '1.0-0' }}%</span>
+            </div>
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="doctorIncome">
@@ -121,15 +135,13 @@
               <button
                 mat-icon-button
                 type="button"
-                color="warn"
-                (click)="$event.stopPropagation(); deleteVisit(visit)"
-                (keydown.enter)="$event.stopPropagation()"
-                (keydown.space)="$event.stopPropagation(); $event.preventDefault()"
-                [disabled]="deletingId === visit.id"
-                class="row-delete-btn"
-                aria-label="Видалити запис"
+                class="row-menu-btn"
+                [matMenuTriggerFor]="rowMenu"
+                [matMenuTriggerData]="{ visit: visit }"
+                (click)="$event.stopPropagation()"
+                aria-label="Дії"
               >
-                <mat-icon>delete_outline</mat-icon>
+                <mat-icon>more_vert</mat-icon>
               </button>
             </div>
           </td>
@@ -149,6 +161,21 @@
         ></tr>
       </table>
     </div>
+
+    <!-- Row context menu -->
+    <mat-menu #rowMenu="matMenu" class="ledger-row-menu">
+      <ng-template matMenuContent let-visit="visit">
+        <button
+          mat-menu-item
+          class="ledger-row-menu__delete"
+          [disabled]="deletingId === visit.id"
+          (click)="deleteVisit(visit)"
+        >
+          <mat-icon>delete_outline</mat-icon>
+          Видалити
+        </button>
+      </ng-template>
+    </mat-menu>
 
     <div class="visits-mobile">
       <article
@@ -187,72 +214,22 @@
           <button
             mat-icon-button
             type="button"
-            color="warn"
-            (click)="$event.stopPropagation(); deleteVisit(visit)"
-            (keydown.enter)="$event.stopPropagation()"
-            (keydown.space)="$event.stopPropagation(); $event.preventDefault()"
-            [disabled]="deletingId === visit.id"
-            class="row-delete-btn"
-            aria-label="Видалити запис"
+            class="row-menu-btn"
+            [matMenuTriggerFor]="rowMenu"
+            [matMenuTriggerData]="{ visit: visit }"
+            (click)="$event.stopPropagation()"
+            aria-label="Дії"
           >
-            <mat-icon>delete_outline</mat-icon>
+            <mat-icon>more_vert</mat-icon>
           </button>
         </div>
       </article>
     </div>
 
-    <!-- Pagination -->
-    <nav class="pagination" *ngIf="totalPages > 1" aria-label="Навігація по сторінках">
-      <button
-        type="button"
-        class="pagination__btn pagination__btn--nav"
-        [disabled]="currentPage === 1"
-        (click)="goToPage(currentPage - 1)"
-        aria-label="Попередня сторінка"
-      >
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path
-            d="M10 12L6 8l4-4"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-      </button>
-
-      <ng-container *ngFor="let page of pageNumbers">
-        <span *ngIf="page === -1" class="pagination__ellipsis">&hellip;</span>
-        <button
-          *ngIf="page !== -1"
-          type="button"
-          class="pagination__btn"
-          [class.pagination__btn--active]="page === currentPage"
-          (click)="goToPage(page)"
-          [attr.aria-current]="page === currentPage ? 'page' : null"
-        >
-          {{ page }}
-        </button>
-      </ng-container>
-
-      <button
-        type="button"
-        class="pagination__btn pagination__btn--nav"
-        [disabled]="currentPage === totalPages"
-        (click)="goToPage(currentPage + 1)"
-        aria-label="Наступна сторінка"
-      >
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path
-            d="M6 4l4 4-4 4"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-      </button>
-    </nav>
+    <div class="ledger-footer">
+      <span class="ledger-footer__count">Показано {{ shownCount }} із {{ totalVisits }} записів</span>
+      <button *ngIf="hasMore" type="button" class="ledger-footer__more" (click)="loadMore()">Завантажити ще →</button>
+    </div>
   </div>
 
   <div class="empty-state" *ngIf="!monthLoading && !ledgerVm.visits.length && totalVisits === 0">

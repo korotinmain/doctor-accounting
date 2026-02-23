@@ -1,4 +1,4 @@
-<main id="main-content" class="shell" tabindex="-1" *ngIf="facade.vm$ | async as vm; else loadingState">
+<div class="dashboard-layout">
   <ng-container *ngIf="userView$ | async as user">
     <app-report-header
       [userDisplayName]="user.displayName"
@@ -8,77 +8,66 @@
     ></app-report-header>
   </ng-container>
 
-  <section class="auth-alert" *ngIf="facade.authErrorMessage()" role="alert" aria-live="assertive">
-    <mat-icon>warning_amber</mat-icon>
-    <p>{{ facade.authErrorMessage() }}</p>
-  </section>
+  <main id="main-content" class="shell" tabindex="-1" *ngIf="facade.vm$ | async as vm; else loadingState">
+    <section class="auth-alert" *ngIf="facade.authErrorMessage()" role="alert" aria-live="assertive">
+      <mat-icon>warning_amber</mat-icon>
+      <p>{{ facade.authErrorMessage() }}</p>
+    </section>
 
-  <ng-container *ngIf="{ monthLoading: (facade.monthLoading$ | async) ?? true } as view">
-    <app-period-control-bar
-      [selectedMonthLabel]="facade.selectedMonthLabel"
-      [monthLoading]="view.monthLoading"
-      [isCurrentMonth]="facade.isCurrentMonthSelected"
-      (shiftMonthRequested)="facade.shiftMonth($event)"
-      (currentMonthRequested)="facade.goCurrentMonth()"
-    ></app-period-control-bar>
-
-    <app-dashboard-stats
-      [summary]="vm.summary"
-      [monthLoading]="view.monthLoading"
-      [history]="vm.history"
-    ></app-dashboard-stats>
-
-    <section class="content-grid">
-      <div class="content-grid__main">
-        <app-visits-ledger
-          *ngIf="facade.ledgerVm$ | async as ledgerVm"
-          [ledgerVm]="ledgerVm"
-          [monthLoading]="view.monthLoading"
-          [totalVisits]="vm.summary.totalVisits"
-          [selectedMonthLabel]="facade.selectedMonthLabel"
-          [searchControl]="facade.searchControl"
-          [sortControl]="facade.sortControl"
-          [deletingId]="facade.deletingId()"
-          (createVisitRequested)="facade.openCreateDialog()"
-          (clearSearchRequested)="facade.clearSearch()"
-          (editVisitRequested)="facade.editVisit($event)"
-          (deleteVisitRequested)="facade.deleteVisit($event)"
-        ></app-visits-ledger>
-      </div>
-
-      <app-side-stack
+    <ng-container *ngIf="{ monthLoading: (facade.monthLoading$ | async) ?? true } as view">
+      <app-period-control-bar
+        [selectedMonthLabel]="facade.selectedMonthLabel"
         [monthLoading]="view.monthLoading"
-        [dailyStats]="vm.dailyStats"
-        [visits]="vm.visits"
-        [selectedMonth]="facade.monthControl.value"
-        [exportFormat]="facade.exportFormat"
-        (exportRequested)="facade.exportVisitsData(vm.visits)"
-      ></app-side-stack>
-    </section>
-  </ng-container>
+        [isCurrentMonth]="facade.isCurrentMonthSelected"
+        (shiftMonthRequested)="facade.shiftMonth($event)"
+        (currentMonthRequested)="facade.goCurrentMonth()"
+      ></app-period-control-bar>
 
-  <app-visit-dialog
-    [open]="facade.formDialogOpen()"
-    [saving]="facade.saving()"
-    [editedVisitId]="facade.editedVisitId()"
-    [visitForm]="facade.visitForm"
-    [procedureOptions]="facade.procedureOptions"
-    [percentQuickOptions]="facade.percentQuickOptions"
-    [projectedIncome]="(facade.projectedIncome$ | async) ?? 0"
-    (closeRequested)="facade.closeVisitDialog()"
-    (submitRequested)="facade.submitVisit()"
-  ></app-visit-dialog>
-</main>
+      <app-dashboard-stats
+        [summary]="vm.summary"
+        [monthLoading]="view.monthLoading"
+        [history]="vm.history"
+      ></app-dashboard-stats>
 
-<ng-template #loadingState>
-  <main id="main-content" class="shell shell--loading" tabindex="-1" aria-busy="true">
-    <section class="loading loading--hero"></section>
-    <section class="loading-grid">
-      <article class="loading"></article>
-      <article class="loading"></article>
-      <article class="loading"></article>
-      <article class="loading"></article>
-    </section>
-    <section class="loading loading--panel"></section>
+      <section class="content-grid">
+        <div class="content-grid__main">
+          <app-visits-ledger
+            *ngIf="facade.ledgerVm$ | async as ledgerVm"
+            [ledgerVm]="ledgerVm"
+            [monthLoading]="view.monthLoading"
+            [totalVisits]="vm.summary.totalVisits"
+            [selectedMonthLabel]="facade.selectedMonthLabel"
+            [searchControl]="facade.searchControl"
+            [sortControl]="facade.sortControl"
+            [deletingId]="facade.deletingId()"
+            (createVisitRequested)="facade.openCreateDialog()"
+            (clearSearchRequested)="facade.clearSearch()"
+            (editVisitRequested)="facade.editVisit($event)"
+            (deleteVisitRequested)="facade.deleteVisit($event)"
+          ></app-visits-ledger>
+        </div>
+
+        <app-side-stack
+          [monthLoading]="view.monthLoading"
+          [dailyStats]="vm.dailyStats"
+          [visits]="vm.visits"
+          [selectedMonth]="facade.monthControl.value"
+          [exportFormat]="facade.exportFormat"
+          (exportRequested)="facade.exportVisitsData(vm.visits)"
+        ></app-side-stack>
+      </section>
+    </ng-container>
   </main>
-</ng-template>
+
+  <ng-template #loadingState>
+    <main id="main-content" class="shell shell--loading" tabindex="-1" aria-busy="true">
+      <section class="loading-grid">
+        <article class="loading"></article>
+        <article class="loading"></article>
+        <article class="loading"></article>
+        <article class="loading"></article>
+      </section>
+      <section class="loading loading--panel"></section>
+    </main>
+  </ng-template>
+</div>

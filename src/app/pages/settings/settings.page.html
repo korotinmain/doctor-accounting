@@ -61,40 +61,7 @@
       </div>
     </section>
 
-    <!-- ══ Card 2 — Кольори платформи ══════════════════════════════ -->
-    <section class="s-card">
-      <div class="s-card__head">
-        <span class="s-card__icon s-card__icon--violet">
-          <mat-icon>palette</mat-icon>
-        </span>
-        <div>
-          <h2>Кольори платформи</h2>
-          <p>Колірна тема інтерфейсу — застосовується одразу</p>
-        </div>
-      </div>
-
-      <div class="theme-grid">
-        <button
-          *ngFor="let t of themes"
-          type="button"
-          class="theme-option"
-          [class.theme-option--active]="theme() === t.id"
-          (click)="selectTheme(t.id)"
-          [attr.aria-label]="'Тема ' + t.label"
-          [attr.aria-pressed]="theme() === t.id"
-        >
-          <span class="theme-option__swatches">
-            <span class="theme-option__swatch" [style.background]="t.swatch1"></span>
-            <span class="theme-option__swatch" [style.background]="t.swatch2"></span>
-            <span class="theme-option__swatch" [style.background]="t.swatch3"></span>
-          </span>
-          <span class="theme-option__label">{{ t.label }}</span>
-          <mat-icon class="theme-option__check" *ngIf="theme() === t.id">check_circle</mat-icon>
-        </button>
-      </div>
-    </section>
-
-    <!-- ══ Card 3 — Формат експорту ════════════════════════════════ -->
+    <!-- ══ Card 2 — Формат експорту ════════════════════════════════ -->
     <section class="s-card">
       <div class="s-card__head">
         <span class="s-card__icon s-card__icon--amber">

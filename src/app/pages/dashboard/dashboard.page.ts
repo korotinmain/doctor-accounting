@@ -10,7 +10,6 @@ import {
   PeriodControlBarComponent,
   ReportHeaderComponent,
   SideStackComponent,
-  VisitDialogComponent,
   VisitsLedgerComponent
 } from '../../components';
 import { AuthSessionService, ConfirmDialogService, VisitsDashboardFacade } from '../../services';
@@ -27,8 +26,7 @@ import { AuthSessionService, ConfirmDialogService, VisitsDashboardFacade } from 
     PeriodControlBarComponent,
     DashboardStatsComponent,
     SideStackComponent,
-    VisitsLedgerComponent,
-    VisitDialogComponent
+    VisitsLedgerComponent
   ],
   templateUrl: './dashboard.page.html',
   styleUrls: ['./dashboard.page.scss'],

@@ -39,7 +39,7 @@ export class DashboardStatsComponent {
     type: 'area',
     sparkline: { enabled: true },
     height: 44,
-    width: '100%',
+    width: 100,
     animations: { enabled: false }
   } as ApexChart;
 

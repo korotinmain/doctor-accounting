@@ -1,4 +1,4 @@
-<section class="stats" *ngIf="!monthLoading; else statsLoading">
+<section class="stats" [class.stats--loading]="monthLoading">
   <article class="stat-card" [ngClass]="'stat-card--' + card.colorKey" *ngFor="let card of cards; let i = index">
     <div class="stat-card__header">
       <div class="stat-card__icon">
@@ -56,12 +56,3 @@
     </div>
   </article>
 </section>
-
-<ng-template #statsLoading>
-  <section class="stats stats--skeleton">
-    <div class="stat-card stat-card--skeleton" *ngFor="let _ of [1, 2, 3, 4]">
-      <div class="skeleton-line skeleton-line--short"></div>
-      <div class="skeleton-line skeleton-line--value"></div>
-    </div>
-  </section>
-</ng-template>

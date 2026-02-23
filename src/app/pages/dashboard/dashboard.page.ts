@@ -6,7 +6,6 @@ import { User } from 'firebase/auth';
 import { map, shareReplay } from 'rxjs';
 
 import {
-  ActionPanelComponent,
   DashboardStatsComponent,
   PeriodControlBarComponent,
   ReportHeaderComponent,
@@ -27,7 +26,6 @@ import { AuthSessionService, ConfirmDialogService, VisitsDashboardFacade } from 
     ReportHeaderComponent,
     PeriodControlBarComponent,
     DashboardStatsComponent,
-    ActionPanelComponent,
     SideStackComponent,
     VisitsLedgerComponent,
     VisitDialogComponent

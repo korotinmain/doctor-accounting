@@ -30,18 +30,12 @@
 
     <section class="content-grid">
       <div class="content-grid__main">
-        <app-action-panel
-          [selectedMonthLabel]="facade.selectedMonthLabel"
-          [monthLoading]="view.monthLoading"
-          [totalVisits]="vm.summary.totalVisits"
-          (createVisitRequested)="facade.openCreateDialog()"
-        ></app-action-panel>
-
         <app-visits-ledger
           *ngIf="facade.ledgerVm$ | async as ledgerVm"
           [ledgerVm]="ledgerVm"
           [monthLoading]="view.monthLoading"
           [totalVisits]="vm.summary.totalVisits"
+          [selectedMonthLabel]="facade.selectedMonthLabel"
           [searchControl]="facade.searchControl"
           [sortControl]="facade.sortControl"
           [deletingId]="facade.deletingId()"

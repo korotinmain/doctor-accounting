@@ -1,50 +1,66 @@
 <mat-card class="panel ledger">
-  <header class="panel__header panel__header--row">
-    <div class="panel__title-group">
-      <mat-icon class="panel__icon">list_alt</mat-icon>
-      <h2>Журнал візитів</h2>
+  <!-- ── Header ──────────────────────────────────────────────────────── -->
+  <header class="ledger__header">
+    <div class="ledger__title-row">
+      <div class="ledger__title-group">
+        <mat-icon class="panel__icon">list_alt</mat-icon>
+        <h2>Журнал візитів</h2>
+      </div>
+
+      <div class="ledger__meta">
+        <span class="ledger__chip ledger__chip--period" *ngIf="selectedMonthLabel">
+          <mat-icon>calendar_today</mat-icon>
+          {{ selectedMonthLabel }}
+        </span>
+        <span class="ledger__chip ledger__chip--count">
+          <ng-container *ngIf="monthLoading"><span class="skeleton-inline"></span></ng-container>
+          <ng-container *ngIf="!monthLoading && ledgerVm.hasQuery"
+            >{{ ledgerVm.visits.length }} з {{ totalVisits }}</ng-container
+          >
+          <ng-container *ngIf="!monthLoading && !ledgerVm.hasQuery">{{ totalVisits }} записів</ng-container>
+        </span>
+      </div>
+
+      <button mat-flat-button color="primary" type="button" class="ledger__cta" (click)="openCreateDialog()">
+        <mat-icon>add</mat-icon>
+        Новий візит
+      </button>
     </div>
-    <div class="ledger__header-actions">
-      <span class="badge badge--count">
-        <ng-container *ngIf="monthLoading">Оновлення...</ng-container>
-        <ng-container *ngIf="!monthLoading && ledgerVm.hasQuery; else allCount">
-          {{ ledgerVm.visits.length }} з {{ totalVisits }} записів
-        </ng-container>
-        <ng-template #allCount>
-          <ng-container *ngIf="!monthLoading">{{ totalVisits }} записів</ng-container>
-        </ng-template>
-      </span>
+
+    <!-- ── Controls ─────────────────────────────────────────────────── -->
+    <div class="ledger__controls">
+      <div class="ledger__search">
+        <mat-icon class="ledger__search-icon">search</mat-icon>
+        <input
+          class="ledger__search-input"
+          type="text"
+          placeholder="Пошук за пацієнтом, послугою, датою…"
+          [formControl]="searchControl"
+          autocomplete="off"
+        />
+        <button
+          *ngIf="searchControl.value"
+          type="button"
+          class="ledger__search-clear"
+          (click)="clearSearch()"
+          aria-label="Очистити"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <div class="ledger__sort">
+        <mat-icon class="ledger__sort-icon">swap_vert</mat-icon>
+        <select class="ledger__sort-select" [formControl]="sortControl" aria-label="Сортування">
+          <option value="dateDesc">Найновіші спочатку</option>
+          <option value="incomeDesc">Дохід: більше до менше</option>
+          <option value="amountDesc">Сума: більше до менше</option>
+          <option value="patientAsc">Пацієнт: А–Я</option>
+        </select>
+        <mat-icon class="ledger__sort-arrow">keyboard_arrow_down</mat-icon>
+      </div>
     </div>
   </header>
-
-  <div class="ledger-controls">
-    <mat-form-field appearance="outline" class="modern-field ledger-controls__search" subscriptSizing="dynamic">
-      <mat-label>Пошук у журналі</mat-label>
-      <mat-icon matPrefix>search</mat-icon>
-      <input matInput [formControl]="searchControl" />
-      <button
-        mat-icon-button
-        matSuffix
-        type="button"
-        *ngIf="searchControl.value"
-        (click)="clearSearch()"
-        aria-label="Очистити пошук"
-      >
-        <mat-icon>close</mat-icon>
-      </button>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" class="modern-field ledger-controls__sort" subscriptSizing="dynamic">
-      <mat-label>Сортування</mat-label>
-      <mat-icon matPrefix>swap_vert</mat-icon>
-      <mat-select [formControl]="sortControl">
-        <mat-option value="dateDesc">Найновіші спочатку</mat-option>
-        <mat-option value="incomeDesc">Дохід: більше до менше</mat-option>
-        <mat-option value="amountDesc">Сума: більше до менше</mat-option>
-        <mat-option value="patientAsc">Пацієнт: А-Я</mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
 
   <div class="ledger-skeleton" *ngIf="monthLoading">
     <div class="skeleton-line skeleton-line--long"></div>
@@ -55,7 +71,7 @@
 
   <div class="table-wrap" *ngIf="!monthLoading && ledgerVm.visits.length">
     <div class="table-wrap__desktop">
-      <table mat-table [dataSource]="ledgerVm.visits" class="visits-table">
+      <table mat-table [dataSource]="pagedVisits" class="visits-table">
         <ng-container matColumnDef="visitDate">
           <th mat-header-cell *matHeaderCellDef>Дата</th>
           <td mat-cell *matCellDef="let visit">
@@ -119,7 +135,7 @@
           </td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr
           mat-row
           *matRowDef="let row; columns: displayedColumns"
@@ -137,7 +153,7 @@
     <div class="visits-mobile">
       <article
         class="visit-card"
-        *ngFor="let visit of ledgerVm.visits; trackBy: trackByVisitId"
+        *ngFor="let visit of pagedVisits; trackBy: trackByVisitId"
         tabindex="0"
         role="button"
         [attr.aria-label]="'Редагувати візит ' + visit.patientName"
@@ -184,6 +200,59 @@
         </div>
       </article>
     </div>
+
+    <!-- Pagination -->
+    <nav class="pagination" *ngIf="totalPages > 1" aria-label="Навігація по сторінках">
+      <button
+        type="button"
+        class="pagination__btn pagination__btn--nav"
+        [disabled]="currentPage === 1"
+        (click)="goToPage(currentPage - 1)"
+        aria-label="Попередня сторінка"
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path
+            d="M10 12L6 8l4-4"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+
+      <ng-container *ngFor="let page of pageNumbers">
+        <span *ngIf="page === -1" class="pagination__ellipsis">&hellip;</span>
+        <button
+          *ngIf="page !== -1"
+          type="button"
+          class="pagination__btn"
+          [class.pagination__btn--active]="page === currentPage"
+          (click)="goToPage(page)"
+          [attr.aria-current]="page === currentPage ? 'page' : null"
+        >
+          {{ page }}
+        </button>
+      </ng-container>
+
+      <button
+        type="button"
+        class="pagination__btn pagination__btn--nav"
+        [disabled]="currentPage === totalPages"
+        (click)="goToPage(currentPage + 1)"
+        aria-label="Наступна сторінка"
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path
+            d="M6 4l4 4-4 4"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+    </nav>
   </div>
 
   <div class="empty-state" *ngIf="!monthLoading && !ledgerVm.visits.length && totalVisits === 0">

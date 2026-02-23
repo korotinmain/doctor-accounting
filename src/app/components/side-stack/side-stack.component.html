@@ -1,97 +1,115 @@
 <div class="side-stack">
-  <mat-card class="panel mini day-overview">
-    <header class="day-overview__header">
-      <div class="day-overview__title-group">
-        <mat-icon class="day-overview__icon">analytics</mat-icon>
-        <div class="day-overview__title-copy">
-          <h3>Огляд дня</h3>
-          <p>{{ todayLabel }}</p>
-        </div>
+  <!-- ══ Card 1: Статистика по днях ══════════════════════════════════ -->
+  <mat-card class="sc-card sc-card--stats">
+    <header class="sc-header">
+      <div class="sc-title-group">
+        <h3 class="sc-title">Статистика по днях</h3>
+        <p class="sc-sub" *ngIf="!monthLoading">
+          {{ activeDaysCount }} {{ activeDaysCount === 1 ? 'активний день' : 'активних дні(в)' }} за місяць
+        </p>
+        <span class="sc-sub sc-sub--skeleton" *ngIf="monthLoading"></span>
       </div>
+      <button type="button" class="sc-more" aria-label="Більше">
+        <mat-icon>more_vert</mat-icon>
+      </button>
     </header>
 
-    <div *ngIf="!monthLoading; else sideLoadingState">
-      <!-- ─ Статистика ──────────────────────────────────────────────── -->
-      <section class="overview-stats">
-        <div class="overview-stats__summary">
-          <span>Візитів {{ activeStatsLabel }}</span>
-          <strong>{{ visitLabel(todayStats.visits) }}</strong>
-        </div>
-
-        <article class="overview-metric overview-metric--income">
-          <span class="overview-metric__label">
-            <mat-icon>person</mat-icon>
-            Дохід лікаря
+    <ng-container *ngIf="!monthLoading; else statsCardSkeleton">
+      <ul class="sc-stat-list">
+        <li class="sc-stat-item">
+          <span class="sc-stat-icon sc-stat-icon--gold">
+            <mat-icon>emoji_events</mat-icon>
           </span>
-          <strong>{{ todayStats.doctorIncome | currency: 'UAH' : 'symbol' : '1.0-0' : 'uk-UA' }}</strong>
-        </article>
-
-        <article class="overview-metric overview-metric--total">
-          <span class="overview-metric__label">
-            <mat-icon>payments</mat-icon>
-            Загальна каса
+          <span class="sc-stat-text"
+            >Найприбутковіший день &mdash; <strong>{{ bestProfitableDay }}</strong></span
+          >
+        </li>
+        <li class="sc-stat-item">
+          <span class="sc-stat-icon sc-stat-icon--blue">
+            <mat-icon>bar_chart</mat-icon>
           </span>
-          <strong>{{ todayStats.totalAmount | currency: 'UAH' : 'symbol' : '1.0-0' : 'uk-UA' }}</strong>
-        </article>
-      </section>
+          <span class="sc-stat-text"
+            >Середній % &mdash; <strong class="sc-accent">{{ avgIncomePercent }}%</strong></span
+          >
+        </li>
+        <li class="sc-stat-item">
+          <span class="sc-stat-icon sc-stat-icon--amber">
+            <mat-icon>circle</mat-icon>
+          </span>
+          <span class="sc-stat-text"
+            ><strong class="sc-accent">{{ topProcedure.percent }}%</strong> доходу &mdash; {{ topProcedure.name }}</span
+          >
+        </li>
+      </ul>
+    </ng-container>
 
-      <!-- ─ Календар ──────────────────────────────────────────────── -->
-      <div class="day-overview__divider"></div>
+    <ng-template #statsCardSkeleton>
+      <div class="sc-skeleton-list">
+        <div class="skeleton-line skeleton-line--long"></div>
+        <div class="skeleton-line skeleton-line--long"></div>
+        <div class="skeleton-line skeleton-line--long"></div>
+      </div>
+    </ng-template>
+  </mat-card>
 
-      <section class="overview-calendar">
-        <p class="overview-calendar__label">Календар &mdash; {{ calendarMonthTitle }}</p>
+  <!-- ══ Card 2: Активність за місяць ═══════════════════════════════ -->
+  <mat-card class="sc-card sc-card--activity">
+    <header class="sc-header">
+      <div class="sc-title-group">
+        <h3 class="sc-title">Активність за місяць</h3>
+        <p class="sc-sub">{{ calendarMonthLabel }}</p>
+      </div>
+      <button type="button" class="sc-more" aria-label="Більше">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+    </header>
 
-        <div class="overview-calendar__weekdays">
-          <span *ngFor="let label of weekdayLabels">{{ label }}</span>
-        </div>
+    <ng-container *ngIf="!monthLoading; else activitySkeleton">
+      <!-- Weekday labels -->
+      <div class="ac-weekdays">
+        <span *ngFor="let label of weekdayLabels">{{ label }}</span>
+      </div>
 
-        <div class="overview-calendar__grid">
+      <!-- Week rows -->
+      <div class="ac-weeks">
+        <div class="ac-week" *ngFor="let week of calendarWeeks; trackBy: trackByWeek">
           <button
+            *ngFor="let cell of week.cells; trackBy: trackByCell"
             type="button"
-            class="overview-calendar__cell"
-            *ngFor="let cell of calendarCells; trackBy: trackByCell"
+            class="ac-cell"
+            [class.ac-cell--empty]="cell.type === 'empty'"
+            [class.ac-cell--has-visits]="cell.type === 'day' && cell.hasVisits"
+            [class.ac-cell--today]="cell.type === 'day' && cell.isToday && !isDaySelected(cell.day)"
+            [class.ac-cell--selected]="cell.type === 'day' && isDaySelected(cell.day)"
             [disabled]="cell.type === 'empty' || (cell.type === 'day' && !cell.hasVisits && !cell.isToday)"
-            [class.overview-calendar__cell--empty]="cell.type === 'empty'"
-            [class.overview-calendar__cell--has-visits]="cell.type === 'day' && cell.hasVisits"
-            [class.overview-calendar__cell--today]="cell.type === 'day' && cell.isToday && !isDaySelected(cell.day)"
-            [class.overview-calendar__cell--selected]="cell.type === 'day' && isDaySelected(cell.day)"
+            [attr.data-amount]="
+              cell.type === 'day' && cell.hasVisits
+                ? (getDayTotal(cell.day) | currency: 'UAH' : 'symbol' : '1.0-0' : 'uk-UA')
+                : null
+            "
             (click)="cell.type === 'day' && (cell.hasVisits || cell.isToday) && selectDay(cell.day)"
           >
             <ng-container *ngIf="cell.type === 'day'">{{ cell.day }}</ng-container>
           </button>
         </div>
+      </div>
 
-        <p class="overview-calendar__hint" *ngIf="!selectedDay">Натисніть на день, щоб побачити статистику</p>
-        <p class="overview-calendar__hint overview-calendar__hint--active" *ngIf="selectedDay">
-          Показано: {{ activeStatsLabel }} &mdash;
-          <button type="button" class="overview-calendar__reset" (click)="selectedDay = null">скинути</button>
-        </p>
-      </section>
-
-      <!-- ─ Дії ──────────────────────────────────────────────────── -->
-      <div class="day-overview__divider"></div>
-
-      <section class="overview-actions">
-        <button
-          type="button"
-          class="overview-actions__btn overview-actions__btn--primary"
-          (click)="exportRequested.emit()"
-        >
-          <mat-icon>download</mat-icon>
-          Експорт даних
+      <!-- Action buttons -->
+      <div class="ac-actions">
+        <button type="button" class="ac-btn ac-btn--primary" (click)="exportRequested.emit()">
+          <mat-icon>upload</mat-icon>
+          Експорт у PDF
         </button>
-
-        <button type="button" class="overview-actions__btn" (click)="printReport()">
-          <mat-icon>print</mat-icon>
+        <button type="button" class="ac-btn" (click)="printReport()">
+          <mat-icon>history</mat-icon>
           Друк звіту
         </button>
+      </div>
+    </ng-container>
 
-        <p>Дані за {{ calendarMonthLabel }}.</p>
-      </section>
-    </div>
-
-    <ng-template #sideLoadingState>
-      <div class="overview-loading">
+    <ng-template #activitySkeleton>
+      <div class="sc-skeleton-list">
+        <div class="skeleton-line skeleton-line--long"></div>
         <div class="skeleton-line skeleton-line--long"></div>
         <div class="skeleton-line skeleton-line--long"></div>
         <div class="skeleton-line skeleton-line--long"></div>

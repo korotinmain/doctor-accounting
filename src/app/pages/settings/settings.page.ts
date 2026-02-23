@@ -1,4 +1,4 @@
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -18,7 +18,7 @@ interface ThemeOption {
 @Component({
   selector: 'app-settings-page',
   standalone: true,
-  imports: [NgFor, NgIf, NgClass, FormsModule, RouterLink, MatIconModule, MatButtonModule],
+  imports: [NgFor, NgIf, FormsModule, RouterLink, MatIconModule, MatButtonModule],
   templateUrl: './settings.page.html',
   styleUrls: ['./settings.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

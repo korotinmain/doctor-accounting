@@ -44,6 +44,12 @@ export const routes: Routes = [
     path: 'settings',
     canActivate: [authGuard],
     title: 'Налаштування | Doctor Accounting',
+    data: {
+      seo: {
+        description: 'Налаштування облікового запису Doctor Accounting: теми, відсотки, формат експорту.',
+        robots: 'noindex, nofollow'
+      }
+    },
     loadComponent: () => import('./pages/settings/settings.page').then((m) => m.SettingsPageComponent)
   },
   {

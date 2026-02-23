@@ -110,6 +110,12 @@
   &:active {
     transform: scale(0.94);
   }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: default;
+    pointer-events: none;
+  }
 }
 
 .month-picker__center {

@@ -32,7 +32,7 @@ export class PeriodControlBarComponent {
       return;
     }
 
-    if (event.key === 'ArrowRight') {
+    if (event.key === 'ArrowRight' && !this.isCurrentMonth) {
       event.preventDefault();
       this.shiftMonth(1);
     }

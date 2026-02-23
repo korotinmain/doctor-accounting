@@ -21,7 +21,13 @@
       }}</span>
     </div>
 
-    <button type="button" class="month-picker__btn" aria-label="Наступний місяць" (click)="shiftMonth(1)">
+    <button
+      type="button"
+      class="month-picker__btn"
+      aria-label="Наступний місяць"
+      (click)="shiftMonth(1)"
+      [disabled]="isCurrentMonth"
+    >
       <mat-icon>chevron_right</mat-icon>
     </button>
   </div>

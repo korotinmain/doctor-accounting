@@ -32,6 +32,10 @@ export class VisitsDashboardFacade {
     return this.userSettings.percentPresets();
   }
 
+  get exportFormat(): 'csv' | 'excel' {
+    return this.userSettings.exportFormat();
+  }
+
   readonly monthControl = this.formBuilder.nonNullable.control(this.getCurrentMonth(), Validators.required);
 
   readonly searchControl = this.formBuilder.nonNullable.control('');

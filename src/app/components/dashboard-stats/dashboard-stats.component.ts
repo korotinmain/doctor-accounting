@@ -17,6 +17,7 @@ interface StatCard {
   valueFormat: ValueFormat;
   trendPercent: number | null;
   trendLabel: string;
+  hasPrevData: boolean;
   chartSeries: number[];
   chartColor: string;
 }
@@ -64,8 +65,9 @@ export class DashboardStatsComponent {
         colorKey: 'green',
         value: s.totalIncome,
         valueFormat: 'currency',
-        trendPercent: prev ? calcTrendPercent(s.totalIncome, prev.income) : null,
+        trendPercent: prev && prev.income > 0 ? calcTrendPercent(s.totalIncome, prev.income) : null,
         trendLabel: 'від минулого місяця',
+        hasPrevData: prev !== null && prev.income > 0,
         chartSeries: [...this.history.map((h) => h.income), s.totalIncome],
         chartColor: '#0b9185'
       },
@@ -75,8 +77,9 @@ export class DashboardStatsComponent {
         colorKey: 'blue',
         value: avgCheck,
         valueFormat: 'currency',
-        trendPercent: prev ? calcTrendPercent(avgCheck, prevAvgCheck) : null,
+        trendPercent: prev && prev.visits > 0 ? calcTrendPercent(avgCheck, prevAvgCheck) : null,
         trendLabel: 'від минулого місяця',
+        hasPrevData: prev !== null && prev.visits > 0,
         chartSeries: [...this.history.map((h) => (h.visits > 0 ? h.amount / h.visits : 0)), avgCheck],
         chartColor: '#3b67d6'
       },
@@ -86,8 +89,9 @@ export class DashboardStatsComponent {
         colorKey: 'orange',
         value: s.totalAmount,
         valueFormat: 'currency',
-        trendPercent: prev ? calcTrendPercent(s.totalAmount, prev.amount) : null,
+        trendPercent: prev && prev.amount > 0 ? calcTrendPercent(s.totalAmount, prev.amount) : null,
         trendLabel: 'від минулого місяця',
+        hasPrevData: prev !== null && prev.amount > 0,
         chartSeries: [...this.history.map((h) => h.amount), s.totalAmount],
         chartColor: '#d9640c'
       },
@@ -97,8 +101,9 @@ export class DashboardStatsComponent {
         colorKey: 'violet',
         value: s.totalVisits,
         valueFormat: 'count',
-        trendPercent: prev ? calcTrendPercent(s.totalVisits, prev.visits) : null,
+        trendPercent: prev && prev.visits > 0 ? calcTrendPercent(s.totalVisits, prev.visits) : null,
         trendLabel: 'від минулого місяця',
+        hasPrevData: prev !== null && prev.visits > 0,
         chartSeries: [...this.history.map((h) => h.visits), s.totalVisits],
         chartColor: '#b02fce'
       }

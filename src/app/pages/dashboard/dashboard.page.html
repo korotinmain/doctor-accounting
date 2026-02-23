@@ -51,6 +51,7 @@
         [dailyStats]="vm.dailyStats"
         [visits]="vm.visits"
         [selectedMonth]="facade.monthControl.value"
+        [exportFormat]="facade.exportFormat"
         (exportRequested)="facade.exportVisitsData(vm.visits)"
       ></app-side-stack>
     </section>

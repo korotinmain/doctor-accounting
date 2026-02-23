@@ -30,14 +30,20 @@
     </div>
 
     <div class="stat-card__footer">
-      <span class="stat-card__trend-label" *ngIf="card.trendPercent !== null && card.trendPercent !== 0">
+      <span
+        class="stat-card__trend-label"
+        *ngIf="card.hasPrevData && card.trendPercent !== null && card.trendPercent !== 0"
+      >
         {{ formatTrend(card.trendPercent) }} {{ card.trendLabel }}
       </span>
-      <span class="stat-card__trend-label" *ngIf="card.trendPercent === null || card.trendPercent === 0">
+      <span
+        class="stat-card__trend-label"
+        *ngIf="card.hasPrevData && (card.trendPercent === null || card.trendPercent === 0)"
+      >
         {{ card.trendLabel }}
       </span>
 
-      <div class="stat-card__sparkline" *ngIf="card.chartSeries.length > 1">
+      <div class="stat-card__sparkline" *ngIf="card.hasPrevData && card.chartSeries.length > 1">
         <apx-chart
           [series]="[{ data: card.chartSeries }]"
           [chart]="sparklineChart"

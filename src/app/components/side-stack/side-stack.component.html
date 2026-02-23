@@ -98,7 +98,7 @@
       <div class="ac-actions">
         <button type="button" class="ac-btn ac-btn--primary" (click)="exportRequested.emit()">
           <mat-icon>upload</mat-icon>
-          Експорт у PDF
+          {{ exportFormat === 'excel' ? 'Експорт у Excel' : 'Експорт у CSV' }}
         </button>
         <button type="button" class="ac-btn" (click)="printReport()">
           <mat-icon>history</mat-icon>

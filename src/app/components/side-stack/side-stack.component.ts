@@ -36,6 +36,8 @@ export class SideStackComponent implements OnInit {
   @Input() visits: Visit[] = [];
   @Input() selectedMonth = '';
 
+  @Input() exportFormat: 'csv' | 'excel' = 'csv';
+
   @Output() exportRequested = new EventEmitter<void>();
 
   selectedDay: string | null = null;

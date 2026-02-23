@@ -1,5 +1,14 @@
 import { CurrencyPipe, NgFor, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -30,7 +39,7 @@ export interface CalendarWeek {
   styleUrls: ['./side-stack.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SideStackComponent implements OnInit {
+export class SideStackComponent implements OnInit, OnChanges {
   @Input() monthLoading = false;
   @Input() dailyStats: DailyInsight[] = [];
   @Input() visits: Visit[] = [];
@@ -44,6 +53,14 @@ export class SideStackComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectedDay = this.todayIsoDate;
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['selectedMonth'] && !changes['selectedMonth'].firstChange) {
+      const now = new Date();
+      const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+      this.selectedDay = this.selectedMonth === currentMonth ? this.todayIsoDate : null;
+    }
   }
 
   readonly weekdayLabels = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'];

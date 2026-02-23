@@ -96,7 +96,12 @@
 
       <!-- Action buttons -->
       <div class="ac-actions">
-        <button type="button" class="ac-btn ac-btn--primary" (click)="exportRequested.emit()">
+        <button
+          type="button"
+          class="ac-btn ac-btn--primary"
+          (click)="exportRequested.emit()"
+          [disabled]="!visits.length"
+        >
           <mat-icon>upload</mat-icon>
           {{ exportFormat === 'excel' ? 'Експорт у Excel' : 'Експорт у CSV' }}
         </button>

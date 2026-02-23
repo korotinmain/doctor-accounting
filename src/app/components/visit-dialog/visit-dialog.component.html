@@ -61,12 +61,13 @@
             <input
               matInput
               [matDatepicker]="visitDatePicker"
+              [max]="maxVisitDate"
               formControlName="visitDate"
               readonly
               (click)="visitDatePicker.open()"
             />
             <mat-datepicker-toggle matSuffix [for]="visitDatePicker"></mat-datepicker-toggle>
-            <mat-datepicker #visitDatePicker></mat-datepicker>
+            <mat-datepicker #visitDatePicker [startAt]="maxVisitDate"></mat-datepicker>
             <mat-error *ngIf="visitDateControl?.touched && visitDateControl?.invalid"> Вкажіть дату візиту </mat-error>
           </mat-form-field>
 

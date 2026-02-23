@@ -58,6 +58,8 @@ export class VisitDialogComponent implements OnChanges, AfterViewInit {
   @Input() percentQuickOptions: number[] = [];
   @Input({ required: true }) visitForm!: FormGroup;
 
+  readonly maxVisitDate = new Date();
+
   @Output() closeRequested = new EventEmitter<void>();
   @Output() submitRequested = new EventEmitter<void>();
 

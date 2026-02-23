@@ -92,9 +92,14 @@
 }
 
 // ── Loading overlay ───────────────────────────────────────────────────
-.sc-stats-body,
+.sc-stats-body {
+  position: relative;
+  min-height: 196px; // 3 stat items (~60px each) + padding
+}
+
 .sc-activity-body {
   position: relative;
+  min-height: 330px; // calendar weekdays + 5–6 week rows + actions
 }
 
 .sc-stats-body--loading,

@@ -255,7 +255,10 @@
   .top {
     flex-direction: column;
     align-items: stretch;
-    gap: 10px;
+    gap: 6px;
+    min-height: auto;
+    padding-top: 6px;
+    padding-bottom: 6px;
   }
 
   .top__actions {

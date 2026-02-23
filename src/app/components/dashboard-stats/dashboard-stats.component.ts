@@ -6,7 +6,7 @@ import type { ApexChart, ApexFill, ApexStroke, ApexTooltip } from 'ng-apexcharts
 
 import { MonthlyPoint, MonthlySummary, calcTrendPercent } from '../../utils/visits-analytics';
 
-type ColorKey = 'green' | 'blue' | 'orange';
+type ColorKey = 'green' | 'blue' | 'orange' | 'violet';
 type ValueFormat = 'currency' | 'count';
 
 interface StatCard {
@@ -67,7 +67,7 @@ export class DashboardStatsComponent {
         trendPercent: prev ? calcTrendPercent(s.totalIncome, prev.income) : null,
         trendLabel: 'від минулого місяця',
         chartSeries: [...this.history.map((h) => h.income), s.totalIncome],
-        chartColor: '#10b981'
+        chartColor: '#0b9185'
       },
       {
         label: 'Середній чек',
@@ -78,29 +78,29 @@ export class DashboardStatsComponent {
         trendPercent: prev ? calcTrendPercent(avgCheck, prevAvgCheck) : null,
         trendLabel: 'від минулого місяця',
         chartSeries: [...this.history.map((h) => (h.visits > 0 ? h.amount / h.visits : 0)), avgCheck],
-        chartColor: '#3b82f6'
+        chartColor: '#3b67d6'
       },
       {
         label: 'Загальна каса',
         icon: 'account_balance_wallet',
-        colorKey: 'blue',
+        colorKey: 'orange',
         value: s.totalAmount,
         valueFormat: 'currency',
         trendPercent: prev ? calcTrendPercent(s.totalAmount, prev.amount) : null,
         trendLabel: 'від минулого місяця',
         chartSeries: [...this.history.map((h) => h.amount), s.totalAmount],
-        chartColor: '#3b82f6'
+        chartColor: '#d9640c'
       },
       {
         label: 'Прийоми',
         icon: 'supervisor_account',
-        colorKey: 'orange',
+        colorKey: 'violet',
         value: s.totalVisits,
         valueFormat: 'count',
         trendPercent: prev ? calcTrendPercent(s.totalVisits, prev.visits) : null,
         trendLabel: 'від минулого місяця',
         chartSeries: [...this.history.map((h) => h.visits), s.totalVisits],
-        chartColor: '#f59e0b'
+        chartColor: '#b02fce'
       }
     ];
   }

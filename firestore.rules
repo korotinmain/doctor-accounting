@@ -13,6 +13,10 @@ service cloud.firestore {
         && request.resource.data.createdAt == resource.data.createdAt
         && isValidVisit(request.resource.data);
     }
+
+    match /users/{userId}/settings/{settingId} {
+      allow read, write: if isSignedIn() && request.auth.uid == userId;
+    }
   }
 
   function isSignedIn() {

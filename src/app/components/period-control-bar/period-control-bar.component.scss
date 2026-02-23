@@ -9,11 +9,11 @@
   gap: 14px;
   padding: 14px 20px;
   border-radius: 16px;
-  border: 1px solid rgba(200, 220, 218, 0.75);
-  background: #ffffff;
+  border: 1px solid rgba(var(--color-600-rgb), 0.75);
+  background: var(--color-surface);
   box-shadow:
-    0 2px 8px rgba(15, 118, 110, 0.05),
-    0 1px 3px rgba(18, 36, 59, 0.03);
+    0 2px 8px rgba(var(--color-600-rgb), 0.05),
+    0 1px 3px rgba(var(--color-dark-rgb), 0.03);
   position: relative;
   overflow: hidden;
   justify-content: space-between;
@@ -26,7 +26,7 @@
     bottom: 16px;
     width: 3px;
     border-radius: 0 3px 3px 0;
-    background: linear-gradient(to bottom, #3dbbb7, #12967f);
+    background: linear-gradient(to bottom, var(--color-primary-light), var(--color-primary));
   }
 }
 
@@ -42,7 +42,7 @@
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #8995ab;
+  color: var(--color-text-muted);
   font-weight: 600;
 }
 
@@ -50,14 +50,14 @@
   margin: 0;
   font-size: 0.95rem;
   line-height: 1.2;
-  color: #2a3646;
+  color: var(--color-text-body);
   font-weight: 700;
 }
 
 .month-picker {
   border-radius: 14px;
-  border: 1px solid rgba(180, 215, 212, 0.75);
-  background: linear-gradient(145deg, #f5fbfb 0%, #eef7f6 100%);
+  border: 1px solid rgba(var(--color-600-rgb), 0.75);
+  background: var(--color-surface-alt);
   padding: 6px;
   display: grid;
   grid-template-columns: 38px 1fr 38px;
@@ -68,7 +68,7 @@
   min-width: 0;
 
   &:focus-visible {
-    outline: 2px solid rgba(77, 184, 180, 0.4);
+    outline: 2px solid rgba(var(--color-600-rgb), 0.4);
     outline-offset: 1px;
   }
 }
@@ -77,9 +77,9 @@
   width: 34px;
   height: 34px;
   border-radius: 10px;
-  border: 1px solid rgba(190, 218, 215, 0.85);
-  background: #ffffff;
-  color: #3d7a76;
+  border: 1px solid rgba(var(--color-600-rgb), 0.85);
+  background: var(--color-surface);
+  color: var(--color-primary);
   padding: 0;
   display: flex;
   align-items: center;
@@ -87,7 +87,7 @@
   line-height: 1;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 1px 3px rgba(15, 118, 110, 0.06);
+  box-shadow: 0 1px 3px rgba(var(--color-600-rgb), 0.06);
 
   .mat-icon {
     width: 18px;
@@ -101,10 +101,10 @@
   }
 
   &:hover {
-    background: #e8f5f4;
-    border-color: rgba(15, 118, 110, 0.3);
-    color: #0f766e;
-    box-shadow: 0 2px 6px rgba(15, 118, 110, 0.12);
+    background: var(--color-surface-mid);
+    border-color: rgba(var(--color-600-rgb), 0.3);
+    color: var(--color-primary);
+    box-shadow: 0 2px 6px rgba(var(--color-600-rgb), 0.12);
   }
 
   &:active {
@@ -123,7 +123,7 @@
   line-height: 1.2;
   font-weight: 700;
   font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
-  color: #0f2e2b;
+  color: var(--color-900);
   letter-spacing: -0.015em;
   white-space: nowrap;
   overflow: hidden;
@@ -135,7 +135,12 @@
     border-radius: 8px;
     min-width: 120px;
     min-height: 16px;
-    background: linear-gradient(90deg, #ecf3f1 25%, #e1ece9 50%, #ecf3f1 75%);
+    background: linear-gradient(
+      90deg,
+      var(--color-surface-mid) 25%,
+      var(--color-surface-alt) 50%,
+      var(--color-surface-mid) 75%
+    );
     background-size: 220% 100%;
     animation: shimmer 1.2s linear infinite;
   }
@@ -144,9 +149,9 @@
 .control-bar__today {
   min-height: 40px;
   border-radius: 12px;
-  border: 1px solid rgba(185, 215, 212, 0.85);
-  background: #ffffff;
-  color: #275c58;
+  border: 1px solid rgba(var(--color-600-rgb), 0.85);
+  background: var(--color-surface);
+  color: var(--color-primary);
   font-size: 0.88rem;
   font-weight: 700;
   padding: 0 14px;
@@ -158,30 +163,30 @@
   cursor: pointer;
   flex-shrink: 0;
   transition: all 0.2s ease;
-  box-shadow: 0 1px 3px rgba(15, 118, 110, 0.06);
+  box-shadow: 0 1px 3px rgba(var(--color-600-rgb), 0.06);
 
   .mat-icon {
     font-size: 18px;
     width: 18px;
     height: 18px;
     line-height: 18px;
-    color: #0f766e;
+    color: var(--color-primary);
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
   &:hover {
-    background: #e8f5f4;
-    border-color: rgba(15, 118, 110, 0.3);
-    color: #0f766e;
-    box-shadow: 0 2px 6px rgba(15, 118, 110, 0.1);
+    background: var(--color-surface-mid);
+    border-color: rgba(var(--color-600-rgb), 0.3);
+    color: var(--color-primary);
+    box-shadow: 0 2px 6px rgba(var(--color-600-rgb), 0.1);
   }
 
   &--active {
-    border-color: rgba(15, 118, 110, 0.3);
-    background: #e3f3f2;
-    color: #0a5e58;
+    border-color: rgba(var(--color-600-rgb), 0.3);
+    background: var(--color-surface-mid);
+    color: var(--color-primary);
   }
 }
 

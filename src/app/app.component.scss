@@ -10,8 +10,8 @@
   z-index: 9999;
   padding: 10px 14px;
   border-radius: 10px;
-  background: #0f766e;
-  color: #ffffff;
+  background: var(--color-primary);
+  color: var(--color-surface);
   font-weight: 700;
   text-decoration: none;
   transition: top 0.2s ease;

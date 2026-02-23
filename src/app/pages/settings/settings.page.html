@@ -1,0 +1,138 @@
+<main class="settings-shell">
+  <!-- ── Page header ───────────────────────────────────────────── -->
+  <header class="settings-header">
+    <a routerLink="/" class="settings-back" aria-label="Назад до дашборду">
+      <mat-icon>arrow_back</mat-icon>
+    </a>
+    <div class="settings-header__text">
+      <h1>Налаштування</h1>
+      <p>Персоналізуйте платформу під себе</p>
+    </div>
+  </header>
+
+  <div class="settings-grid">
+    <!-- ══ Card 1 — % Швидкий набір ════════════════════════════════ -->
+    <section class="s-card">
+      <div class="s-card__head">
+        <span class="s-card__icon s-card__icon--blue">
+          <mat-icon>percent</mat-icon>
+        </span>
+        <div>
+          <h2>Швидкий набір відсотків</h2>
+          <p>Кнопки швидкого вибору % при додаванні візиту</p>
+        </div>
+      </div>
+
+      <div class="preset-chips" *ngIf="presets().length; else noPresets">
+        <div class="preset-chip" *ngFor="let pct of presets()">
+          <span>{{ pct }}%</span>
+          <button
+            type="button"
+            class="preset-chip__remove"
+            (click)="removePreset(pct)"
+            [attr.aria-label]="'Видалити ' + pct + '%'"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </div>
+      <ng-template #noPresets>
+        <p class="preset-empty">Немає жодного пресету. Додайте перший нижче.</p>
+      </ng-template>
+
+      <div class="preset-add">
+        <div class="preset-add__row" [class.preset-add__row--error]="addError">
+          <input
+            type="number"
+            min="1"
+            max="100"
+            class="preset-add__input"
+            placeholder="Новий %"
+            [(ngModel)]="newPresetInput"
+            (keydown.enter)="addPreset()"
+            aria-label="Значення нового відсотку"
+          />
+          <button type="button" class="preset-add__btn" (click)="addPreset()">
+            <mat-icon>add</mat-icon>
+            Додати
+          </button>
+        </div>
+        <p class="preset-add__error" *ngIf="addError" role="alert">{{ addError }}</p>
+      </div>
+    </section>
+
+    <!-- ══ Card 2 — Кольори платформи ══════════════════════════════ -->
+    <section class="s-card">
+      <div class="s-card__head">
+        <span class="s-card__icon s-card__icon--violet">
+          <mat-icon>palette</mat-icon>
+        </span>
+        <div>
+          <h2>Кольори платформи</h2>
+          <p>Колірна тема інтерфейсу — застосовується одразу</p>
+        </div>
+      </div>
+
+      <div class="theme-grid">
+        <button
+          *ngFor="let t of themes"
+          type="button"
+          class="theme-option"
+          [class.theme-option--active]="theme() === t.id"
+          (click)="selectTheme(t.id)"
+          [attr.aria-label]="'Тема ' + t.label"
+          [attr.aria-pressed]="theme() === t.id"
+        >
+          <span class="theme-option__swatches">
+            <span class="theme-option__swatch" [style.background]="t.swatch1"></span>
+            <span class="theme-option__swatch" [style.background]="t.swatch2"></span>
+            <span class="theme-option__swatch" [style.background]="t.swatch3"></span>
+          </span>
+          <span class="theme-option__label">{{ t.label }}</span>
+          <mat-icon class="theme-option__check" *ngIf="theme() === t.id">check_circle</mat-icon>
+        </button>
+      </div>
+    </section>
+
+    <!-- ══ Card 3 — Формат експорту ════════════════════════════════ -->
+    <section class="s-card">
+      <div class="s-card__head">
+        <span class="s-card__icon s-card__icon--amber">
+          <mat-icon>download</mat-icon>
+        </span>
+        <div>
+          <h2>Формат експорту</h2>
+          <p>Формат файлу при завантаженні журналу за місяць</p>
+        </div>
+      </div>
+
+      <div class="format-options">
+        <button
+          type="button"
+          class="format-option"
+          [class.format-option--active]="exportFormat() === 'csv'"
+          (click)="selectExportFormat('csv')"
+          [attr.aria-pressed]="exportFormat() === 'csv'"
+        >
+          <mat-icon>table_view</mat-icon>
+          <span class="format-option__name">CSV</span>
+          <span class="format-option__desc">Текстовий, UTF-8<br />Excel / Google Sheets</span>
+          <mat-icon class="format-option__check" *ngIf="exportFormat() === 'csv'">check_circle</mat-icon>
+        </button>
+
+        <button
+          type="button"
+          class="format-option"
+          [class.format-option--active]="exportFormat() === 'excel'"
+          (click)="selectExportFormat('excel')"
+          [attr.aria-pressed]="exportFormat() === 'excel'"
+        >
+          <mat-icon>grid_on</mat-icon>
+          <span class="format-option__name">Excel</span>
+          <span class="format-option__desc">Файл .xlsx<br />Microsoft Excel</span>
+          <mat-icon class="format-option__check" *ngIf="exportFormat() === 'excel'">check_circle</mat-icon>
+        </button>
+      </div>
+    </section>
+  </div>
+</main>

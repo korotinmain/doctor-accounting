@@ -9,7 +9,7 @@
   display: grid;
   place-items: center;
   padding: 16px;
-  background: rgba(8, 43, 38, 0.42);
+  background: rgba(var(--color-dark-rgb), 0.42);
   backdrop-filter: blur(3px);
 }
 
@@ -20,8 +20,8 @@
   padding: 0;
   border-radius: 18px;
   box-shadow:
-    0 20px 44px rgba(14, 35, 58, 0.26),
-    0 6px 16px rgba(14, 35, 58, 0.14);
+    0 20px 44px rgba(var(--color-dark-rgb), 0.26),
+    0 6px 16px rgba(var(--color-dark-rgb), 0.14);
 
   &:hover {
     transform: none;
@@ -34,9 +34,9 @@
   align-items: center;
   gap: 12px;
   padding: 14px 18px;
-  background: linear-gradient(145deg, #56b8b0 0%, #40a8cb 100%);
+  background: var(--gradient-header);
 
-  color: #ecffff;
+  color: rgba(255, 255, 255, 0.94);
 }
 
 .visit-dialog__header-main {
@@ -59,7 +59,7 @@
     width: 24px;
     height: 24px;
     font-size: 24px;
-    color: #efffff;
+    color: rgba(255, 255, 255, 0.95);
   }
 }
 
@@ -69,7 +69,7 @@
     font-size: 1.95rem;
     line-height: 1;
     letter-spacing: -0.01em;
-    color: #efffff;
+    color: rgba(255, 255, 255, 0.95);
   }
 
   p {
@@ -83,7 +83,7 @@
 
 .visit-dialog__close {
   flex-shrink: 0;
-  color: #e7ffff;
+  color: rgba(255, 255, 255, 0.91);
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.08);
 }
@@ -142,9 +142,9 @@
 }
 
 .percent-quick__btn {
-  border: 1px solid rgba(164, 193, 186, 0.85);
-  background: #f7fbfa;
-  color: #0f615a;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-alt);
+  color: var(--color-800);
   border-radius: 999px;
   min-height: 36px;
   height: 36px;
@@ -160,20 +160,20 @@
     box-shadow 0.18s ease;
 
   &:hover {
-    border-color: rgba(15, 118, 110, 0.45);
-    background: rgba(20, 184, 166, 0.1);
+    border-color: rgba(var(--color-600-rgb), 0.45);
+    background: var(--color-emerald-surface);
   }
 }
 
 .percent-quick__btn--active {
-  border-color: rgba(15, 118, 110, 0.5);
-  background: #0f766e;
-  color: #ecfdf5;
-  box-shadow: 0 2px 7px rgba(15, 118, 110, 0.25);
+  border-color: rgba(var(--color-600-rgb), 0.5);
+  background: var(--color-primary);
+  color: var(--color-surface-mid);
+  box-shadow: 0 2px 7px rgba(var(--color-600-rgb), 0.25);
 }
 
 .compact-field input[readonly] {
-  color: #0f766e;
+  color: var(--color-primary);
   font-weight: 700;
 }
 
@@ -189,7 +189,7 @@
   .secondary-action {
     min-width: auto;
     padding: 0 8px;
-    color: #6c809f;
+    color: var(--color-text-muted);
     font-weight: 600;
   }
 

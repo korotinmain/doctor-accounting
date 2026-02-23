@@ -3,15 +3,11 @@
     <article class="brand-pane">
       <p class="brand-pane__eyebrow">Doctor Accounting</p>
       <h1>Створення облікового запису</h1>
-      <p class="brand-pane__lead">
-        Зареєструйте профіль для окремого простору даних у Firestore та почніть вести облік прийомів і доходів.
-      </p>
+      <p class="brand-pane__lead">Зареєструйте профіль і починайте вести облік прийомів та доходів одразу.</p>
 
-      <ul class="brand-pane__list">
-        <li><mat-icon>person_add_alt_1</mat-icon>Персональний кабінет лікаря</li>
-        <li><mat-icon>verified_user</mat-icon>Захист облікових записів Firebase Auth</li>
-        <li><mat-icon>insights</mat-icon>Ізоляція даних по користувачах</li>
-      </ul>
+      <div class="brand-pane__preview" aria-hidden="true">
+        <img src="assets/analytics-auth.svg" alt="" class="brand-pane__preview-img" />
+      </div>
     </article>
 
     <mat-card class="auth-card">
@@ -80,8 +76,15 @@
           <mat-error *ngIf="confirmPasswordInvalid">Паролі мають співпадати.</mat-error>
         </mat-form-field>
 
-        <button mat-flat-button color="primary" type="submit" class="primary-btn" [disabled]="submitting">
-          <span>Створити акаунт</span>
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          class="primary-btn"
+          [disabled]="submitting"
+          [class.is-loading]="submitting"
+        >
+          <span class="btn-label"><mat-icon>person_add</mat-icon>Створити акаунт</span>
           <mat-progress-spinner
             *ngIf="submitting"
             mode="indeterminate"

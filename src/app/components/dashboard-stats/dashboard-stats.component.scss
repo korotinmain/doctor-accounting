@@ -11,10 +11,10 @@
 
 // ─── Card ────────────────────────────────────────────────
 .stat-card {
-  background: #fff;
+  background: var(--color-surface);
   border-radius: 16px;
-  border: 1px solid rgba(225, 232, 240, 0.85);
-  box-shadow: 0 1px 3px rgba(20, 39, 65, 0.04);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-card);
   padding: 18px 20px 14px;
   display: flex;
   flex-direction: column;
@@ -25,23 +25,28 @@
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 14px rgba(20, 39, 65, 0.08);
+    box-shadow: var(--shadow-hover);
   }
 
   // ── Color variants ──────────────────────────────────────
   &--green {
-    --card-accent: #10b981;
-    --card-icon-bg: #10b981;
+    --card-accent: var(--color-emerald);
+    --card-icon-bg: var(--gradient-emerald);
   }
 
   &--blue {
-    --card-accent: #3b82f6;
-    --card-icon-bg: #3b82f6;
+    --card-accent: var(--color-primary);
+    --card-icon-bg: var(--gradient-brand);
   }
 
   &--orange {
-    --card-accent: #f59e0b;
-    --card-icon-bg: #f59e0b;
+    --card-accent: var(--color-amber);
+    --card-icon-bg: var(--gradient-amber);
+  }
+
+  &--violet {
+    --card-accent: var(--color-violet);
+    --card-icon-bg: var(--gradient-violet);
   }
 }
 
@@ -56,14 +61,14 @@
   width: 44px;
   height: 44px;
   border-radius: 12px;
-  background: var(--card-icon-bg, #e2e8f0);
+  background: var(--card-icon-bg, var(--gradient-brand));
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 
   mat-icon {
-    color: #fff;
+    color: rgba(255, 255, 255, 0.96);
     font-size: 22px;
     width: 22px;
     height: 22px;
@@ -76,7 +81,7 @@
 .stat-card__label {
   flex: 1;
   font-size: 0.875rem;
-  color: #64748b;
+  color: var(--color-text-muted);
   font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
@@ -94,18 +99,18 @@
   white-space: nowrap;
 
   &--up {
-    background: #d1fae5;
-    color: #065f46;
+    background: rgba(var(--color-600-rgb), 0.12);
+    color: var(--color-primary);
   }
 
   &--down {
-    background: #fee2e2;
-    color: #991b1b;
+    background: var(--color-danger-surface);
+    color: var(--color-danger);
   }
 
   &--flat {
-    background: #f1f5f9;
-    color: #64748b;
+    background: var(--color-surface-alt);
+    color: var(--color-text-muted);
   }
 }
 
@@ -117,7 +122,7 @@
 .stat-card__value {
   font-size: clamp(1.75rem, 2.2vw, 2.1rem);
   font-weight: 700;
-  color: #0f172a;
+  color: var(--color-900);
   line-height: 1.1;
   letter-spacing: -0.02em;
   white-space: nowrap;
@@ -138,7 +143,7 @@
 
 .stat-card__trend-label {
   font-size: 0.77rem;
-  color: #94a3b8;
+  color: var(--color-text-muted);
   line-height: 1.3;
   min-width: 0;
   overflow: hidden;
@@ -169,7 +174,12 @@
 .stats--skeleton {
   .skeleton-line {
     border-radius: 6px;
-    background: linear-gradient(90deg, #f1f5f9 25%, #e8edf3 50%, #f1f5f9 75%);
+    background: linear-gradient(
+      90deg,
+      var(--color-surface-alt) 25%,
+      var(--color-surface-mid) 50%,
+      var(--color-surface-alt) 75%
+    );
     background-size: 200% 100%;
     animation: shimmer 1.4s infinite;
 

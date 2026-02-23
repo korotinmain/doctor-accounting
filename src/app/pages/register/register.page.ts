@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -34,6 +34,7 @@ import { AuthSessionService } from '../../services/auth-session.service';
 })
 export class RegisterPageComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   readonly registerForm = this.fb.group(
     {
@@ -114,8 +115,10 @@ export class RegisterPageComponent implements OnInit {
       await this.router.navigateByUrl('/');
     } catch (error) {
       this.errorMessage = this.resolveRegisterError(error);
+      this.cdr.markForCheck();
     } finally {
       this.submitting = false;
+      this.cdr.markForCheck();
     }
   }
 

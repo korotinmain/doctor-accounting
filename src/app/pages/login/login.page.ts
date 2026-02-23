@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -36,6 +36,7 @@ type LoginMode = 'google' | 'email' | null;
 })
 export class LoginPageComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   readonly loginForm = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
@@ -103,8 +104,10 @@ export class LoginPageComponent implements OnInit {
       }
     } catch (error) {
       this.errorMessage = this.resolveAuthErrorMessage(error);
+      this.cdr.markForCheck();
     } finally {
       this.mode = null;
+      this.cdr.markForCheck();
     }
   }
 
@@ -128,8 +131,10 @@ export class LoginPageComponent implements OnInit {
       await this.router.navigateByUrl('/');
     } catch (error) {
       this.errorMessage = this.resolveAuthErrorMessage(error);
+      this.cdr.markForCheck();
     } finally {
       this.mode = null;
+      this.cdr.markForCheck();
     }
   }
 

@@ -3,14 +3,10 @@
     <article class="brand-pane">
       <p class="brand-pane__eyebrow">Doctor Accounting</p>
       <h1>Панель обліку прийомів для приватної практики</h1>
-      <p class="brand-pane__lead">
-        Керуйте візитами, фінансами та статистикою в єдиному робочому просторі. Увійдіть через email або Google.
-      </p>
+      <p class="brand-pane__lead">Керуйте візитами, фінансами та статистикою в єдиному робочому просторі.</p>
 
-      <div class="brand-pane__chips">
-        <span><mat-icon>verified_user</mat-icon>Безпечна авторизація</span>
-        <span><mat-icon>query_stats</mat-icon>Прозора аналітика</span>
-        <span><mat-icon>cloud_done</mat-icon>Збереження в Firebase</span>
+      <div class="brand-pane__preview" aria-hidden="true">
+        <img src="assets/dashboard-auth.svg" alt="" class="brand-pane__preview-img" />
       </div>
     </article>
 
@@ -53,8 +49,15 @@
           <mat-error *ngIf="passwordInvalid">Пароль має містити щонайменше 6 символів.</mat-error>
         </mat-form-field>
 
-        <button mat-flat-button color="primary" type="submit" class="primary-btn" [disabled]="isBusy">
-          <span>Увійти через email</span>
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          class="primary-btn"
+          [disabled]="isBusy"
+          [class.is-loading]="mode === 'email'"
+        >
+          <span class="btn-label"><mat-icon>login</mat-icon>Увійти через Email</span>
           <mat-progress-spinner
             *ngIf="mode === 'email'"
             mode="indeterminate"
@@ -72,6 +75,7 @@
         type="button"
         class="google-btn"
         [disabled]="isBusy"
+        [class.is-loading]="mode === 'google'"
         (click)="signInWithGoogle()"
         aria-label="Увійти через Google"
       >

@@ -1,0 +1,96 @@
+// ─ Theme overrides ─────────────────────────────────────────────────────────
+// Applied via [data-theme="..."] on <html>.
+// Default (midnight-cobalt) needs no override — all tokens already defined in _tokens.scss.
+
+// ── Forest — deep emerald greens ───────────────────────────────────────────
+[data-theme='forest'] {
+  --color-900: #052e16;
+  --color-800: #166534;
+  --color-600: #15803d;
+  --color-600-rgb: 21, 128, 61;
+  --color-500: #4ade80;
+  --color-steel: #86efac;
+  --color-navy: #14532d;
+  --color-dark-rgb: 5, 46, 22;
+  --color-primary: #15803d;
+  --color-primary-dark: #166534;
+  --color-primary-light: #4ade80;
+  --color-text-heading: #052e16;
+  --color-text-body: #14532d;
+  --color-text-muted: #4a7c5a;
+  --color-text-hint: rgba(74, 124, 90, 0.6);
+  --color-surface-alt: #f0fdf4;
+  --color-surface-mid: #dcfce7;
+  --color-border: rgba(21, 128, 61, 0.15);
+  --color-border-strong: rgba(21, 128, 61, 0.28);
+  --color-focus-border: rgba(21, 128, 61, 0.45);
+  --color-focus-shadow: 0 0 0 3px rgba(21, 128, 61, 0.14);
+  --gradient-brand: linear-gradient(150deg, #4ade80 0%, #15803d 100%);
+  --gradient-cta: linear-gradient(135deg, #15803d 0%, #166534 100%);
+  --gradient-header: linear-gradient(145deg, #4ade80 0%, #15803d 100%);
+  --shadow-card: 0 2px 8px rgba(5, 46, 22, 0.07), 0 1px 3px rgba(5, 46, 22, 0.04);
+  --shadow-hover: 0 6px 16px rgba(5, 46, 22, 0.11), 0 2px 5px rgba(5, 46, 22, 0.06);
+  --shadow-panel: 0 3px 10px rgba(5, 46, 22, 0.07), 0 1px 3px rgba(5, 46, 22, 0.04);
+}
+
+// ── Sunset — warm amber / copper ───────────────────────────────────────────
+[data-theme='sunset'] {
+  --color-900: #431407;
+  --color-800: #9a3412;
+  --color-600: #d9500a;
+  --color-600-rgb: 217, 80, 10;
+  --color-500: #fb923c;
+  --color-steel: #fdba74;
+  --color-navy: #7c2d12;
+  --color-dark-rgb: 67, 20, 7;
+  --color-primary: #d9500a;
+  --color-primary-dark: #9a3412;
+  --color-primary-light: #fb923c;
+  --color-text-heading: #431407;
+  --color-text-body: #7c2d12;
+  --color-text-muted: #9a520a;
+  --color-text-hint: rgba(154, 82, 10, 0.6);
+  --color-surface-alt: #fff7ed;
+  --color-surface-mid: #ffedd5;
+  --color-border: rgba(217, 80, 10, 0.15);
+  --color-border-strong: rgba(217, 80, 10, 0.28);
+  --color-focus-border: rgba(217, 80, 10, 0.45);
+  --color-focus-shadow: 0 0 0 3px rgba(217, 80, 10, 0.14);
+  --gradient-brand: linear-gradient(150deg, #fb923c 0%, #d9500a 100%);
+  --gradient-cta: linear-gradient(135deg, #d9500a 0%, #9a3412 100%);
+  --gradient-header: linear-gradient(145deg, #fb923c 0%, #d9500a 100%);
+  --shadow-card: 0 2px 8px rgba(67, 20, 7, 0.07), 0 1px 3px rgba(67, 20, 7, 0.04);
+  --shadow-hover: 0 6px 16px rgba(67, 20, 7, 0.11), 0 2px 5px rgba(67, 20, 7, 0.06);
+  --shadow-panel: 0 3px 10px rgba(67, 20, 7, 0.07), 0 1px 3px rgba(67, 20, 7, 0.04);
+}
+
+// ── Royal — deep violet / purple ───────────────────────────────────────────
+[data-theme='royal'] {
+  --color-900: #1e0a40;
+  --color-800: #4a1d96;
+  --color-600: #7c3aed;
+  --color-600-rgb: 124, 58, 237;
+  --color-500: #a78bfa;
+  --color-steel: #c4b5fd;
+  --color-navy: #3b1778;
+  --color-dark-rgb: 30, 10, 64;
+  --color-primary: #7c3aed;
+  --color-primary-dark: #4a1d96;
+  --color-primary-light: #a78bfa;
+  --color-text-heading: #1e0a40;
+  --color-text-body: #3b1778;
+  --color-text-muted: #6d4fb8;
+  --color-text-hint: rgba(109, 79, 184, 0.6);
+  --color-surface-alt: #f5f3ff;
+  --color-surface-mid: #ede9fe;
+  --color-border: rgba(124, 58, 237, 0.15);
+  --color-border-strong: rgba(124, 58, 237, 0.28);
+  --color-focus-border: rgba(124, 58, 237, 0.45);
+  --color-focus-shadow: 0 0 0 3px rgba(124, 58, 237, 0.14);
+  --gradient-brand: linear-gradient(150deg, #a78bfa 0%, #7c3aed 100%);
+  --gradient-cta: linear-gradient(135deg, #7c3aed 0%, #4a1d96 100%);
+  --gradient-header: linear-gradient(145deg, #a78bfa 0%, #7c3aed 100%);
+  --shadow-card: 0 2px 8px rgba(30, 10, 64, 0.07), 0 1px 3px rgba(30, 10, 64, 0.04);
+  --shadow-hover: 0 6px 16px rgba(30, 10, 64, 0.11), 0 2px 5px rgba(30, 10, 64, 0.06);
+  --shadow-panel: 0 3px 10px rgba(30, 10, 64, 0.07), 0 1px 3px rgba(30, 10, 64, 0.04);
+}

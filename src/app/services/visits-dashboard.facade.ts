@@ -16,6 +16,7 @@ import {
   sortVisits
 } from '../utils/visits-analytics';
 import { ConfirmDialogService } from './confirm-dialog.service';
+import { UserSettingsService } from './user-settings.service';
 import { VisitsService } from './visits.service';
 
 type ReportPeriod = {
@@ -26,7 +27,10 @@ type ReportPeriod = {
 @Injectable()
 export class VisitsDashboardFacade {
   readonly procedureOptions = ['Консультація', 'Операція', 'Інше'];
-  readonly percentQuickOptions = [10, 20, 30, 40, 50];
+
+  get percentQuickOptions(): number[] {
+    return this.userSettings.percentPresets();
+  }
 
   readonly monthControl = this.formBuilder.nonNullable.control(this.getCurrentMonth(), Validators.required);
 
@@ -151,7 +155,8 @@ export class VisitsDashboardFacade {
     private readonly visitsService: VisitsService,
     private readonly snackBar: MatSnackBar,
     private readonly auth: Auth,
-    private readonly confirmDialog: ConfirmDialogService
+    private readonly confirmDialog: ConfirmDialogService,
+    private readonly userSettings: UserSettingsService
   ) {}
 
   get selectedMonthLabel(): string {
@@ -319,6 +324,20 @@ export class VisitsDashboardFacade {
       groups.set(visit.visitDate, existing);
     }
 
+    const rawName = this.auth.currentUser?.displayName ?? this.auth.currentUser?.email?.split('@')[0] ?? 'export';
+    const safeName = rawName
+      .replace(/[^\w\u0400-\u04FF\s-]/g, '')
+      .trim()
+      .replace(/\s+/g, '_');
+
+    if (this.userSettings.exportFormat() === 'excel') {
+      this.exportAsExcel(groups, safeName, monthPrefix);
+    } else {
+      this.exportAsCsv(groups, safeName, monthPrefix);
+    }
+  }
+
+  private exportAsCsv(groups: Map<string, Visit[]>, safeName: string, monthPrefix: string): void {
     const q = (s: string | number) => `"${String(s).replace(/"/g, '""')}"`;
     const sep = ';';
     const lines: string[] = [];
@@ -330,7 +349,7 @@ export class VisitsDashboardFacade {
         new Date(date + 'T00:00:00')
       );
 
-      lines.push([q('Дата'), q('ПІБ'), q('Сума'), q('%')].join(sep));
+      lines.push([q('Дата'), q('ПІБ'), q('Сума'), q('Дохід лікаря')].join(sep));
       let dayAmount = 0;
       let dayIncome = 0;
       let firstRow = true;
@@ -344,7 +363,7 @@ export class VisitsDashboardFacade {
         firstRow = false;
       }
 
-      lines.push([q(''), q(''), q(dayAmount), q(dayIncome)].join(sep));
+      lines.push([q(''), q('Підсумок за день'), q(dayAmount), q(dayIncome)].join(sep));
       lines.push('');
       grandAmount += dayAmount;
       grandIncome += dayIncome;
@@ -357,12 +376,63 @@ export class VisitsDashboardFacade {
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement('a');
     anchor.href = url;
-    const rawName = this.auth.currentUser?.displayName ?? this.auth.currentUser?.email?.split('@')[0] ?? 'export';
-    const safeName = rawName
-      .replace(/[^\w\u0400-\u04FF\s-]/g, '')
-      .trim()
-      .replace(/\s+/g, '_');
     anchor.download = `${safeName}_${monthPrefix}.csv`;
+    anchor.click();
+    URL.revokeObjectURL(url);
+  }
+
+  private exportAsExcel(groups: Map<string, Visit[]>, safeName: string, monthPrefix: string): void {
+    const esc = (s: string | number) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const cell = (v: string | number, bold = false, isNum = false) =>
+      `<Cell${bold ? ' ss:StyleID="Bold"' : ''}><Data ss:Type="${isNum ? 'Number' : 'String'}">${esc(v)}</Data></Cell>`;
+
+    let xmlRows = '';
+    let grandAmount = 0;
+    let grandIncome = 0;
+
+    for (const [date, dayVisits] of groups.entries()) {
+      const shortDate = new Intl.DateTimeFormat('uk-UA', { day: 'numeric', month: 'short' }).format(
+        new Date(date + 'T00:00:00')
+      );
+      let dayAmount = 0;
+      let dayIncome = 0;
+
+      xmlRows += `<Row>${cell('Дата', true)}${cell('ПІБ', true)}${cell('Сума', true)}${cell('Дохід лікаря', true)}</Row>`;
+
+      let firstRow = true;
+      for (const visit of dayVisits) {
+        dayAmount += visit.amount;
+        dayIncome += visit.doctorIncome;
+        xmlRows += `<Row>${cell(firstRow ? shortDate : '')}${cell(visit.patientName)}${cell(visit.amount, false, true)}${cell(visit.doctorIncome, false, true)}</Row>`;
+        firstRow = false;
+      }
+
+      xmlRows += `<Row>${cell('')}${cell('Підсумок за день', true)}${cell(dayAmount, true, true)}${cell(dayIncome, true, true)}</Row>`;
+      xmlRows += '<Row><Cell ss:Index="4"/></Row>';
+
+      grandAmount += dayAmount;
+      grandIncome += dayIncome;
+    }
+
+    xmlRows += `<Row>${cell('ЗАГАЛОМ', true)}${cell('')}${cell(grandAmount, true, true)}${cell(grandIncome, true, true)}</Row>`;
+
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+          xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+  <Styles>
+    <Style ss:ID="Bold"><Font ss:Bold="1"/></Style>
+  </Styles>
+  <Worksheet ss:Name="Журнал">
+    <Table>${xmlRows}</Table>
+  </Worksheet>
+</Workbook>`;
+
+    const blob = new Blob(['\uFEFF' + xml], { type: 'application/vnd.ms-excel;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = `${safeName}_${monthPrefix}.xls`;
     anchor.click();
     URL.revokeObjectURL(url);
   }

@@ -1,26 +1,74 @@
 // ─ Design tokens ──────────────────────────────────────────────────────────────
-// CSS custom properties available globally — no import needed in component SCSS.
-// SCSS variables ($bp-*) are for media queries: @use 'tokens' as t in component.
+// Primary:  Midnight Cobalt  #0a1533 · #1f3c8f · #3b67d6 · #6489e8 · #a5b8f2
+// Accents:  Teal  #0b9185 · Gold  #c07c28 · Fuchsia  #b02fce
+// "Midnight Cobalt" — deep, rich, premium.
 
 :root {
   // ── Brand palette ──────────────────────────────────────────────────────────
-  --color-primary: #0f766e;
-  --color-primary-500: #14b8a6;
-  --color-primary-400: #3dbbb7;
-  --color-primary-surface: #f5fbfb;
-  --color-primary-pale: #eef7f6;
+  --color-900: #0a1533; // midnight navy — deepest, headings
+  --color-800: #1f3c8f; // deep cobalt — dark CTAs, hover
+  --color-600: #3b67d6; // cobalt blue — primary, buttons, active
+  --color-600-rgb: 59, 103, 214; // RGB channels for rgba() usage
+  --color-500: #6489e8; // periwinkle — gradient start, highlights
+  --color-steel: #a5b8f2; // lavender mist — muted borders
+  --color-navy: #1c326a; // ink — body text, labels
+  --color-dark-rgb: 10, 21, 51; // shadow base RGB
 
-  // ── Neutrals ───────────────────────────────────────────────────────────────
-  --color-text-heading: #1c2c47;
-  --color-text-body: #2a3646;
-  --color-text-muted: #7189a3;
-  --color-text-hint: #8995ab;
+  // ── Semantic aliases ───────────────────────────────────────────────────────
+  --color-primary: #3b67d6;
+  --color-primary-dark: #1f3c8f;
+  --color-primary-light: #6489e8;
+  --color-text-heading: #0a1533;
+  --color-text-body: #1c326a;
+  --color-text-muted: #5568a8;
+  --color-text-hint: rgba(85, 104, 168, 0.6);
   --color-surface: #ffffff;
-  --color-surface-alt: #f0f4f8;
+  --color-surface-alt: #f2f5fd;
+  --color-surface-mid: #dce5fa;
+
+  // ── Accent — Teal (income / revenue) ──────────────────────────────────────
+  --color-emerald: #0b9185;
+  --color-emerald-dark: #0a7a70;
+  --color-emerald-light: #2dd4c0;
+  --color-emerald-surface: rgba(11, 145, 133, 0.08);
+  --color-emerald-rgb: 11, 145, 133;
+
+  // ── Accent — Orange (cash totals / money) ──────────────────────────────────
+  --color-amber: #d9640c;
+  --color-amber-dark: #b24f08;
+  --color-amber-light: #f5913c;
+  --color-amber-surface: rgba(217, 100, 12, 0.08);
+  --color-amber-rgb: 217, 100, 12;
+
+  // ── Accent — Fuchsia (appointments / visits / procedures) ─────────────────
+  --color-violet: #b02fce;
+  --color-violet-dark: #9026ac;
+  --color-violet-light: #de79f5;
+  --color-violet-surface: rgba(176, 47, 206, 0.08);
+  --color-violet-rgb: 176, 47, 206;
 
   // ── Borders ────────────────────────────────────────────────────────────────
-  --color-border: rgba(220, 230, 240, 0.9);
-  --color-border-teal: rgba(180, 215, 212, 0.75);
+  --color-border: rgba(59, 103, 214, 0.15);
+  --color-border-strong: rgba(59, 103, 214, 0.28);
+
+  // ── Danger (semantic — unchanged) ──────────────────────────────────────────
+  --color-danger: #dc2626;
+  --color-danger-surface: rgba(239, 68, 68, 0.07);
+  --color-danger-border: rgba(239, 68, 68, 0.24);
+
+  // ── Focus ──────────────────────────────────────────────────────────────────
+  --color-focus-border: rgba(59, 103, 214, 0.45);
+  --color-focus-shadow: 0 0 0 3px rgba(59, 103, 214, 0.14);
+
+  // ── Gradients ──────────────────────────────────────────────────────────────
+  --gradient-brand: linear-gradient(150deg, #6489e8 0%, #3b67d6 100%);
+  --gradient-cta: linear-gradient(135deg, #3b67d6 0%, #1f3c8f 100%);
+  --gradient-header: linear-gradient(145deg, #6489e8 0%, #3b67d6 100%);
+  --gradient-emerald: linear-gradient(145deg, #2dd4c0 0%, #0b9185 100%);
+  --gradient-amber: linear-gradient(145deg, #f5913c 0%, #d9640c 100%);
+  --gradient-violet: linear-gradient(145deg, #de79f5 0%, #b02fce 100%);
+  --gradient-danger: linear-gradient(145deg, #dc2626 0%, #b91c1c 100%);
+  --gradient-danger-hover: linear-gradient(145deg, #ef4444 0%, #dc2626 100%);
 
   // ── Radii ──────────────────────────────────────────────────────────────────
   --radius-card: 16px;
@@ -28,9 +76,15 @@
   --radius-sm: 10px;
 
   // ── Shadows ────────────────────────────────────────────────────────────────
-  --shadow-card: 0 2px 8px rgba(15, 118, 110, 0.05), 0 1px 3px rgba(18, 36, 59, 0.03);
-  --shadow-hover: 0 6px 16px rgba(20, 39, 65, 0.06), 0 2px 5px rgba(20, 39, 65, 0.03);
-  --shadow-panel: 0 3px 10px rgba(20, 39, 65, 0.04), 0 1px 3px rgba(20, 39, 65, 0.02);
+  --shadow-card: 0 2px 8px rgba(10, 21, 51, 0.07), 0 1px 3px rgba(10, 21, 51, 0.04);
+  --shadow-hover: 0 6px 16px rgba(10, 21, 51, 0.11), 0 2px 5px rgba(10, 21, 51, 0.06);
+  --shadow-panel: 0 3px 10px rgba(10, 21, 51, 0.07), 0 1px 3px rgba(10, 21, 51, 0.04);
+
+  // ── Spinner colors ─────────────────────────────────────────────────────────
+  // on filled (colored) buttons — always white regardless of theme
+  --color-spinner-on-filled: rgba(255, 255, 255, 0.92);
+  // on outline/ghost buttons — matches the primary brand color of the active theme
+  --color-spinner-on-outline: var(--color-primary);
 }
 
 // ── Breakpoint SCSS variables (use with @use 'tokens' as t; → t.$bp-tablet) ─

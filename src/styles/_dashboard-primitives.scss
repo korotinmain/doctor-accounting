@@ -12,7 +12,7 @@
 
   &:hover {
     box-shadow: var(--shadow-hover);
-    border-color: rgba(205, 218, 232, 0.92);
+    border-color: var(--color-border-strong);
   }
 }
 
@@ -20,7 +20,7 @@
   h2 {
     margin: 0;
     font-size: 1.2rem;
-    color: #1e2d3f;
+    color: var(--color-text-heading);
     font-weight: 700;
     letter-spacing: -0.01em;
   }
@@ -28,7 +28,7 @@
   p {
     margin: 5px 0 0;
     font-size: 0.86rem;
-    color: #7388a2;
+    color: var(--color-text-muted);
     font-weight: 600;
   }
 }
@@ -53,7 +53,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 1px 4px rgba(25, 47, 78, 0.04);
+  box-shadow: 0 1px 4px rgba(var(--color-dark-rgb), 0.04);
   transition: all 0.3s ease;
   overflow: hidden;
 }
@@ -74,7 +74,7 @@
       width: 19px;
       height: 19px;
       font-size: 19px;
-      color: #0d766c;
+      color: var(--color-primary);
       line-height: 19px;
     }
   }
@@ -95,9 +95,9 @@
   border-radius: 999px;
   background: linear-gradient(
     110deg,
-    rgba(209, 229, 223, 0.85) 8%,
-    rgba(247, 252, 250, 0.95) 18%,
-    rgba(209, 229, 223, 0.85) 33%
+    rgba(var(--color-600-rgb), 0.12) 8%,
+    rgba(243, 251, 251, 0.95) 18%,
+    rgba(var(--color-600-rgb), 0.12) 33%
   );
   background-size: 220% 100%;
   animation: shimmer 1.4s linear infinite;
@@ -124,9 +124,9 @@
   vertical-align: middle;
   background: linear-gradient(
     110deg,
-    rgba(209, 229, 223, 0.85) 8%,
-    rgba(247, 252, 250, 0.95) 18%,
-    rgba(209, 229, 223, 0.85) 33%
+    rgba(var(--color-600-rgb), 0.12) 8%,
+    rgba(243, 251, 251, 0.95) 18%,
+    rgba(var(--color-600-rgb), 0.12) 33%
   );
   background-size: 220% 100%;
   animation: shimmer 1.4s linear infinite;
@@ -140,25 +140,25 @@
 .badge {
   font-size: 0.72rem;
   font-weight: 700;
-  color: #3d615a;
+  color: var(--color-text-body);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  background: #f4f8f7;
-  border: 1px solid rgba(199, 215, 211, 0.95);
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
   padding: 6px 14px;
   border-radius: 12px;
   box-shadow: none;
   transition: border-color 0.2s ease;
 
   &:hover {
-    border-color: rgba(180, 203, 197, 0.95);
+    border-color: var(--color-border);
   }
 
   &--count {
-    background: #ecf5f3;
-    color: #2f5952;
+    background: var(--color-surface-mid);
+    color: var(--color-text-body);
     padding: 7px 16px;
-    border-color: rgba(183, 211, 202, 0.95);
+    border-color: var(--color-border);
   }
 }
 

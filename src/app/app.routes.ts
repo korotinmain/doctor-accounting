@@ -41,6 +41,12 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/dashboard/dashboard.page').then((module) => module.DashboardPageComponent)
   },
   {
+    path: 'settings',
+    canActivate: [authGuard],
+    title: 'Налаштування | Doctor Accounting',
+    loadComponent: () => import('./pages/settings/settings.page').then((m) => m.SettingsPageComponent)
+  },
+  {
     path: '**',
     redirectTo: ''
   }

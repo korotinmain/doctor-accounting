@@ -1,11 +1,12 @@
 import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-report-header',
   standalone: true,
-  imports: [NgIf, MatIconModule],
+  imports: [NgIf, RouterLink, MatIconModule],
   templateUrl: './report-header.component.html',
   styleUrls: ['./report-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

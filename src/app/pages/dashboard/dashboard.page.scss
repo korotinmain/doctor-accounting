@@ -26,13 +26,13 @@
   border-radius: 18px;
   background: linear-gradient(
     110deg,
-    rgba(224, 242, 241, 0.25) 8%,
+    rgba(var(--color-600-rgb), 0.08) 8%,
     rgba(255, 255, 255, 0.95) 18%,
-    rgba(224, 242, 241, 0.22) 33%
+    rgba(var(--color-600-rgb), 0.06) 33%
   );
   background-size: 220% 100%;
   animation: shimmer 1.6s linear infinite;
-  border: 1px solid rgba(207, 227, 221, 0.7);
+  border: 1px solid var(--color-border);
 }
 
 .loading--hero {
@@ -50,12 +50,12 @@
   gap: 10px;
   padding: 12px 14px;
   border-radius: 14px;
-  border: 1px solid rgba(245, 158, 11, 0.4);
-  background: #fffbeb;
-  color: #92400e;
+  border: 1px solid var(--color-danger-border);
+  background: var(--color-surface);
+  color: var(--color-danger);
 
   mat-icon {
-    color: #d97706;
+    color: var(--color-danger);
     width: 20px;
     height: 20px;
     font-size: 20px;

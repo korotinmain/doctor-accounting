@@ -325,8 +325,8 @@
   }
 
   &--selected {
-    border-color: rgba(var(--color-violet-rgb), 0.4);
-    background: var(--gradient-violet);
+    border-color: rgba(var(--color-600-rgb), 0.4);
+    background: rgba(var(--color-600-rgb));
     color: var(--color-surface);
     font-weight: 700;
     box-shadow:

@@ -501,7 +501,7 @@
 }
 
 .visit-card {
-  border: 1px solid rgba(210, 228, 221, 0.85);
+  border: 1px solid var(--color-border);
   border-radius: 14px;
   padding: 14px;
   background: var(--color-surface);
@@ -716,13 +716,11 @@
 }
 
 @media (max-width: 820px) {
-  .ledger__header-actions {
-    display: grid;
-    gap: 8px;
-    width: 100%;
+  .ledger__controls {
+    grid-template-columns: 1fr;
   }
 
-  .ledger__add-btn {
+  .ledger__cta.mat-mdc-button-base {
     width: 100%;
     justify-content: center;
   }
@@ -748,12 +746,22 @@
     gap: 10px;
   }
 
+  // keep head as a single row — name left, date right
   .visit-card__head {
-    align-items: flex-start;
-    flex-direction: column;
+    align-items: center;
+    flex-direction: row;
   }
 
+  // keep 3 metric columns, just tighter padding
   .visit-card__metrics {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    div {
+      padding: 8px;
+    }
+
+    strong {
+      font-size: 0.88rem;
+    }
   }
 }

@@ -15,7 +15,7 @@
   </button>
 </header>
 
-<form [formGroup]="data.visitForm" (ngSubmit)="submitForm()" class="visit-form visit-form--dialog">
+<form [formGroup]="data.visitForm" (ngSubmit)="handleSubmit()" class="visit-form visit-form--dialog">
   <div class="visit-form__rows">
     <!-- Row 1: Patient name – full width -->
     <div class="visit-form__row visit-form__row--full">
@@ -28,7 +28,12 @@
 
     <!-- Row 2: Date + Service -->
     <div class="visit-form__row">
-      <mat-form-field appearance="outline" class="modern-field compact-field" subscriptSizing="dynamic">
+      <mat-form-field
+        appearance="outline"
+        class="modern-field compact-field"
+        subscriptSizing="dynamic"
+        (mousedown)="$event.preventDefault()"
+      >
         <mat-label>Дата прийому</mat-label>
         <input
           matInput
@@ -92,13 +97,28 @@
     </button>
 
     <button
+      *ngIf="!data.editedVisitId()"
+      mat-flat-button
+      color="primary"
+      type="submit"
+      [disabled]="data.saving() || data.visitForm.invalid"
+      class="primary-action"
+      [class.primary-action--saved]="savedFlash()"
+    >
+      <mat-icon>{{ savedFlash() ? 'check_circle' : 'add_task' }}</mat-icon>
+      {{ savedFlash() ? 'Збережено!' : 'Зберегти і додати ще' }}
+    </button>
+
+    <button
+      *ngIf="data.editedVisitId()"
       mat-flat-button
       color="primary"
       type="submit"
       [disabled]="data.saving() || data.visitForm.invalid"
       class="primary-action"
     >
-      + Зберегти візит
+      <mat-icon>save</mat-icon>
+      Зберегти візит
     </button>
   </div>
 </form>

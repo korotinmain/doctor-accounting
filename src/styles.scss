@@ -302,6 +302,45 @@ mat-icon {
   &.mat-mdc-option-active {
     background-color: rgba(var(--color-600-rgb), 0.12) !important;
   }
+
+  // Selected item — cobalt blue text + checkmark
+  &.mdc-list-item--selected:not(.mat-mdc-option-multiple) {
+    .mdc-list-item__primary-text {
+      color: var(--color-primary) !important;
+    }
+
+    .mat-pseudo-checkbox-full,
+    .mat-pseudo-checkbox {
+      color: var(--color-primary) !important;
+      border-color: var(--color-primary) !important;
+    }
+
+    // The SVG checkmark inside pseudo-checkbox
+    &::after,
+    .mat-pseudo-checkbox::after {
+      color: var(--color-primary) !important;
+      border-color: var(--color-primary) !important;
+    }
+  }
+}
+
+// Select arrow & value text
+.mat-mdc-select-arrow svg {
+  fill: var(--color-primary) !important;
+}
+
+.mat-mdc-select-value-text {
+  color: var(--color-primary) !important;
+}
+
+// Selected option checkmark — minimal style (no filled square)
+.mat-mdc-option .mat-pseudo-checkbox-checked.mat-pseudo-checkbox-minimal::after {
+  color: var(--color-primary) !important;
+}
+
+.mat-mdc-option .mat-pseudo-checkbox-checked.mat-pseudo-checkbox-full {
+  background: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
 }
 
 * {
@@ -460,4 +499,51 @@ select:focus-visible,
   &:hover {
     background: var(--color-danger-surface) !important;
   }
+}
+
+// ── Datepicker calendar ───────────────────────────────────────────────────────
+
+// Toggle icon
+.mat-datepicker-toggle .mat-mdc-icon-button .mat-icon,
+.mat-datepicker-toggle .mat-mdc-icon-button svg,
+.mat-datepicker-toggle .mat-mdc-icon-button svg path,
+.mat-datepicker-toggle button {
+  color: var(--color-primary) !important;
+  fill: var(--color-primary) !important;
+}
+
+// Selected day circle
+.mat-calendar-body-selected {
+  background-color: var(--color-primary) !important;
+  color: #fff !important;
+}
+
+// Today's date outline
+.mat-calendar-body-today:not(.mat-calendar-body-selected) {
+  border-color: var(--color-primary) !important;
+  color: var(--color-primary) !important;
+}
+
+// Hover / focus on day cells
+.mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover
+  > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
+  background-color: rgba(var(--color-600-rgb), 0.1) !important;
+}
+
+// Month/year header button
+.mat-calendar-period-button {
+  color: var(--color-text-heading) !important;
+  font-weight: 700 !important;
+}
+
+// Navigation arrows
+.mat-calendar-previous-button,
+.mat-calendar-next-button {
+  color: var(--color-primary) !important;
+}
+
+// Active/selected month or year in multi-view
+.mat-calendar-body-active > .mat-calendar-body-cell-content {
+  background-color: rgba(var(--color-600-rgb), 0.12) !important;
+  color: var(--color-primary) !important;
 }

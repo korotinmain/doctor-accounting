@@ -453,7 +453,11 @@ export class VisitsDashboardFacade {
       visitForm: this.visitForm,
       procedureOptions: this.procedureOptions,
       percentQuickOptions: this.percentQuickOptions,
-      projectedIncome$: this.projectedIncome$
+      projectedIncome$: this.projectedIncome$,
+      onSubmitAndAddMore: async () => {
+        await this.submitVisit();
+        this.resetFormKeepDate();
+      }
     };
 
     this.dialogRef = this.dialog.open(VisitDialogComponent, {
@@ -498,6 +502,20 @@ export class VisitsDashboardFacade {
   private notifyError(message: string, error: unknown): void {
     console.error(error);
     this.snackBar.open(message, 'OK', { duration: 3200 });
+  }
+
+  private resetFormKeepDate(): void {
+    const currentDate = this.visitForm.get('visitDate')?.value;
+    this.visitForm.reset({
+      visitDate: currentDate ?? this.getTodayDate(),
+      patientName: '',
+      procedureName: 'Консультація',
+      amount: null,
+      percent: 30,
+      notes: ''
+    });
+    this.visitForm.markAsUntouched();
+    this.visitForm.markAsPristine();
   }
 
   private resetForm(): void {

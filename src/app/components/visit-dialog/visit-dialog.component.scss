@@ -172,6 +172,62 @@
 
   .primary-action {
     min-width: 132px;
+    background: var(--gradient-cta) !important;
+    color: #fff !important;
+    transition:
+      filter 0.2s ease,
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    &:hover:not([disabled]) {
+      filter: brightness(1.12);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(var(--color-600-rgb), 0.4) !important;
+    }
+
+    &:active:not([disabled]) {
+      filter: brightness(0.97);
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(var(--color-600-rgb), 0.25) !important;
+    }
+
+    &[disabled] {
+      background: var(--color-surface-mid) !important;
+      color: var(--color-text-hint) !important;
+      box-shadow: none !important;
+      filter: none;
+      transform: none;
+      cursor: not-allowed;
+
+      mat-icon {
+        color: var(--color-text-hint) !important;
+      }
+    }
+  }
+
+  .primary-action--saved {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%) !important;
+    animation: saved-pop 0.25s ease;
+  }
+
+  @keyframes saved-pop {
+    0% {
+      transform: scale(1);
+    }
+    45% {
+      transform: scale(1.05);
+    }
+    100% {
+      transform: scale(1);
+    }
   }
 
   button {
